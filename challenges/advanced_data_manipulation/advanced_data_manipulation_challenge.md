@@ -146,12 +146,16 @@ UWIN_wide <- filter(UWIN_subset, City == "wide")
 
 int <- intersect(UWIN_atga$Species, UWIN_wide$Species)
 int
+```
        
-# Filter down to 3 species of interest which occur in both cities
+Filter down to 3 species of interest which occur in both cities
+```R
 UWIN_subset <- filter(UWIN_subset, Species %in% c("virginia_opossum", "red_fox",
                                                    "weasel_sp"))
-
-# Plot detections for each species with 
+```
+  
+Now, plot detections for each species
+```R
 ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
   geom_bar(stat = "identity") +
   labs(title = "Species Detections", x = "Species", y = "Detections") +
