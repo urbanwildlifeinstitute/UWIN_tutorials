@@ -68,6 +68,7 @@ head(UWIN_data)
              
 </details>
 
+  
 ## Challenge 2. 
 ### Summarizing and plotting data
 Nice work! We decide we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
