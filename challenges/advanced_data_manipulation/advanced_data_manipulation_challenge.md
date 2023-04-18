@@ -1,7 +1,7 @@
 # UWIN Challenge: Advanced Data Manipulation
 ## Coding Club Reference tutorial [__here.__](https://ourcodingclub.github.io/tutorials/data-manip-creative-dplyr/)
 
-Let's take a peek at some real data derived from the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
+Let's take a peek at some real data collected by the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
 
 ```R
 # Load in libraries
@@ -17,7 +17,7 @@ head(UWIN_data)
 ```
 
 ### Breaking down our data
-These are summary statistics of wildlife found at unquie sites sampled by camera traps in 19 cities across the US and Canada. Below is a table of City acronyms...
+These data are summary statistics of wildlife found at unquie sites sampled by camera traps in 19 cities across the US and Canada. Below is a table of City acronyms...
 
 | City                      | Code   |
 |---------------------------|--------|
@@ -57,7 +57,7 @@ and descriptions of each column header...
 
 ## Challenge 1. 
 ### Changing column names
-We decide that `Y` and `J` are confusing column names because we keep forgetting what they stand for. Let's update these to be more descriptive names. We will change `Y` to `det_days` and `J` to `cam_days` using `dplyr` functions.
+We decided that `Y` and `J` are confusing column names, we keep forgetting what they stand for! Let's update these to be more descriptive names. We will change `Y` to `det_days` and `J` to `cam_days` using `dplyr` functions.
 
 <details closed><summary><a href="https://hello.ca">Solution</a></summary>
 
@@ -71,7 +71,7 @@ head(UWIN_data)
   
 ## Challenge 2. 
 ### Summarizing and plotting data
-Nice work! We decide we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
+Nice work! We decided we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
   
 Start by creating a new data set `UWIN_east` for these cities which only includes raccoon detections.
   
@@ -128,11 +128,11 @@ ggplot(data = det_city, aes(x = City, y = det_total)) +
 ### More filtering and plotting pratice
 Wow, there is a lot of variability of raccoon detections across these cities! Let's see how detections vary across a few other species in two of these cities. Choose two of these cities and create a new dataframe for three new species (e.g. not raccoon) which occur in both cities. Hint: the `intersect` function may come in handy. 
   
-Then create a barplot that plots the detections for each species (on the x-axis) for each City using colors. Hint: see 'Barplot of diet' from Coding Club Tutorial.
+Then create a barplot that plots the detections for each species (on the x-axis) for each City using colors. Hint: see 'Barplot of diet' from the Coding Club Tutorial.
     
 <details closed><summary><a href="https://hello.ca">Solution</a></summary>
 
-To determine which species occur in both cities of your choosing, start by filtering down to these cities AND filter out detections `det_days` greater than zero. 
+To determine which species occur in both cities of your choosing, start by filtering down to these cities AND filter to detections `det_days` greater than zero. 
 ```R
 # filter to cities of interest
 UWIN_subset <- filter(UWIN_data, City %in% c("atga", "wide")) 
