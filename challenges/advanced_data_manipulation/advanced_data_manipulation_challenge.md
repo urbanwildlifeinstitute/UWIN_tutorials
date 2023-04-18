@@ -57,14 +57,15 @@ and descriptions of each column header...
 
 ## Challenge 1. 
 ### Changing column names
-We decide that 'Y' and 'J' are confusing column names because we keep forgetting what they stand for. Let's update these to be more descriptive names. We will change 'Y' to 'det_days' and 'J' to 'cam_days' using `dplyr` functions.
+We decide that `Y` and `J` are confusing column names because we keep forgetting what they stand for. Let's update these to be more descriptive names. We will change `Y` to `det_days` and `J` to `cam_days` using `dplyr` functions.
 
 <details closed><summary><a href="https://hello.ca">Solution</a></summary>
+
 ```R
 UWIN_data <- rename(UWIN_data, det_days = Y, cam_days = J)
 head(UWIN_data)
 ```
-
+             
 </details>
 
 
