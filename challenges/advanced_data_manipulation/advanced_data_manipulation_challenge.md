@@ -122,3 +122,43 @@ ggplot(data = det_city, aes(x = City, y = det_total)) +
 ```
              
 </details>
+
+  
+## Challenge 3. 
+### More filtering and plotting pratice
+Wow, there is a lot of variability of raccoon detections across these cities! Let's see how detections vary across a few other species in two of these cities. Choose two of these cities and create a new dataframe for three new species (e.g. not raccoon) which occur in both cities. Hint: the `intersect` function may come in handy. 
+  
+Then create a barplot that plots the detections for each species (on the x-axis) for each City using colors. Hint: see 'Barplot of diet' from Coding Club Tutorial.
+    
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+
+To determine which species occur in both cities of your choosing, start by filtering down to these cities AND filter out detections `det_days` greater than zero. 
+```R
+# filter to cities of interest
+UWIN_subset <- filter(UWIN_data, City %in% c("atga", "wide")) 
+
+# Filter out zero detections to find species present in your cities of interest
+UWIN_subset <- filter(UWIN_subset, det_days > 0)
+
+# Now let's see which species occur in both cities
+UWIN_atga <- filter(UWIN_subset, City == "atga")
+UWIN_wide <- filter(UWIN_subset, City == "wide")
+
+int <- intersect(UWIN_atga$Species, UWIN_wide$Species)
+int
+       
+# Filter down to 3 species of interest which occur in both cities
+UWIN_subset <- filter(UWIN_subset, Species %in% c("virginia_opossum", "red_fox",
+                                                   "weasel_sp"))
+
+# Plot detections for each species with 
+ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Species Detections", x = "Species", y = "Detections") +
+  theme_minimal() 
+```
+             
+</details>
+
+
+  
