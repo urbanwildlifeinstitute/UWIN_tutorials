@@ -4,18 +4,19 @@
 Let's take a peek at some real data derived from the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data
 
 ```R
+# Load in libraries
 library(dplyr)
 library(ggplot2)
 
+# Set your local working directory
 setwd()
 UWIN_data <- read.csv("full_capture_history.csv", header = TRUE) 
-```
 
-Awesome, let's check out what data we're working with.
-
-```R
+# Check out what data we're working with.
 head(UWIN_data)
 ```
+
+### Understanding our data
 These are summary statistics of wildlife found at unquie sites sampled by camera traps in 19 cities across the US and Canada. Below is a table of City acronyms and descriptions of each column header. 
 
 | City                      | Code   |
@@ -53,8 +54,14 @@ These are summary statistics of wildlife found at unquie sites sampled by camera
 | Y       | Integer   | The number of days the species was detected, Y <= J.                                                                                              |
 | J       | Integer   | The number of days a camera was operational on a given deployment at a site.                                                                      |
 
+## Challenge 1. 
+### Changing column names
 
-## 1. Working with .tif files
+<details open><summary><a href="https://hello.ca">link text</a></summary>
+
+Works!
+
+</details>
 
 Today we are going to use `ggplot2` to make pretty graphs
 
