@@ -68,7 +68,56 @@ head(UWIN_data)
              
 </details>
 
+## Challenge 2. 
+### Summarizing and plotting data
+Nice work! We decide we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
+  
+Start by creating a new data set `UWIN_east` for these cities which only includes raccoon detections.
+  
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+  
+```R
+# Use the filter function to focus on four cities of interest
+UWIN_east <- filter(UWIN_data, City %in% c("atga", "wide", "rony", "safl")) 
 
+# We can check this worked by viewing the unique cities
+unique(UWIN_east$City)
+             
+# filter only species of interest
+raccoon_east <- filter(UWIN_east, Species == "raccoon")
+unique(raccoon_east$Species)
+```
+             
+</details>
 
+Now we want to sum all raccoon detections across all of the sites for each city. Create a new 2-column dataframe called `det_total` which is a count of all raccoon detections for each east coast city
+  
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+  
+```R
+det_city <- raccoon_east %>% 
+  group_by(City) %>% 
+  summarise(det_total = sum(det_days))
+```
+             
+</details>
 
+Good deal. Let's use this new dataframe to make a bar plot. 
+  
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+  
+```R
+# This can be done using the 'geom_bar' function
+ggplot(data = det_city, aes(x = City, y = det_total)) +
+  geom_bar(stat = "identity", fill = "lightblue") +
+  labs(title = "Raccoon Detections", x = "City", y = "Detections") +
+  theme_minimal() 
 
+# or the 'geom_col' function
+ggplot(data = det_city, aes(x = City, y = det_total)) +
+  geom_col(fill = "lightblue") +
+  labs(title = "Raccoon Detections", x = "City", y = "Detections") +
+  theme_minimal() 
+```
+             
+</details>
