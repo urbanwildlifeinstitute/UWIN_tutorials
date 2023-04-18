@@ -1,7 +1,7 @@
 # UWIN Challenge: Advanced Data Manipulation
 ## Coding Club Reference tutorial [__here.__](https://ourcodingclub.github.io/tutorials/data-manip-creative-dplyr/)
 
-Let's take a peek at some real data derived from the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data
+Let's take a peek at some real data derived from the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
 
 ```R
 # Load in libraries
@@ -16,8 +16,8 @@ UWIN_data <- read.csv("full_capture_history.csv", header = TRUE)
 head(UWIN_data)
 ```
 
-### Understanding our data
-These are summary statistics of wildlife found at unquie sites sampled by camera traps in 19 cities across the US and Canada. Below is a table of City acronyms and descriptions of each column header. 
+### Breaking down our data
+These are summary statistics of wildlife found at unquie sites sampled by camera traps in 19 cities across the US and Canada. Below is a table of City acronyms...
 
 | City                      | Code   |
 |---------------------------|--------|
@@ -41,6 +41,7 @@ These are summary statistics of wildlife found at unquie sites sampled by camera
 | Tacoma, Washington        | `tawa` |
 | Wilmington, Delaware      | `wide` |
 
+and descriptions of each column header... 
 
 | Column  | Type      | Description                                                                                                                                       |
 |---------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -56,21 +57,17 @@ These are summary statistics of wildlife found at unquie sites sampled by camera
 
 ## Challenge 1. 
 ### Changing column names
+We decide that 'Y' and 'J' are confusing column names because we keep forgetting what they stand for. Let's update these to be more descriptive names. We will change 'Y' to 'det_days' and 'J' to 'cam_days' using `dplyr` functions.
 
-<details open><summary><a href="https://hello.ca">link text</a></summary>
-
-Works!
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+```R
+UWIN_data <- rename(UWIN_data, det_days = Y, cam_days = J)
+head(UWIN_data)
+```
 
 </details>
 
-Today we are going to use `ggplot2` to make pretty graphs
 
-This is normal text, look a code block written in python:
 
-```R
-name = raw_input('What is your name?\n')
-print 'Hi, %s.' % name
-```
 
-<a name="syntax"></a>
 
