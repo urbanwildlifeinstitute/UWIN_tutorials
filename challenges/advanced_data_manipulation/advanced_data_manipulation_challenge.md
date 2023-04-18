@@ -1,27 +1,17 @@
----
-title: "Coding Club's Basic data manipulation"
-author: "Kimberly Rivera"
-date: "2023-04-12 08:00:00"
-meta: Tutorials
-subtitle: "UWIN Challenge"
-layout: post
-tags: github ESA_data
----
-<div class="block">
-	<center>
-		<img src="{{ site.baseurl }}/img/tutheader_tutname.png" alt="Img">
-	</center>
-</div>
+# UWIN Challenge: Advanced Data Manipulation
+## Coding Club Reference tutorial: https://ourcodingclub.github.io/tutorials/data-manip-creative-dplyr/
 
-### Tutorial Aims:
+Let's take a peek at some real data derived from the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data
 
-#### <a href="#sections"> 1. Working with .tif files</a>
-#### <a href="#syntax"> 2. Mapping spatial data</a>
-#### <a href="#syntax"> 3. Extracting and analyzing raster data</a>
+```R
+library(dplyr)
+library(ggplot2)
 
-In this tutorial...
+setwd()
+UWIN_data <- read.csv("full_capture_history.csv", header = TRUE) 
 
-<a name="sections"></a>
+```
+
 
 ## 1. Working with .tif files
 
