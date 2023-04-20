@@ -70,30 +70,35 @@ ggplot(data = det_city, aes(x = City, y = det_total)) +
 # Let's create a new dataset for these cities for three new species which
 # occur in both cities
 
-# select 3 species which occur in both cities 
-atga <- filter(UWIN_data, City == "atga")
-wide <- filter(UWIN_data, City == "wide")
-
-
-unique(atga$Species)
-unique(wide$Species)
-
-int = intersect(atga$Species, wide$Species)
-int
-
 # filter only cities of interest
 UWIN_subset <- filter(UWIN_data, City %in% c("atga", "wide")) 
 
-# filter only species of interest
-UWIN_east_sp <- filter(UWIN_subset, Species %in% c("virginia_opossum", "coyote",
-                                              "raccoon")) 
+
+# Filter out zero detections to find species present in your cities of interest
+UWIN_subset <- filter(UWIN_subset, det_days > 0)
+
+UWIN_atga <- filter(UWIN_subset, City == "atga")
+UWIN_wide <- filter(UWIN_subset, City == "wide")
+
+int <- intersect(UWIN_atga$Species, UWIN_wide$Species)
+int
+
+# select 3 species which occur in both cities 
+unique(UWIN_subset$Species)
+
+
+# filter only 3 chosen species of interest
+UWIN_subset <- filter(UWIN_subset, Species %in% c("virginia_opossum", "red_fox",
+                                                   "weasel_sp"))
 
 # Then lets make another barplot that categorizes the detections by species (on the x-axis)
 # and by City using colors.
-ggplot(data = UWIN_east_sp, aes(x = Species, y = det_days, fill = City)) +
+ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
   geom_bar(stat = "identity") +
   labs(title = "Species Detections", x = "Species", y = "Detections") +
   theme_minimal() 
 
 
-
+UWIN_subset_table <- UWIN_subset %>% 
+  group_by(City, Species) %>% 
+  summarise(det_total = sum(det_days))
