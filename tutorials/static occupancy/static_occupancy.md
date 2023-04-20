@@ -11,7 +11,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 #### <a href="#occupancy"> 1. What is occuancy?</a>
 
-#### <a href="#assumptions"> 2. Occupancy Model Assumptions</a>
+#### <a href="#assumptions"> 2. Occupancy model assumptions</a>
 
 #### <a href="#formatting"> 3. Formatting data</a>
 
@@ -28,7 +28,7 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 <a name="assumptions"></a>
 
-## 1. Occupancy Model Assumptions
+## 1. Occupancy model assumptions
 
 Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between our observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
 
@@ -44,10 +44,7 @@ We comply to these assumptions by carefully developing our study design (based o
 
 Let's learn more about occupancy through an exmaple. We will use red fox data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
-
-
-
-Let's take a peek at some real data collected by the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
+Let's take a peek at the data! Start by loading in neccessary libraries and `chicago_red_fox.csv`. We will continue to use `dplyr` and `ggplot2`.
 
 ```R
 # Load in libraries
@@ -56,7 +53,7 @@ library(ggplot2)
 
 # Set your local working directory
 setwd()
-UWIN_data <- read.csv("full_capture_history.csv", header = TRUE) 
+fox <- read.csv("full_capture_history.csv", header = TRUE) 
 
 # Check out what data we're working with.
 head(UWIN_data)
