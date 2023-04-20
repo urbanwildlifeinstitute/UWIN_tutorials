@@ -5,7 +5,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 ### Some helpful references:
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
-2. Lodestar [Guide to 'Fitting occupancy models in `unmarked`'](https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html) - David Wilkinson
+2. Lodestar's [Guide to 'Fitting occupancy models in unmarked'](https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html) - David Wilkinson
 
 ### Tutorial Aims:
 
@@ -19,17 +19,27 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 #### <a href="#plots"> 3. Plotting model outputs</a>
 
+
 <a name="occupancy"></a>
 
 ## 1. What is occuancy?
 
-### Subheadings like this
+Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species across space and time. 'Occupany' can be defined as the probability that a site is occupied by a particular species. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors to monitor environments that may or may not host our species (specifically 'unmarked species') of interest. 
 
-Some text
+<a name="assumptions"></a>
+
+## 1. Occupancy Model Assumptions
+
+Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between our observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
+
+1. Detectiton probability is constant across sites or vists or explained by covariates
+2. Occupancy probability is constant across sites or visits or explained by covariates
+3. The occupancy status does not change over our repeated surveys
+
+We comply to these assumptions by carefully developing study designs and through the incorperation of relevant and measurable covariates. 
 
 
 
-Coding Club Reference tutorial [__here.__](https://ourcodingclub.github.io/tutorials/data-manip-creative-dplyr/)
 
 Let's take a peek at some real data collected by the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
 
