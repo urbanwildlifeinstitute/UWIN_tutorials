@@ -36,7 +36,13 @@ Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfe
 2. Occupancy probability is constant across sites or visits or explained by covariates
 3. The occupancy status does not change over our repeated surveys
 
-We comply to these assumptions by carefully developing study designs and through the incorperation of relevant and measurable covariates. 
+We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorperating relevant and measurable covariates. 
+
+<a name="formatting"></a>
+
+## 1. Formatting data
+
+Let's learn more about occupancy through an exmaple. We will use red fox data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
 
 
