@@ -130,5 +130,3 @@ siteCovs_df <- data.frame(siteCovs)
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
-
-
