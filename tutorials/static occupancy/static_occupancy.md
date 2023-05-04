@@ -105,7 +105,7 @@ We will be using the `unmarked` R package to model our data. Therefore, our data
 library("unmarked")
 ?unmarkedFrameOccu()
 ```
-We see there are a few neccessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting out data to model an occupancy model based on this hypothesis.
+We see there are a few neccessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
 
 ```R
 y <- raccoon_wk %>% 
@@ -130,3 +130,11 @@ siteCovs_df <- data.frame(siteCovs)
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
+Be mindful that it is OK to have missing or NA observation data. BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model.
+
+<a name="models"></a>
+
+## 4. Fitting models
+
+
+
