@@ -83,7 +83,7 @@ raccoon_wk <- raccoon_wk %>%
 ```
 There are many ways to collapse this data, so use methods most familiar to you. If you are working with a larger dataset, it may be helpful to build a function to do this or loop through your data and collapse visits into occasions.
 
-Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wetlands areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data was extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
+Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wetlands areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
@@ -99,10 +99,36 @@ landcover <- rename(landcover, Site = sites)
 # Now we can join our datasets
 raccoon_wk <- left_join(raccoon_wk, landcover, by = 'Site')
 ```
+We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. 
 
+```R
+library("unmarked")
+?unmarkedFrameOccu()
+```
+We see there are a few neccessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting out data to model an occupancy model based on this hypothesis.
 
+```R
+y <- raccoon_wk %>% 
+  select(visit_1:visit_5)
 
-We will be formatting our data to methods outlines in the `unmarked` package. 
+siteCovs <- raccoon_wk %>% 
+  select(c(water, forest))
 
+# We should also examine our covariates of interest to see if they should be scaled
+hist(raccoon_wk$water)
+hist(raccoon_wk$forest)
+
+# Looks like it's a good idea to scale these data before adding to our occu() data.frame
+siteCovs <- siteCovs %>% 
+  mutate(water_scale = scale(water)) %>% 
+  mutate(forest_scale = scale(forest)) %>% 
+  select(-c(water, forest)) # drop unscaled covariates
+
+siteCovs_df <- data.frame(siteCovs)
+
+# Now we can make our unmarkedFrameOccu() dataframe
+raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
+summary(raccoon_occ)
+```
 
 
