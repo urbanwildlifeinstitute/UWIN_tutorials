@@ -130,7 +130,8 @@ siteCovs_df <- data.frame(siteCovs)
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
-Be mindful that it is OK to have missing or NA observation data. BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model.
+Be mindful that it is OK to have missing or NA observation data BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model. We only have landcover data for 119/170 sites, so we should see sites dropped from our model
+
 
 <a name="models"></a>
 
