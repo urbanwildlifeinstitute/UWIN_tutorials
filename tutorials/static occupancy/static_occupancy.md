@@ -96,9 +96,12 @@ colnames(landcover)
 # we'll go ahead and rename 'sites' to 'Site' in the 'landcover' dataset
 landcover <- rename(landcover, Site = sites)
 
-# Now we can join our datasets
-raccoon_wk <- left_join(raccoon_wk, landcover, by = 'Site')
+# Now we can join our datasets and drop NA's. 
+raccoon_wk <- left_join(raccoon_wk, landcover, by = 'Site') %>% 
+  na.omit(.)
 ```
+Be mindful that it is OK to have missing or NA observation data BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model. We only have landcover data for 119/170 sites, so these sites are dropped using `na.omit()`.
+
 We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. 
 
 ```R
@@ -130,7 +133,7 @@ siteCovs_df <- data.frame(siteCovs)
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
-Be mindful that it is OK to have missing or NA observation data BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model. We only have landcover data for 119/170 sites, so we should see sites dropped from our model
+
 
 
 <a name="models"></a>
