@@ -196,7 +196,7 @@ mean(siteValue)
 ```
 
 <a href="#plots">
-  
+
 ## 5. Predicting & plotting model outputs
   
 
