@@ -138,10 +138,9 @@ summary(raccoon_occ)
 
 ## 4. Fitting models
 
-Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above:
-
-null - raccoon occupancy is constant across sites <br />
-habitat hypothesis - raccoon occupancy is explained habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
+Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above: <br />
+**null** - raccoon occupancy is constant across sites <br />
+**habitat hypothesis** - raccoon occupancy is explained habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
 
 ```R
 ?occu()
