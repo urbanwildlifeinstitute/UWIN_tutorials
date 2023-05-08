@@ -17,7 +17,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 #### <a href="#models"> 4. Fitting models</a>
 
-#### <a href="#plots"> 5. Plotting model outputs</a>
+#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
 
 
 <a name="occupancy"></a>
@@ -179,6 +179,24 @@ occ_error <- cbind(coef(null_model, type = "state"),
 # 95% confidence intervals for detection
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
+                         
+# Convert back to probability
+plogis(occ_error)
+plogis(det_error)
+```
+How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites.
+
+```R
+# Our naive occupancy
+siteValue <- apply(X = y,
+                   MARGIN = 1, # 1 = across rows
+                   FUN = "max", na.rm = TRUE) # This function finds the max value
+
+mean(siteValue)
 ```
 
+<a href="#plots">
+  
+## 5. Predicting & plotting model outputs
+  
 
