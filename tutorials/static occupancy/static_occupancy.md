@@ -134,13 +134,13 @@ raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
 
-
 <a name="models"></a>
 
 ## 4. Fitting models
+
 Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above:
 null - raccoon occupancy is constant across sites
-habitat hypothesis - raccoon occupancy is explained habitat metrics, water and forest, where occupancy increased with increasing proportions of water and forests
+habitat hypothesis - raccoon occupancy is explained habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
 
 ```R
 ?occu()
@@ -160,10 +160,25 @@ plogis(coef(null_model, type = "state")) # for occupancy
 plogis(coef(intercept_model, type = "det")) # for detection
 ```
 
-We can also use functions `fitList` and `modSel` in unmarked to compare our models.
+We can also use functions `fitList` and `modSel` in `unmarked` to compare our models.
 
 ```R
 fitlist <- fitList(m1 = null_model, m2 = habitat_model)
 modSel(fitlist)
 ```
+Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
+
+```R
+plogis(coef(null_model, type = "state")) # for occupancy
+plogis(coef(null_model, type = "det")) # for detection
+
+# We can also use `confit` to calculate the associated error
+# 95% confidence intervals for occupancy
+occ_error <- cbind(coef(null_model, type = "state"),
+                         confint(null_model, type = "state"))
+# 95% confidence intervals for detection
+det_error <- cbind(coef(null_model, type = "det"),
+                         confint(null_model, type = "det"))
+```
+
 
