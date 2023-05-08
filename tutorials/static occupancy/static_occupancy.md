@@ -235,8 +235,23 @@ lines(pred_forest$lower ~ new_dat$forest_scale, # y-axis ~ x-axis
 lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
-
 ```
+We can also do this using `ggplot` functions.
+  
+```R
+# first merge the two datasets (predicted occupancy and forest data)
+all_dat <- bind_cols(pred_forest, new_dat)
+
+ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
+  geom_path(size = 1) + # adds line
+  labs(x = "Proportion forest (scaled)", y = "Occupancy probability") +
+  ggtitle("Raccoon Occupancy")+
+  scale_x_continuous(limits = c(0,1)) +
+  ylim(0,1)+
+  theme_classic()+ # drops gray background and grid
+  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  ```
 
 
   
