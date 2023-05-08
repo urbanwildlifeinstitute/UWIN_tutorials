@@ -227,6 +227,15 @@ plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
+  
+# add 95% confidence intervals
+lines(pred_forest$lower ~ new_dat$forest_scale, # y-axis ~ x-axis
+      lty = 2 # make a checked line
+) 
+lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
+      lty = 2 # make a checked line
+)
+
 ```
 
 
