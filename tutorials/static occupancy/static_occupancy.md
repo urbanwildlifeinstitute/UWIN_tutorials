@@ -83,7 +83,7 @@ raccoon_wk <- raccoon_wk %>%
 ```
 There are many ways to collapse this data, so use methods most familiar to you. If you are working with a larger dataset, it may be helpful to build a function to do this or loop through your data and collapse visits into occasions.
 
-Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wetlands areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
+Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
@@ -135,10 +135,35 @@ summary(raccoon_occ)
 ```
 
 
-
 <a name="models"></a>
 
 ## 4. Fitting models
+Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above:
+null - raccoon occupancy is constant across sites
+habitat hypothesis - raccoon occupancy is explained habitat metrics, water and forest, where occupancy increased with increasing proportions of water and forests
 
+```R
+?occu()
 
+null_model <- occu(~1 # detection
+                        ~1, # occupancy
+                        data = raccoon_occ)
+
+habitat_model <- occu(~1 # detection
+                      ~ forest_scale + water_scale, # occupancy
+                        data = raccoon_occ)
+null_model
+habitat_model
+
+# Let's look at 
+plogis(coef(null_model, type = "state")) # for occupancy
+plogis(coef(intercept_model, type = "det")) # for detection
+```
+
+We can also use functions `fitList` and `modSel` in unmarked to compare our models.
+
+```R
+fitlist <- fitList(m1 = null_model, m2 = habitat_model)
+modSel(fitlist)
+```
 
