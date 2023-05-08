@@ -199,9 +199,9 @@ mean(siteValue)
 
 ## 5. Predicting & plotting model outputs
 
-If we stuck with our habitat hypothesis, we could use the `habitat_model` to predict occupancy across proportions of forest or water. Let's plot the variation in occupancy with proportion of forest as an example.
+If we chose to go with our habitat hypothesis, we could use `habitat_model` to predict occupancy across varying proportions of forest or water. Let's plot changes in occupancy with proportion of forest as an example.
 
-We know that proportions range from 0 to 1, so we will predict across these values in intervals of .05 while holding water equal to the mean scaled value. We also have to remember that we scaled our predictors, so we must do that again here.
+We know that the proportion of forest ranges from 0 to 1, so we will predict across these values in intervals of .05 while holding water equal to the mean scaled value. We also have to remember that we scaled our predictors, so we must do that again here.
 
 ```R
 # Create a new dataframe 
@@ -236,7 +236,7 @@ lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
-We can also do this using `ggplot` functions.
+We can make this a bit cleaner using `ggplot` functions.
   
 ```R
 # first merge the two datasets (predicted occupancy and forest data)
