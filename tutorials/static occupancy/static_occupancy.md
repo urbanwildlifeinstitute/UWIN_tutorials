@@ -143,7 +143,16 @@ siteCovs <- raccoon_wk %>%
 
 # We should also examine our covariates of interest to see if they should be scaled
 hist(raccoon_wk$water)
+
+<div align="center"><img width="150" height="auto" src="./plots/siteCovs_water.png" alt="A plot of water site covariate." /></div>
+
+<div align="center"> <h3>plots</h3> </div>
+
 hist(raccoon_wk$forest)
+
+<div align="center"><img width="150" height="auto" src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." /></div>
+
+<div align="center"> <h3>plots</h3> </div>
 
 # Looks like it's a good idea to scale these data before adding to our occu() data.frame
 siteCovs <- siteCovs %>% 
