@@ -61,27 +61,51 @@ head(raccoon)
 We see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
 
 ```R
-# let's confirm that there are no repeated sites
+# Let's confirm that there are no repeated sites
 length(unique(raccoon$Site))
 
-# Great, no repeats! Now let's collapse our data into 6-day sampling occasions. We can manually collapse days into weekly visits by summing selected rows...
-raccoon_wk <- raccoon %>%
-  mutate(visit_1 = select(., Day_1:Day_6) %>% rowSums(na.rm = TRUE)) %>% 
-  mutate(visit_2 = select(., Day_7:Day_12) %>% rowSums(na.rm = TRUE)) %>% 
-  mutate(visit_3 = select(., Day_13:Day_18) %>% rowSums(na.rm = TRUE)) %>% 
-  mutate(visit_4 = select(., Day_19:Day_24) %>% rowSums(na.rm = TRUE)) %>% 
-  mutate(visit_5 = select(., Day_25:Day_31) %>% rowSums(na.rm = TRUE)) %>% 
-  select(-c(Day_1:Day_31))
-  
-# Then changing counts >0 to '1' and count = 0, to '0'
-raccoon_wk <- raccoon_wk %>% 
-  mutate(visit_1 = ifelse(visit_1 >= 1, 1, 0)) %>% 
-  mutate(visit_2 = ifelse(visit_2 >= 1, 1, 0)) %>% 
-  mutate(visit_3 = ifelse(visit_3 >= 1, 1, 0)) %>% 
-  mutate(visit_4 = ifelse(visit_4 >= 1, 1, 0)) %>% 
-  mutate(visit_5 = ifelse(visit_5 >= 1, 1, 0))
+# Great, no repeats! Now let's collapse our data into 6-day sampling occasions. Let's grab all the columns that start with day...
+day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
+
+# split them into six day groups...
+n_weeks <- ceiling(ncol(day_cols)/6)
+week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
+
+# and write a function that keeps each occasion with all NA's as such and those > 0 as 1
+combine_days <- function(y, groups){
+  ans <- rep(NA, max(groups))
+  for(i in 1:length(groups)){
+    tmp <- as.numeric(y[groups == i])
+    if(all(is.na(tmp))){
+      next
+    } else {
+      ans[i] <- as.numeric(sum(tmp, na.rm = TRUE)>0)
+    }
+  }
+  return(ans)
+}
+
+# Apply this function across rows (in groups of 6)
+week_summary <- t( # this transposes our matrix
+  apply(
+    day_cols, 
+    1, # 1 is for rows
+    combine_days,
+    groups = week_groups
+  )
+)
+
+# Now update names
+colnames(week_summary) <- paste0("Week_",1:n_weeks)
+raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
+raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-There are many ways to collapse this data, so use methods most familiar to you. If you are working with a larger dataset, it may be helpful to build a function to do this or loop through your data and collapse visits into occasions.
+Now one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the reaminder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
+
+```R
+raccoon_wk <- raccoon_wk %>% 
+  select(-Week_6)
+```
 
 Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
 
