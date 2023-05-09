@@ -151,6 +151,10 @@ hist(raccoon_wk$water)
 ```R
 hist(raccoon_wk$forest)
 ```
+<p float="left">
+  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="100" />
+  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="100" /> 
+</p>
 
 <div align="center"><img width="150" height="auto" src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." /></div>
 
