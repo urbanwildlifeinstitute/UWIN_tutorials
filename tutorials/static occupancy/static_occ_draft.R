@@ -241,7 +241,8 @@ dev.off()
 # first merge our datasets
 all_dat <- bind_cols(pred_forest, new_dat)
 
-png("occ_forest_ggplot.png", height = 700, width = 700)
+
+ggsave("occ_forest_ggplot.tiff", width = 6, height = 6)
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
@@ -251,7 +252,7 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
   theme(plot.title=element_text(hjust=0.5)) # centers titles
-dev.off()
+
 
 # Challenge---------------------------------------------------------------------
 # Challenge, do this for this hypothesis: raccoon occupancy is explained urban intensity,
