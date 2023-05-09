@@ -100,7 +100,7 @@ colnames(week_summary) <- paste0("Week_",1:n_weeks)
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-Now one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the reaminder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
+Now one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
 
 ```R
 raccoon_wk <- raccoon_wk %>% 
