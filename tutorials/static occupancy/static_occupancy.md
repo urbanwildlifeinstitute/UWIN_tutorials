@@ -287,7 +287,7 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   theme(plot.title=element_text(hjust=0.5)) # centers titles
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot.tiff" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
+  <img src="./plots/occ_forest_ggplot.TIFF" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
 </p>
 
   
