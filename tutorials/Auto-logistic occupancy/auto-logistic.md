@@ -4,8 +4,8 @@
 This tutorial is aimed at folks interested and new to occuapncy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
-1. ['An introduction to auto-logistic occupancy models']([https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf](https://masonfidino.com/autologistic_occupancy_model/) - Mason Fidino
-2. ['Occupancy models for citizen-science data']([https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13090) - Res Altwegg & James D. Nichols
+1. ['An introduction to auto-logistic occupancy models']([https://masonfidino.com/autologistic_occupancy_model/]) - Mason Fidino
+2. ['Occupancy models for citizen-science data']([https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13090]) - Res Altwegg & James D. Nichols
 
 ### Tutorial Aims:
 
