@@ -290,4 +290,4 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
 </p>
 
-That's better!
+Nice work! If you are interested in furthering your occupancy journey, try this tutorial with your own data or check out other UWIN tutorials like 'Auto-logistic occupancy'.
