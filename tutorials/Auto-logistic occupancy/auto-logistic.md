@@ -22,4 +22,5 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 <a name="occupancy"></a>
 
-## 1. What is occuancy?
+## 1. What is Auto-logistic occuancy?
+Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in species occuancy across years or seasons. By considering a dynamic system, we can study how changing environmental conditions, such climate or fire, may impact species ecology or habitat use. We can also test the impacts of management interventions or account for variations in sampling methodologies. There are a variety of ways we can model a dyanmic system, such as using a dynamic occupancy model, or incorperting random site effects. However these methods require large datasets 
