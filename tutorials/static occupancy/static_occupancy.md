@@ -290,6 +290,4 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   <img src="./plots/occ_forest_ggplot.tiff" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
 </p>
 
- 
-  
-
+That's better!
