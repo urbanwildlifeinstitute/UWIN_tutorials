@@ -9,7 +9,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 ### Tutorial Aims:
 
-#### <a href="#occupancy"> 1. What is Auto-logistic occuancy?</a>
+#### <a href="#occupancy"> 1. What is Auto-logistic occupancy?</a>
 
 #### <a href="#assumptions"> 2. Occupancy model assumptions</a>
 
@@ -22,5 +22,5 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 <a name="occupancy"></a>
 
-## 1. What is Auto-logistic occuancy?
-Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in species occuancy across years or seasons. By considering a dynamic system, we can study how changing environmental conditions, such climate or fire, may impact species ecology or habitat use. We can also test the impacts of management interventions or account for variations in sampling methodologies. There are a variety of ways we can model a dyanmic system, such as using a dynamic occupancy model, or incorperting random site effects. However these methods require large datasets 
+## 1. What is Auto-logistic occupancy?
+Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in the environment or species occupancy across years or seasons. By considering a dynamic system, we can account for a lot of things like changing environmental conditions (such climate or fire), impacts of management interventions, variations in sampling methodologies, or life stages of species. Often, scientists are interested in modeling temporal dynamics or how species ecology or habitat use changes across time (diel, seasonally, or yearly). There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dyanmic system. Some common ways to account for temporal dynamics include dynamic occupancy model, multi-state occupancy models, or the incorpertion of random site effects. However, all these methods require large datasets 
