@@ -144,7 +144,13 @@ siteCovs <- raccoon_wk %>%
 # We should also examine our covariates of interest to see if they should be scaled
 hist(raccoon_wk$water)
 hist(raccoon_wk$forest)
+```
+<p float="left">
+  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="300" height="auto" />
+  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+</p>
 
+```R
 # Looks like it's a good idea to scale these data before adding to our occu() data.frame
 siteCovs <- siteCovs %>% 
   mutate(water_scale = scale(water)) %>% 
@@ -260,6 +266,10 @@ lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
+<p float="center">
+  <img src="./plots/occ_forest_basic.png" alt="Occupancy plot of raccoons using plot()" width="300" height="auto" />
+</p>
+
 We can make this a bit cleaner using `ggplot` functions.
   
 ```R
@@ -276,7 +286,8 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   theme_classic()+ # drops gray background and grid
   theme(plot.title=element_text(hjust=0.5)) # centers titles
   ```
+<p float="center">
+  <img src="./plots/occ_forest_ggplot.tiff" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
+</p>
 
-
-  
-
+That's better!
