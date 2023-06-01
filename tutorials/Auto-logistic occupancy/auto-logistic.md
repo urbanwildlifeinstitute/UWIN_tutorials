@@ -112,11 +112,11 @@ hist(opossum_covariates$Vacancy)
 ```
 
 <p float="left">
-  <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="200" height="auto" />
-  <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
-  <img src="./plots/hist_income.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
-  <img src="./plots/hist_pop_den.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
-  <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
+  <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="300" height="auto" />
+  <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_income.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_pop_den.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
 </p>
 
 
