@@ -38,4 +38,22 @@ For this example, we will use data collected by the UWIN Chicago. We will specif
 | Season2 | C    | 0     | 0      | 1     |
 
 Let's load in and examine our data...
+```R
+# Load in libraries
+library(dplyr)
+library(ggplot2)
+library(devtools)
+
+devtools::install_github(
+  "mfidino/autoOcc",
+  build_vignettes = TRUE
+)
+
+# Set your local working directory
+setwd()
+
+# Load in data
+opossum_det <- load(file='opossum_det_hist.rda') 
+opossums_cov <- load(file='opossum_covariates.rda') 
+```
 
