@@ -93,6 +93,11 @@ x <- list(m = matrix(1:6, nrow = 2),
           l = letters[1:8],
           n = c(1:10))
 ```
+Let's start by loading in spatial covariate (site-specific) data
+
+```R
+load(file='opossum_covariates.rda') 
+```
 
 
 <a name="models"></a>
