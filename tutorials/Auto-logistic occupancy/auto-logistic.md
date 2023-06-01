@@ -110,12 +110,13 @@ hist(opossum_covariates$Income)
 hist(opossum_covariates$Population_density)
 hist(opossum_covariates$Vacancy)
 ```
+
 <p float="left">
-  <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="300" height="auto" />
-  <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
-  <img src="./plots/hist_income.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
-  <img src="./plots/hist_pop_den.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
-  <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="200" height="auto" />
+  <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
+  <img src="./plots/hist_income.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
+  <img src="./plots/hist_pop_den.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
+  <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="200" height="auto" /> 
 </p>
 
 
@@ -133,7 +134,7 @@ m1 <- auto_occ(
 
 summary(m1)
 ```
-We can see that our *$\Psi$ - $\theta$* term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
 ```R
 # expected occupancy
