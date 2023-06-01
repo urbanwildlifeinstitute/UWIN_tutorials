@@ -11,18 +11,31 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 #### <a href="#occupancy"> 1. What is Auto-logistic occupancy?</a>
 
-#### <a href="#assumptions"> 2. Occupancy model assumptions</a>
+#### <a href="#formatting"> 2. Formatting data</a>
 
-#### <a href="#formatting"> 3. Formatting data</a>
+#### <a href="#models"> 3. Fitting models</a>
 
-#### <a href="#models"> 4. Fitting models</a>
-
-#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
+#### <a href="#plots"> 4. Predicting & plotting model outputs</a>
 
 
 <a name="occupancy"></a>
 
 ## 1. What is Auto-logistic occupancy?
-Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in the environment or species occupancy. By considering a dynamic system, we can account for a lot of things like changing environmental conditions (such as climate or fire), impacts of management interventions, variations in sampling methodologies, or life stages of species. Often, scientists are interested in modeling temporal dynamics or how species ecology or habitat use changes across time (diel, seasonally, or yearly). There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dyanmic system. Some common ways to account for temporal changes include dynamic occupancy models, multi-state occupancy models, or the incorpertion of random site effects. However, all these methods require large amounts of data to estimate all affiliated parameters. An alternative to these methods is using a temporal auto-logistic parameter where occupancy for *t = 2...5* (where t is time) is dependent on the previous *t*'s occupancy.
+Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in the environment or species occupancy. By considering a dynamic system, we can account for a lot of things like changing environmental conditions (such as climate or fire), impacts of management interventions, variations in sampling methodologies, or life stages of species. Often, scientists are interested in modeling temporal dynamics or how species ecology or habitat use changes across time (diel, seasonally, or yearly). There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dyanmic system. Some common ways to account for temporal changes include dynamic occupancy models, multi-state occupancy models, or the incorpertion of random site effects. However, all these methods require large amounts of data to estimate all affiliated parameters. An alternative to these methods is using a temporal auto-logistic parameter where occupancy for *t = 2...5* (where t is time) is dependent on the previous *t*'s occupancy. This method only introduces one new parameter, unlike the models listed above. To get into the nitty gritty of the equations, please review [this blog post](https://masonfidino.com/autologistic_occupancy_model/) (also listed in references above). Rather, let's get into an example and see how this approach can be applied. 
 
+<a name="formatting"></a>
+
+## 2. Formatting data for an Auto-logistic model
+For this example, we will use data collected by the UWIN Chicago. We will specifically look at changes in Virginia opossum occupancy across four seasons. Like a static occupancy model, we will need a column for 'sites' and 'visits' (or 'occasions' if data is collapsed). We will also need a new column which describes the temporal sampling period, in this case 'season'. 
+
+| season  | site | occ_1 | occ... | occ_J |
+|---------|------|-------|--------|-------|
+| Season1 | A    | NA    | 0      | 1     |
+| Season1 | B    | NA    | 0      | 0     |
+| Season1 | C    | 0     | 1      | 1     |
+| Season2 | A    | 1     | 0      | 0     |
+| Season2 | B    | NA    | NA     | NA    |
+| Season2 | C    | 0     | 0      | 1     |
+
+Let's load in and examine our data...
 
