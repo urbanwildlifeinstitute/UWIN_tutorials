@@ -90,5 +90,15 @@ head(opossum_y[,1,])
 <a name="occupancy"></a>
 
 ## 3. Fitting models
-Now we are ready to fit an autologistic model using the `auto_occ()` function!
+Now we are ready to fit an autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
 
+```R
+m1 <- auto_occ(
+  formula = ~1  # detection
+            ~1, # occupancy
+  y = opossum_y
+)
+
+summary(m1)
+```
+We can see that our $\Psi$ - $\theta$ term here is postivie, 1.878. 
