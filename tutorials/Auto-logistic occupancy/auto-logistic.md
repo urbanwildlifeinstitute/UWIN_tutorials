@@ -119,6 +119,49 @@ hist(opossum_covariates$Vacancy)
   <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
 </p>
 
+Let's scale!
+
+```R
+# we can scale these one-by-one...
+cov_scaled <- opossum_covariates %>% 
+  mutate(Building_age = scale(Building_age)) %>% 
+  mutate(Impervious = scale(Impervious)) %>%
+  mutate(Income = scale(Income)) %>% 
+  mutate(Vacancy = scale(Vacancy)) %>%
+  mutate(Population_density = scale(Population_density)) 
+
+# or by writing a function...
+cov_scaled <- as.data.frame(
+  lapply(
+    opossum_covariates,
+    function(x){
+      if(is.numeric(x)){
+        scale(x)
+      }else{
+        x
+      }
+    }
+  )
+)
+```
+As we've seen with static occupancy, we can input our covariate data.frame into the `auto_occ()` function and fit a new model. 
+
+```R
+# we can drop the sites before inputting data into auto_occ()
+cov_scaled = cov_scaled %>% select(-Site)
+
+# now let's fit a model with some of these covariates
+# fit a model with Impervious cover and Income
+m2 <- auto_occ(
+  ~1 # detection
+  ~Impervious + Income, # occupancy
+  y = opossum_y,
+  occ_covs = oc_scaled
+)
+
+summary(m2)
+```
+
 
 <a name="models"></a>
 
