@@ -26,7 +26,7 @@ Though static occupancy models can be a useful tool when studying species ecolog
 <a name="formatting"></a>
 
 ## 2. Formatting data for an Auto-logistic model
-For this example, we will use data collected by the UWIN Chicago. We will specifically look at changes in Virginia opossum occupancy across four seasons. Like a static occupancy model, we will need a column for 'sites' and 'visits' (or 'occasions' if data is collapsed). We will also need a new column which describes the temporal sampling period, in this case 'season'. 
+For this example, we will use data collected by the UWIN Chicago. We will specifically look at changes in Virginia opossum occupancy across four seasons using the package `autoOcc`. Like a static occupancy model, we will need a column for 'sites' and 'visits' (or 'occasions' if data is collapsed). We will also need a new column which describes the temporal sampling period, in this case 'season'. 
 
 | season  | site | occ_1 | occ... | occ_J |
 |---------|------|-------|--------|-------|
@@ -48,12 +48,14 @@ devtools::install_github(
   "mfidino/autoOcc",
   build_vignettes = TRUE
 )
+library(autoOcc)
 
-# Set your local working directory
+# Set your local working directory and load in data
 setwd()
+load(file='opossum_det_hist.rda') 
+load(file='opossum_covariates.rda') 
 
-# Load in data
-opossum_det <- load(file='opossum_det_hist.rda') 
-opossums_cov <- load(file='opossum_covariates.rda') 
+# examine data
+head(opossum_det_hist) 
 ```
-
+The package `autoOcc` is built similarly to `unmarked` in which we feed our sampling data into a function `format_y()` (similar to `unmarkedFrameOccu` in `unmarked`). Unlike covariates, site data can be missing within seasons. For example, Season1 may include sites a,b,c but Season2 may only include sites a,c. The function `format_y()` will account for these missing data and fill the array with NA's. 
