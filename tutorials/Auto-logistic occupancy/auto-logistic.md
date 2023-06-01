@@ -101,15 +101,15 @@ m1 <- auto_occ(
 
 summary(m1)
 ```
-We can see that our ($\Psi$ - $\theta$) term here is a postivie 1.878. This indicates that if opossum were present at a site at t-1 (for example JA19), they are much more likely to be present at the same site at time t ( e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+We can see that our ($\Psi$ - $\theta$) term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
 ```R
-# get expected occupancy, which is around 0.59.
+# expected occupancy
 (intercept_preds_psi <- predict(
     m1,
     type = "psi"))
 
-# get average weekly detection probability, which is about 0.53.
+# average weekly detection probability
 (intercept_preds_rho <- predict(
     m1, 
     type = "rho"))
