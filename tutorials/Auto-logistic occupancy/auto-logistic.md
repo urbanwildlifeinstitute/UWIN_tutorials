@@ -87,7 +87,15 @@ head(opossum_y[,,1])
 # view the first sampling period
 head(opossum_y[,1,])
 ```
-<a name="occupancy"></a>
+How about covariate data? With this model we can consider site, detection, or temporal covariates (here seasonal). There are two ways to format covariate data, as a date.frame or named list. A data.frame can be used if there **are no temporal covariates**. A names list is necessary when temporal covariates are present. As a reminder, a named list is simply a list with names to access elements of the list. For example: 
+```R
+x <- list(m = matrix(1:6, nrow = 2),
+          l = letters[1:8],
+          n = c(1:10))
+```
+
+
+<a name="models"></a>
 
 ## 3. Fitting models
 Now we are ready to fit an autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
@@ -101,7 +109,7 @@ m1 <- auto_occ(
 
 summary(m1)
 ```
-We can see that our ($\Psi$ - $\theta$) term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+We can see that our *$\Psi$ - $\theta$* term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
 ```R
 # expected occupancy
