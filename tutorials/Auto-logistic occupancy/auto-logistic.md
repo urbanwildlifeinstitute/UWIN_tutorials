@@ -93,11 +93,30 @@ x <- list(m = matrix(1:6, nrow = 2),
           l = letters[1:8],
           n = c(1:10))
 ```
-Let's start by loading in spatial covariate (site-specific) data
+Let's first load in some spatial covariates (site-specific) and check that these data align with the output of `format_y()`
 
 ```R
 load(file='opossum_covariates.rda') 
+
+opossum_covariates$Site
+dimnames(opossum_y)[[1]]
+all(opossum_covariates$Site == dimnames(opossum_y)[[1]])
 ```
+And we can also examine their histograms to see if we should scale all covariates
+```R
+hist(opossum_covariates$Building_age)
+hist(opossum_covariates$Impervious)
+hist(opossum_covariates$Income)
+hist(opossum_covariates$Population_density)
+hist(opossum_covariates$Vacancy)
+```
+<p float="left">
+  <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="300" height="auto" />
+  <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_income.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_pop_den.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+</p>
 
 
 <a name="models"></a>
