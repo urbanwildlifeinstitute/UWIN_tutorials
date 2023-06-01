@@ -58,4 +58,4 @@ load(file='opossum_covariates.rda')
 # examine data
 head(opossum_det_hist) 
 ```
-The package `autoOcc` is built similarly to `unmarked` in which we feed our sampling data into a function `format_y()` (similar to `unmarkedFrameOccu` in `unmarked`). Unlike covariates, site data can be missing within seasons. For example, Season1 may include sites a,b,c but Season2 may only include sites a,c. The function `format_y()` will account for these missing data and fill the array with NA's. 
+The package `autoOcc` is built similarly to `unmarked` in which we feed our sampling data into a function `format_y()` (similar to `unmarkedFrameOccu` in `unmarked`). Unlike covariate data, site data can be missing within seasons. For example, Season1 may include sites a,b,c but Season2 may only include sites a,c. The function `format_y()` will account for these missing data and fill the array with NA's. To use this function we need: `x`, `site_column`, `time_column`, and `history_columns`. 
