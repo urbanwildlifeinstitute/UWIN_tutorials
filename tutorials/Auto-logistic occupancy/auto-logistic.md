@@ -78,7 +78,7 @@ opossum_y <- format_y(
   report = FALSE  # to output without ordering and history report
 )
 ```
-By looking at the output we can see the `format_y()` function breaks each week, or occasion, into a new dimension. We can call on certain aspects of the dimension to view our data. 
+By looking at the output we can see the `format_y()` function breaks each week, or occasion, into a new dimension. We can call on certain aspects of the array to view our data. 
 
 ```R
 # view the first week or occasion
@@ -144,14 +144,30 @@ cov_scaled <- as.data.frame(
   )
 )
 ```
-As we've seen with static occupancy, we can input our covariate data.frame into the `auto_occ()` function and fit a new model. 
+As we've done with static occupancy, we will input our covariate data into a data.frame, in this case using the `auto_occ()` function. Then we are ready to fit a new model. 
 
 ```R
-# we can drop the sites before inputting data into auto_occ()
+# we need to drop the sites before inputting data into auto_occ()
 cov_scaled = cov_scaled %>% select(-Site)
+```
 
-# now let's fit a model with some of these covariates
-# fit a model with Impervious cover and Income
+
+<a name="models"></a>
+
+## 3. Fitting models
+Now we are ready to fit some autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
+
+```R
+# modeling with no covariates
+m1 <- auto_occ(
+  formula = ~1  # detection
+            ~1, # occupancy
+  y = opossum_y
+)
+
+summary(m1)
+
+# modeling with some spatial covariates: impervious cover and income
 m2 <- auto_occ(
   ~1 # detection
   ~Impervious + Income, # occupancy
@@ -161,23 +177,11 @@ m2 <- auto_occ(
 
 summary(m2)
 ```
-
-
-<a name="models"></a>
-
-## 3. Fitting models
-Now we are ready to fit an autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
-
-```R
-m1 <- auto_occ(
-  formula = ~1  # detection
-            ~1, # occupancy
-  y = opossum_y
-)
-
-summary(m1)
-```
+### null model (no covariates)
 We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+
+### spatial model (impervious cover & income)
+
 
 ```R
 # expected occupancy
