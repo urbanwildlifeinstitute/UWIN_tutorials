@@ -180,9 +180,6 @@ summary(m2)
 ### null model (no covariates)
 We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
-### spatial model (impervious cover & income)
-
-
 ```R
 # expected occupancy
 (intercept_preds_psi <- predict(
@@ -194,3 +191,7 @@ We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indica
     m1, 
     type = "rho"))
 ```
+
+### spatial model (impervious cover & income)
+
+
