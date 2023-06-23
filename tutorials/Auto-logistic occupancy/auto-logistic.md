@@ -155,7 +155,7 @@ cov_scaled = cov_scaled %>% select(-Site)
 <a name="models"></a>
 
 ## 3. Fitting models
-Now we are ready to fit some autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
+Now we are ready to fit some autologistic models using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes an autologistic term.
 
 ```R
 # modeling with no covariates
