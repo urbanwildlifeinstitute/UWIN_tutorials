@@ -1,7 +1,7 @@
 # UWIN Tutorial: Autologistic Occupancy
 *Created by Kimberly Rivera - last updated May 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occuapncy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at folks interested and new to occupancy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. [An introduction to auto-logistic occupancy models](https://masonfidino.com/autologistic_occupancy_model/) - Mason Fidino
