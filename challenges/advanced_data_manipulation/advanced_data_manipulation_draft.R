@@ -53,12 +53,13 @@ det_city <- raccoon_east %>%
   group_by(City) %>% 
   summarise(det_total = sum(det_days))
 
-
 ggplot(data = det_city, aes(x = City, y = det_total)) +
   geom_bar(stat = "identity", fill = "lightblue") +
   labs(title = "Raccoon Detections", x = "City", y = "Detections") +
   theme_minimal() 
-  
+ggsave("./plots/raccoon_det.png", dpi = 300)
+
+
 ggplot(data = det_city, aes(x = City, y = det_total)) +
   geom_col(fill = "lightblue") +
   labs(title = "Raccoon Detections", x = "City", y = "Detections") +
@@ -97,6 +98,7 @@ ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
   geom_bar(stat = "identity") +
   labs(title = "Species Detections", x = "Species", y = "Detections") +
   theme_minimal() 
+ggsave("./plots/sp_det.png", dpi = 300)
 
 
 UWIN_subset_table <- UWIN_subset %>% 
