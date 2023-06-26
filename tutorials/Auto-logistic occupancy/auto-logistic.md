@@ -1,7 +1,7 @@
 # UWIN Tutorial: Autologistic Occupancy
 *Created by Kimberly Rivera - last updated May 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occuapncy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at folks interested and new to occupancy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. [An introduction to auto-logistic occupancy models](https://masonfidino.com/autologistic_occupancy_model/) - Mason Fidino
@@ -78,7 +78,7 @@ opossum_y <- format_y(
   report = FALSE  # to output without ordering and history report
 )
 ```
-By looking at the output we can see the `format_y()` function breaks each week, or occasion, into a new dimension. We can call on certain aspects of the dimension to view our data. 
+By looking at the output we can see the `format_y()` function breaks each week, or occasion, into a new dimension. We can call on certain aspects of the array to view our data. 
 
 ```R
 # view the first week or occasion
@@ -110,6 +110,7 @@ hist(opossum_covariates$Income)
 hist(opossum_covariates$Population_density)
 hist(opossum_covariates$Vacancy)
 ```
+
 <p float="left">
   <img src="./plots/hist_building.png" alt="A plot of water site covariate." width="300" height="auto" />
   <img src="./plots/hist_imperv.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
@@ -118,13 +119,46 @@ hist(opossum_covariates$Vacancy)
   <img src="./plots/hist_vacancy.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
 </p>
 
+Let's scale!
+
+```R
+# we can scale these one-by-one...
+cov_scaled <- opossum_covariates %>% 
+  mutate(Building_age = scale(Building_age)) %>% 
+  mutate(Impervious = scale(Impervious)) %>%
+  mutate(Income = scale(Income)) %>% 
+  mutate(Vacancy = scale(Vacancy)) %>%
+  mutate(Population_density = scale(Population_density)) 
+
+# or by writing a function...
+cov_scaled <- as.data.frame(
+  lapply(
+    opossum_covariates,
+    function(x){
+      if(is.numeric(x)){
+        scale(x)
+      }else{
+        x
+      }
+    }
+  )
+)
+```
+As we've done with static occupancy, we will input our covariate data into a data.frame, in this case using the `auto_occ()` function. Then we are ready to fit a new model. 
+
+```R
+# we need to drop the sites before inputting data into auto_occ()
+cov_scaled = cov_scaled %>% select(-Site)
+```
+
 
 <a name="models"></a>
 
 ## 3. Fitting models
-Now we are ready to fit an autologistic model using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes a autologistic term.
+Now we are ready to fit some autologistic models using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes an autologistic term.
 
 ```R
+# modeling with no covariates
 m1 <- auto_occ(
   formula = ~1  # detection
             ~1, # occupancy
@@ -132,8 +166,19 @@ m1 <- auto_occ(
 )
 
 summary(m1)
+
+# modeling with some spatial covariates: impervious cover and income
+m2 <- auto_occ(
+  ~1 # detection
+  ~Impervious + Income, # occupancy
+  y = opossum_y,
+  occ_covs = oc_scaled
+)
+
+summary(m2)
 ```
-We can see that our *$\Psi$ - $\theta$* term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+### null model (no covariates)
+We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
 ```R
 # expected occupancy
@@ -146,3 +191,7 @@ We can see that our *$\Psi$ - $\theta$* term here is a postivie 1.878. This indi
     m1, 
     type = "rho"))
 ```
+
+### spatial model (impervious cover & income)
+
+

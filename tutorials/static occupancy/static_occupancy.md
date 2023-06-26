@@ -1,7 +1,7 @@
 # UWIN Tutorial: Static Occupancy
 *Created by Kimberly Rivera - last updated April 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occuapncy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at folks interested and new to occuapncy modeling, or as a refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
@@ -9,7 +9,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 ### Tutorial Aims:
 
-#### <a href="#occupancy"> 1. What is occuancy?</a>
+#### <a href="#occupancy"> 1. What is occupancy?</a>
 
 #### <a href="#assumptions"> 2. Occupancy model assumptions</a>
 
@@ -24,7 +24,7 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 ## 1. What is occuancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species across space and time. 'Occupany' can be defined as the probability that a site is occupied by a particular species. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors to monitor environments that may or may not host our species (specifically 'unmarked species') of interest. 
+Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species across space and time. 'Occupancy' can be defined as the probability that a site is occupied by a particular species. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors to monitor environments that may or may not host our species (specifically 'unmarked species') of interest. 
 
 <a name="assumptions"></a>
 
@@ -100,7 +100,7 @@ colnames(week_summary) <- paste0("Week_",1:n_weeks)
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-Now one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
+Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
 
 ```R
 raccoon_wk <- raccoon_wk %>% 
@@ -150,8 +150,10 @@ hist(raccoon_wk$forest)
   <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
 </p>
 
+Looks like it's a good idea to scale these data before adding to our `occu()` data.frame
+
 ```R
-# Looks like it's a good idea to scale these data before adding to our occu() data.frame
+# scale covariates
 siteCovs <- siteCovs %>% 
   mutate(water_scale = scale(water)) %>% 
   mutate(forest_scale = scale(forest)) %>% 
@@ -290,4 +292,4 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
 </p>
 
-Nice work! If you are interested in furthering your occupancy journey, try this tutorial with your own data or check out other UWIN tutorials like 'Auto-logistic occupancy'.
+Nice work! If you are interested in furthering your occupancy journey, try this tutorial with your own data or check out other UWIN tutorials like 'Autologistic occupancy'.
