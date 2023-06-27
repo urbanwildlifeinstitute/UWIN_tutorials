@@ -157,6 +157,11 @@ cov_scaled = cov_scaled %>% select(-Site)
 ## 3. Fitting models
 Now we are ready to fit some autologistic models using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes an autologistic term.
 
+We will fit 3 models, one for a null hypothesis, one with spatial covariates, and another that includes a temporal covariate, 'season' which is categorical. 
+**null** - opossum occupancy is constant across sites <br />
+**habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested  landscapes. 
+**temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likley to hunker down in dens and spend less time foraging/ 
+
 ### null model (no covariates)
 ```R
 # modeling with no covariates
@@ -168,6 +173,7 @@ m1 <- auto_occ(
 
 summary(m1)
 ```
+We can see that our $\Psi$ - $\theta$ term here is a positive 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability (see <a href="#plots"> Predicting & plotting model outputs</a>)
 
 ### spatial model (impervious cover & income)
 ```R
@@ -181,11 +187,15 @@ m2 <- auto_occ(
 
 summary(m2)
 ```
+
+### temporal model (season)
+MORE HERE
+
 <a name="plots"></a>
 
 ## 4. Predicting & plotting model outputs
 ### null model (no covariates)
-Because the null model does not consider any covariates, we will use the `predict` function to estimate the intercept only
+Because the null model does not consider any covariates, we can use the `predict` function to just estimate the intercept
 
 ```R
 # expected occupancy
@@ -200,10 +210,18 @@ Because the null model does not consider any covariates, we will use the `predic
 ```
 
 
-
-
-We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
-
 ### spatial model (impervious cover & income)
 
 
+
+
+We can also use the function `compare_models` in `autoOcc` package to compare our models.
+
+```R
+aic_results <- compare_models(
+list(m1, m2, m3),
+digits = 2
+)
+
+aic_results
+```
