@@ -146,8 +146,8 @@ hist(raccoon_wk$water)
 hist(raccoon_wk$forest)
 ```
 <p float="left">
-  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="300" height="auto" />
-  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="300" height="auto" /> 
+  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="500" height="auto" />
+  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="500" height="auto" /> 
 </p>
 
 Looks like it's a good idea to scale these data before adding to our `occu()` data.frame
@@ -269,7 +269,7 @@ lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
 )
 ```
 <p float="center">
-  <img src="./plots/occ_forest_basic.png" alt="Occupancy plot of raccoons using plot()" width="300" height="auto" />
+  <img src="./plots/occ_forest_basic.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
 </p>
 
 We can make this a bit cleaner using `ggplot` functions.
@@ -289,7 +289,7 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   theme(plot.title=element_text(hjust=0.5)) # centers titles
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="300" height="auto" />
+  <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial with your own data or check out other UWIN tutorials like 'Autologistic occupancy'.
