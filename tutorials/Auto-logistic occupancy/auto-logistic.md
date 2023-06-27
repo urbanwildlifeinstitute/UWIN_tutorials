@@ -157,6 +157,7 @@ cov_scaled = cov_scaled %>% select(-Site)
 ## 3. Fitting models
 Now we are ready to fit some autologistic models using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes an autologistic term.
 
+### null model (no covariates)
 ```R
 # modeling with no covariates
 m1 <- auto_occ(
@@ -166,7 +167,10 @@ m1 <- auto_occ(
 )
 
 summary(m1)
+```
 
+### spatial model (impervious cover & income)
+```R
 # modeling with some spatial covariates: impervious cover and income
 m2 <- auto_occ(
   ~1 # detection
@@ -177,8 +181,11 @@ m2 <- auto_occ(
 
 summary(m2)
 ```
+<a name="plots"></a>
+
+## 4. Predicting & plotting model outputs
 ### null model (no covariates)
-We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
+Because the null model does not consider any covariates, we will use the `predict` function to estimate the intercept only
 
 ```R
 # expected occupancy
@@ -191,6 +198,11 @@ We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indica
     m1, 
     type = "rho"))
 ```
+
+
+
+
+We can see that our $\Psi$ - $\theta$ term here is a postivie 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability. 
 
 ### spatial model (impervious cover & income)
 
