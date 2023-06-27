@@ -122,7 +122,7 @@ ggplot(data = det_city, aes(x = City, y = det_total)) +
 ```
 
 <p float="left">
-  <img src="./plots/raccoon_det.png" alt="A plot of raccoon detections in four cities." width="300" height="auto" />
+  <img src="./plots/raccoon_det.png" alt="A plot of raccoon detections in four cities." width="500" height="auto" />
 </p>
 
 </details>
@@ -167,7 +167,7 @@ ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
 ```
 
 <p float="left">
-  <img src="./plots/sp_det.png" alt="A plot of species detections in two cities." width="300" height="auto" />
+  <img src="./plots/sp_det.png" alt="A plot of species detections in two cities." width="500" height="auto" />
 </p>
              
 </details>
