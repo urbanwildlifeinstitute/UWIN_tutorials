@@ -414,7 +414,7 @@ Because the null model does not consider any covariates, we will only use the `p
     type = "rho"))
 ```
 
-For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\Rho$ = .53 (95%CI: 0.48, 0.57)**.
+For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\rho$ = .53 (95%CI: 0.48, 0.57)**.
 
 ### spatial model (impervious cover & income)
 
