@@ -242,7 +242,6 @@ It appears that the temporal model best explaines our data.
 It is possible to model average if AIC values are similar, however we recommend using this method with caution. 
 
 That is because 1) it is very difficult to make model predictions (even though many people do) because it does not use the identity link (i.e., it is not a linear model) and 2) there may be a lot of uninformative parameters in your most competitive models. Some papers that go more in depth on this incude:
-
 * Cade, B. S. (2015). Model averaging and muddled multimodel inferences. Ecology, 96(9), 2370-2382.
 * Arnold, T. W. (2010). Uninformative parameters and model selection using Akaike's Information Criterion. The Journal of Wildlife Management, 74(6), 1175-1178.
 
