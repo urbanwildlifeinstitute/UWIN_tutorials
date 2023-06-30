@@ -160,8 +160,9 @@ cov_scaled = cov_scaled %>% select(-Site)
 Now we are ready to fit some autologistic models using `auto_occ()`! The formula for this model should look familiar to that of `unmarked` where the first argument is for detection and the second for occupancy. However, this model includes an autologistic term.
 
 We will fit 3 models, one for a null hypothesis, one with spatial covariates, and another that includes a temporal covariate, 'season' which is categorical. 
-**null** - opossum occupancy is constant across sites <br />
-**habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested landscapes. 
+
+**null** - opossum occupancy is constant across sites <br>
+**habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested landscapes.  <br>
 **temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likley to hunker down in dens and spend less time foraging.
 
 ### null model (no covariates)
@@ -175,7 +176,7 @@ m1 <- auto_occ(
 
 summary(m1)
 ```
-We can see that our $\Psi$ - $\theta$ term here is a positive 1.878. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability (see <a href="#plots"> Predicting & plotting model outputs</a>)
+We can see that our $\Psi$ - $\theta$ term (the autologistic term) is a positive **1.878**. This indicates that if opossum were present at a site at *t-1* (for example JA19), they are much more likely to be present at the same site at time *t* (e.g. AP19). We can now use this model to make predictions about the expected occupancy and average weekly detection probability (see <a href="#plots"> Predicting & plotting model outputs</a>)
 
 ### spatial model (impervious cover & income)
 ```R
@@ -189,16 +190,206 @@ m2 <- auto_occ(
 
 summary(m2)
 ```
-Note, we could include the same variables for detection if we believed that inpervious cover and income would reduce the probability of detecting opossum. For this example, we'll keep it simple and only hypothesize about occupancy.
+Note, we could include the same variables for detection if we believed that impervious cover and income would reduce the probability of detecting opossum. For this example, we'll keep it simple and only hypothesize about occupancy.
+
+Here, $\Psi$ - $\theta$, is a positive **1.794**. Similiar to the last model, this value indicates that if opossum were present at a site at *t-1* they are much more likely to be present at the same site at time *t*. 
 
 ### temporal model (season)
-MORE HERE
+We can also add complexity with a categorical temporal covariate 'Season'. Remember that temporally varying covariates need to be a named list. For this example, the seasonal information is in the opossum detection history (opossum_det_hist).
+
+```R
+# make named list (don't worry about the warning)
+season_frame <- list(
+   Season = matrix(
+     opossum_det_hist$Season,
+     ncol = dim(opossum_y)[2],
+     nrow = dim(opossum_y)[1]
+   ),
+   Impervious = cov_scaled$Impervious,
+   Income = cov_scaled$Income
+ )
+
+# create model
+m3 <- auto_occ(
+   ~1
+   ~Season + Impervious + Income,
+   y = opossum_y,
+   occ_covs = season_frame
+ )
+
+summary(m3)
+```
+
+We see $\Psi$ - $\theta$ is an even higher positive value, **1.957**.
+
+### Comparing models
+We can use the build-in function `compare_models` to generate AIC values to determine the best fit model.
+
+```R
+# Comparing models
+aic_results <- compare_models(
+  list(m1, m2,m3),
+  digits = 2
+)
+
+aic_results
+```
+
+It appears that the temporal model best explaines our data. If you are interested in model averaging if the AIC values are very close (like we see here), you could also consider model averaging. This is done by ...MORE HERE
+
+```R
+# To model average, get the parameters in each model,
+# and set up a binary matrix to denote if they were present or not in that model.
+
+model_list <- list(
+  null = m1,
+  spatial = m2,
+  temp = m3
+)
+
+# get only the model parameters 
+parms <- lapply(
+  model_list,
+  function(x){
+    x@estimates$parameter
+  }
+)
+
+# select only unique parameters
+all_parms <- unique(
+  unlist(
+    parms
+  )
+)
+
+# make an empty matrix
+parm_matrix <- matrix(
+  0,
+  ncol = length(
+    all_parms
+  ),
+  nrow = length(
+    model_list
+  )
+)
+colnames(parm_matrix) <- all_parms
+
+# Add '1's to models which have parameter present
+for(i in 1:nrow(parm_matrix)){
+  parm_matrix[i, parms[[i]]] <- 1
+}
+
+# calculate overall weight for each parameter. The easiest
+#  way to do this is to make a weight matrix.
+weight_matrix <- matrix(
+  aic_results$AICwt,
+  nrow = length(model_list),
+  ncol = length(all_parms)
+)
+
+parm_weight <- colSums(
+  parm_matrix * weight_matrix
+)
+
+#  We are going to take samples from the parameters (which
+#  is the same thing we do to make predictions
+#  via autoOcc::predict). To do that, we need
+#  to get the variance covariance matrix
+#  for each model.
+
+cov_mat <- lapply(
+  model_list,
+  vcov
+)
+
+# and now the estimates (assuming you are not
+# using any offsets in the model for this).
+
+ests <- lapply(
+  model_list,
+  function(x) x@estimates$Est
+)
+
+# do 5000 samples for each parameter.
+mvn_samps <- vector(
+  "list",
+  length = length(model_list)
+)
+nsim = 5000
+set.seed(465)
+for(i in 1:length(mvn_samps)){
+  mvn_samps[[i]] <- mvtnorm::rmvnorm(
+    nsim,
+    mean = ests[[i]],
+    sigma = cov_mat[[i]],
+    method = "svd"
+  )
+  colnames(mvn_samps[[i]]) <- parms[[i]]
+}
+
+# do model averaging for each parameter
+avg_parm <- data.frame(
+  parameter = all_parms,
+  est = NA,
+  lower = NA,
+  upper = NA
+)
+
+for(i in 1:nrow(avg_parm)){
+  my_parm <- avg_parm$parameter[i]
+  which_models <- which(
+    parm_matrix[,i] == 1
+  )
+  
+  weights <- weight_matrix[
+    which_models,i
+  ] * parm_matrix[
+    which_models,i
+  ]
+
+  # get beta terms
+  beta_mat <- matrix(
+    NA,
+    ncol = length(which_models),
+    nrow = nsim
+  )
+
+  # multiply weight across columns while we do this
+  for(j in 1:ncol(beta_mat)){
+    beta_mat[,j] <- mvn_samps[[which_models[j]]][,my_parm] *
+      weights[j]
+  }
+
+  # sum each row
+  beta_mat <- rowSums(beta_mat)
+  
+  # divide by overall weight
+  beta_mat <- beta_mat / parm_weight[i]
+  
+  # summarise
+  avg_parm$est[i] <- median(beta_mat)
+  avg_parm$lower[i] <- quantile(
+    beta_mat,
+    0.025
+  )
+  avg_parm$upper[i] <- quantile(
+    beta_mat,
+    0.975
+  )
+  
+}
+
+avg_parm
+```
+
+### Next steps
+Now we must backtranform all of our estimates on an occupancy scale which will fall between 0 and 1. We can do this with the `predict` function (see below).
 
 <a name="plots"></a>
 
 ## 4. Predicting & plotting model outputs
 ### null model (no covariates)
-Because the null model does not consider any covariates, we can use the `predict` function to just estimate the intercept
+Because the null model does not consider any covariates, we will only use the `predict` function to estimate the intercept.
 
 ```R
 # expected occupancy
@@ -211,7 +402,6 @@ Because the null model does not consider any covariates, we can use the `predict
     m1, 
     type = "rho"))
 ```
-
 
 ### spatial model (impervious cover & income)
 
