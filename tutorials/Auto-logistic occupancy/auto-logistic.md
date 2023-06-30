@@ -229,7 +229,7 @@ We can use the build-in function `compare_models` to generate AIC values to dete
 ```R
 # Comparing models
 aic_results <- compare_models(
-  list(m1, m2,m3),
+  list(m1,m2,m3),
   digits = 2
 )
 
@@ -414,20 +414,8 @@ Because the null model does not consider any covariates, we will only use the `p
     type = "rho"))
 ```
 
-For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\Rho$ = .53 (95%CI: 0.48, 0.57)**
+For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\Rho$ = .53 (95%CI: 0.48, 0.57)**.
 
 ### spatial model (impervious cover & income)
 
 
-
-
-We can also use the function `compare_models` in `autoOcc` package to compare our models.
-
-```R
-aic_results <- compare_models(
-list(m1, m2, m3),
-digits = 2
-)
-
-aic_results
-```
