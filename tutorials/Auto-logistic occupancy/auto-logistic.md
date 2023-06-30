@@ -26,7 +26,7 @@ Though static occupancy models can be a useful tool when studying species ecolog
 <a name="formatting"></a>
 
 ## 2. Formatting data for an Autologistic model
-For this example, we will use data collected by the UWIN Chicago. We will specifically look at changes in Virginia opossum occupancy across four seasons using the package `autoOcc`. Like a static occupancy model, we will need a column for 'sites' and 'visits' (or 'occasions' if data is collapsed). We will also need a new column which describes the temporal sampling period, in this case 'season'. 
+For this example, we will use data collected by the UWIN Chicago contained within the `autoOcc` package. We will specifically look at changes in Virginia opossum occupancy across four seasons using the package `autoOcc`. Like a static occupancy model, we will need a column for 'sites' and 'visits' (or 'occasions' if data is collapsed). We will also need a new column which describes the temporal sampling period, in this case 'season'. 
 
 | season  | site | occ_1 | occ... | occ_J |
 |---------|------|-------|--------|-------|
@@ -52,13 +52,13 @@ library(autoOcc)
 
 # Set your local working directory and load in data
 setwd()
-load(file='opossum_det_hist.rda') 
-load(file='opossum_covariates.rda') 
+data("opossum_det_hist")
+data("opossum_covariates") 
 
 # examine data
 head(opossum_det_hist) 
 ```
-The package `autoOcc` is built similarly to `unmarked` in which we feed our sampling data into a function `format_y()` (similar to `unmarkedFrameOccu` in `unmarked`). 
+The package `autoOcc` is built similarly to `unmarked` in which we feed our sample data into a function `format_y()` (similar to `unmarkedFrameOccu` in `unmarked`). 
 
 Unlike covariate data, site data can be missing within seasons. For example, Season1 may include sites a,b,c but Season2 may only include sites a,c. The function `format_y()` will account for these missing data and fill the array with NA's. To use this function we need: `x`, `site_column`, `time_column`, and `history_columns`. Be mindful to order your seasons properly before feeding into the function. Data can be input by column headers or by column numbers
 
@@ -88,21 +88,23 @@ head(opossum_y[,,1])
 head(opossum_y[,1,])
 ```
 How about covariate data? With this model we can consider site, detection, or temporal covariates (here seasonal). There are two ways to format covariate data, as a date.frame or named list. A data.frame can be used if there **are no temporal covariates**. A names list is necessary when temporal covariates are present. As a reminder, a named list is simply a list with names to access elements of the list. For example: 
+
 ```R
 x <- list(m = matrix(1:6, nrow = 2),
           l = letters[1:8],
           n = c(1:10))
 ```
-Let's first load in some spatial covariates (site-specific) and check that these data align with the output of `format_y()`
+
+Let's examine our spatial covariates (site-specific) and check that these data align with the output of `format_y()`
 
 ```R
-load(file='opossum_covariates.rda') 
-
 opossum_covariates$Site
 dimnames(opossum_y)[[1]]
 all(opossum_covariates$Site == dimnames(opossum_y)[[1]])
 ```
-And we can also examine their histograms to see if we should scale all covariates
+
+And we can also look at their histograms to see if we should scale all covariates
+
 ```R
 hist(opossum_covariates$Building_age)
 hist(opossum_covariates$Impervious)
@@ -144,13 +146,13 @@ cov_scaled <- as.data.frame(
   )
 )
 ```
+
 As we've done with static occupancy, we will input our covariate data into a data.frame, in this case using the `auto_occ()` function. Then we are ready to fit a new model. 
 
 ```R
-# we need to drop the sites before inputting data into auto_occ()
+# we need to drop the sites column before inputting data into auto_occ()
 cov_scaled = cov_scaled %>% select(-Site)
 ```
-
 
 <a name="models"></a>
 
@@ -159,8 +161,8 @@ Now we are ready to fit some autologistic models using `auto_occ()`! The formula
 
 We will fit 3 models, one for a null hypothesis, one with spatial covariates, and another that includes a temporal covariate, 'season' which is categorical. 
 **null** - opossum occupancy is constant across sites <br />
-**habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested  landscapes. 
-**temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likley to hunker down in dens and spend less time foraging/ 
+**habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested landscapes. 
+**temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likley to hunker down in dens and spend less time foraging.
 
 ### null model (no covariates)
 ```R
@@ -187,6 +189,7 @@ m2 <- auto_occ(
 
 summary(m2)
 ```
+Note, we could include the same variables for detection if we believed that inpervious cover and income would reduce the probability of detecting opossum. For this example, we'll keep it simple and only hypothesize about occupancy.
 
 ### temporal model (season)
 MORE HERE
