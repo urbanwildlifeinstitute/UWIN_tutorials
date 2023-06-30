@@ -394,7 +394,7 @@ avg_parm
 ```
 
 ### Next steps
-Now we must backtranform all of our estimates on an occupancy scale which will fall between 0 and 1. We can do this with the `predict` function (see below).
+Now we can backtransform our estimates for occupancy on a scale between 0 and 1. We can do this with the `predict` function (see below).
 
 <a name="plots"></a>
 
@@ -413,6 +413,8 @@ Because the null model does not consider any covariates, we will only use the `p
     m1, 
     type = "rho"))
 ```
+
+For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\Rho$ = .53 (95%CI: 0.48, 0.57)**
 
 ### spatial model (impervious cover & income)
 
