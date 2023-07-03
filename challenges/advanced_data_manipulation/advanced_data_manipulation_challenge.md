@@ -59,7 +59,7 @@ and descriptions of each column header...
 ### Changing column names
 We decided that `Y` and `J` are confusing column names, we keep forgetting what they stand for! Let's update these to be more descriptive names. We will change `Y` to `det_days` and `J` to `cam_days` using `dplyr` functions.
 
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
 
 ```R
 UWIN_data <- rename(UWIN_data, det_days = Y, cam_days = J)
