@@ -461,10 +461,11 @@ opo_income <- predict(
 
 Awesome, our two data.frames `opo_imperv` and `opo_income` should contain three columns: estimate (the occupancy estimate), lower (the lower confidence interval for this estimate), and upper (the upper confidence interval). 
 
-We can use these data.frames along with the clean data we generated to plot our data. 
+We can use these data.frames along with the clean data we generated to plot our data. If you want to save this plot locally and control the size, you can wrap theplotting code in a `png()` function ending with `dev.off()`. Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`.
 
 ```R
 # plot data with basic R functions
+png("plots/opo_imperv_basic.png", height = 700, width = 700)
 plot(
   opo_imperv$estimate ~ imperv$Impervious,
   bty = "l",
@@ -477,34 +478,35 @@ plot(
 )
 lines(opo_imperv$lower ~ imperv$Impervious, lwd = 2, lty = 2)
 lines(opo_imperv$upper ~ imperv$Impervious, lwd = 2, lty = 2)
+dev.off()
 ```
 <p float="center">
   <img src="./plots/opo_imperv_basic.png" alt="Occupancy plot of opossum across impervious cover using plot()" width="500" height="auto" />
 </p>
 
-If you want to save this plot locally and control the size, you can wrap this code in a `png` function ending with `dev.off()`. You can also play around with the color using the package `colourpicker`. You can add multiple colors at a time or delete the extra colors to add one at a time. Once you install the library, simply click **Addins> Colour Picker** on the top of the R console and select any color.
+You can also play around with the color using the package `colourpicker`. You can add multiple colors at a time or delete the extra colors to add one at a time. Once you install the library, simply click **Addins> Colour Picker** on the top of the R console and select any color.
 
 let's try to make this plot again using `ggplot` and `Colour Picker`. To save a ggplot locally, we can use the `ggsave` function.
 
 ```R
 library(colourpicker)
 
-ggsave("plots/opo_imperv_ggplot.tiff", width = 6, height = 6)
+ggsave("plots/opo_imperv_ggplot.jpg", width = 6, height = 6)
 ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) + # we can use colour picker for `fill = `
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
   geom_path(size = 1) + # adds line
   labs(x = "Impervious cover", y = "Occupancy probability") +
-  ggtitle("Opossum Occupancy")+
+  ggtitle("Opossum Occupancy with Impervious Cover")+
   scale_x_continuous(limits = c(20,80)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+        axis.text.x = element_text(size = 12),    
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 18)) 
 ```
 <p float="center">
   <img src="./plots/opo_imperv_ggplot.jpg" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
 </p>
-
-Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`
-
 
 
