@@ -509,5 +509,3 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
 
 Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`
 
-
-
