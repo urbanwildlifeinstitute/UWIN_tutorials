@@ -417,4 +417,22 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 18)) 
 
+# Let's do this whole process again with Income---------------------------------
+
+income_plot <- bind_cols(opo_income, income) %>% 
+  select(-c(Impervious))
+
+ggsave("plots/opo_income_ggplot.jpg", width = 6, height = 6)
+ggplot(income_plot, aes(x = Income, y = estimate)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = c("#D4B282"), alpha = 0.5) +
+  geom_path(size = 1) + # adds line
+  labs(x = "Per Captia Income (US Dollar)", y = "Occupancy probability") +
+  ggtitle("Opossum Occupancy with Income")+
+  scale_x_continuous(limits = c(28000,80000)) +
+  ylim(0,1)+
+  theme_classic()+ # drops gray background and grid
+  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+        axis.text.x = element_text(size = 12),    
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 18)) 
 
