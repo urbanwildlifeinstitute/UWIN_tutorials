@@ -75,7 +75,7 @@ Nice work! We decided we're interested in examining four east coast cities: `atg
   
 Start by creating a new data set `UWIN_east` for these cities which only includes raccoon detections.
   
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
   
 ```R
 # Use the filter function to focus on four cities of interest
@@ -93,7 +93,7 @@ unique(raccoon_east$Species)
 
 Now we want to sum all raccoon detections across all of the sites for each city. Create a new 2-column dataframe called `det_total` which is a count of all raccoon detections for each east coast city
   
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
   
 ```R
 det_city <- raccoon_east %>% 
@@ -105,7 +105,7 @@ det_city <- raccoon_east %>%
 
 Good deal. Let's use this new dataframe to make a bar plot. 
   
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
   
 ```R
 # This can be done using the 'geom_bar' function
@@ -134,7 +134,7 @@ Wow, there is a lot of variability of raccoon detections across these cities! Le
   
 Then create a barplot that plots the detections for each species (on the x-axis) for each City using colors. Hint: see 'Barplot of diet' from the Coding Club Tutorial.
     
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
 
 To determine which species occur in both cities of your choosing, start by filtering down to these cities AND filter to detections `det_days` greater than zero. 
 ```R
