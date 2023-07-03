@@ -501,7 +501,7 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   theme(plot.title=element_text(hjust=0.5)) # centers titles
 ```
 <p float="center">
-  <img src="./plots/opo_imperv_ggplot.tiff" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
+  <img src="./plots/opo_imperv_ggplot.jpg" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
 </p>
 
 Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`
