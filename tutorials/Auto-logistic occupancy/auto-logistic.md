@@ -478,7 +478,6 @@ plot(
 lines(opo_imperv$lower ~ imperv$Impervious, lwd = 2, lty = 2)
 lines(opo_imperv$upper ~ imperv$Impervious, lwd = 2, lty = 2)
 ```
-
 <p float="center">
   <img src="./plots/opo_imperv_basic.png" alt="Occupancy plot of opossum across impervious cover using plot()" width="500" height="auto" />
 </p>
