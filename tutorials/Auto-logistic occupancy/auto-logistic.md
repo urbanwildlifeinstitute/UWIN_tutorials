@@ -417,5 +417,92 @@ Because the null model does not consider any covariates, we will only use the `p
 For our null hypothesis, we estimate **$\Psi$ (occupancy) = 0.59 (95%CI: 0.49, 0.69)** and **$\rho$ (detection) = 0.53 (95%CI: 0.48, 0.57)**.
 
 ### spatial model (impervious cover & income)
-To make predictions for this model, we will generate realistic 'clean' data (to make pretty plots!) for impervious cover and income.  
+To make predictions for this model, we will generate realistic 'clean' data (to make pretty plots!) for impervious cover and income. To do this, we want to examine our actual data to set probable intervals of data. We also need to scale this data since we fed scaled data into our models.
+
+```R
+# look at real data
+summary(opossum_covariates$Impervious)
+summary(opossum_covariates$Income)
+
+# generate new 'clean' data to predict over
+imperv <- data.frame(
+  Impervious = seq(20, 80, 0.5),
+  Income = 0 # we use '0' because the data is scaled, thus the mean is zero.
+)
+
+income <- data.frame(
+  Impervious = 0,
+  Income = seq(28000, 80000, 100)
+)
+
+# scale data
+imperv_scale <- imperv %>% 
+  mutate(Impervious = scale(Impervious))
+
+income_scale <- income %>% 
+  mutate(Income = scale(Income))
+```
+
+Now we are ready to predict an output using our spatial model (m2) and clean dataset.
+
+```R
+opo_imperv <- predict(
+  object = m2,
+  type = "psi",
+  newdata = imperv_scale
+)
+
+opo_income <- predict(
+  object = m2,
+  type = "psi",
+  newdata = income_scale
+)
+```
+
+Awesome, our two data.frames `opo_imperv` and `opo_income` should contain three columns: estimate (the occupancy estimate), lower (the lower confidence interval for this estimate), and upper (the upper confidence interval). 
+
+We can use these data.frames along with the clean data we generated to plot our data. 
+
+```R
+# plot data with basic R functions
+plot(
+  opo_imperv$estimate ~ imperv$Impervious,
+  bty = "l",
+  type = "l",
+  las = 1,
+  ylab = "Occupancy",
+  xlab= "Impervious Cover (%)",
+  ylim = c(0,1),
+  lwd = 3
+)
+lines(opo_imperv$lower ~ imperv$Impervious, lwd = 2, lty = 2)
+lines(opo_imperv$upper ~ imperv$Impervious, lwd = 2, lty = 2)
+
+```
+If you want to save this plot locally and control the size, you can wrap this code in a `png` function. You can also play around with the color using the package `colourpicker`. You can add multiple colors at a time or delete the extra colors to add one at a time. Once you install the library, simply click **Addins> Colour Picker** on the top of the R console and select any color.
+
+let's try to make this plot again using `ggplot` and our new functions.
+
+```R
+library(colourpicker)
+
+# change size
+png("opo_imperv_ggplot.png", height = 700, width = 700)
+
+ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
+  geom_path(size = 1) + # adds line
+  labs(x = "Impervious cover", y = "Occupancy probability") +
+  ggtitle("Opossum Occupancy")+
+  scale_x_continuous(limits = c(20,80)) +
+  ylim(0,1)+
+  theme_classic()+ # drops gray background and grid
+  theme(plot.title=element_text(hjust=0.5)) # centers titles
+
+# this tells R that your plotting is done
+dev.off()
+```
+
+Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`
+
 
