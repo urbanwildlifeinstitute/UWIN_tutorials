@@ -509,4 +509,31 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   <img src="./plots/opo_imperv_ggplot.jpg" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
 </p>
 
+## Challenge 1. 
+To plot opossum occupancy across income, we need to repeat this plotting process over. Try the same steps as above with the income dataset. 
 
+<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+
+```R
+income_plot <- bind_cols(opo_income, income) %>% 
+  select(-c(Impervious))
+
+ggsave("plots/opo_income_ggplot.jpg", width = 6, height = 6)
+ggplot(income_plot, aes(x = Income, y = estimate)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = c("#D4B282"), alpha = 0.5) +
+  geom_path(size = 1) + # adds line
+  labs(x = "Per Captia Income (US Dollar)", y = "Occupancy probability") +
+  ggtitle("Opossum Occupancy with Income")+
+  scale_x_continuous(limits = c(28000,80000)) +
+  ylim(0,1)+
+  theme_classic()+ # drops gray background and grid
+  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+        axis.text.x = element_text(size = 12),    
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 18)) 
+```
+<p float="center">
+  <img src="./plots/opo_income_ggplot.jpg" alt="Occupancy plot of opossum across income using ggplot()" width="500" height="auto" />
+</p>
+
+</details>
