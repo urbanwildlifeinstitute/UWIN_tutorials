@@ -436,3 +436,21 @@ ggplot(income_plot, aes(x = Income, y = estimate)) +
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 18)) 
 
+# Seasonal model----------------------------------------------------------------
+# Make a data.frame based on actual data
+unique(season_frame$Season)
+
+# QUESTION FOR MASON, b/c we never 'transformed' seasonal data, is the 'Est' the actual occ estimate?? Confused on this
+
+season <- m3@estimates[1:4,] 
+season[,1] <- c("January", "April", "July", "October")
+
+ggplot(data = season, aes(x = parameter, y = Est)) +
+  xlab("\nMonth in 2019") +
+  ylab("Opossum ccupancy\n")+
+  scale_y_continuous(limits = c(-2,2)) +
+  geom_point(data = season, aes(x=parameter, y = Est))+
+  geom_errorbar(aes(ymin=lower, ymax=upper), size = 1, width=.2, color= "#094C59") +
+  geom_point(color= "#094C59", size = 6, shape = 19)
+
+
