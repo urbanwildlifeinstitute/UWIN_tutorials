@@ -489,16 +489,19 @@ let's try to make this plot again using `ggplot` and `Colour Picker`. To save a 
 ```R
 library(colourpicker)
 
-ggsave("plots/opo_imperv_ggplot.tiff", width = 6, height = 6)
+ggsave("plots/opo_imperv_ggplot.jpg", width = 6, height = 6)
 ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) + # we can use colour picker for `fill = `
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
   geom_path(size = 1) + # adds line
   labs(x = "Impervious cover", y = "Occupancy probability") +
-  ggtitle("Opossum Occupancy")+
+  ggtitle("Opossum Occupancy with Impervious Cover")+
   scale_x_continuous(limits = c(20,80)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+        axis.text.x = element_text(size = 12),    
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 18)) 
 ```
 <p float="center">
   <img src="./plots/opo_imperv_ggplot.jpg" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
