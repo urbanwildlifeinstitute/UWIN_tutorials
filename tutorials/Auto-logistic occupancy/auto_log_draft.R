@@ -408,10 +408,13 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
   geom_path(size = 1) + # adds line
   labs(x = "Impervious cover", y = "Occupancy probability") +
-  ggtitle("Opossum Occupancy")+
+  ggtitle("Opossum Occupancy with Impervious Cover")+
   scale_x_continuous(limits = c(20,80)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+        axis.text.x = element_text(size = 12),    
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 18)) 
 
 
