@@ -512,7 +512,7 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
 ## Challenge 1. 
 To plot opossum occupancy across income, we need to repeat this plotting process over. Try the same steps as above with the income dataset. 
 
-<details closed><summary><a href="https://hello.ca">Solution</a></summary>
+<details closed><summary>Solution</a></summary>
 
 ```R
 income_plot <- bind_cols(opo_income, income) %>% 
