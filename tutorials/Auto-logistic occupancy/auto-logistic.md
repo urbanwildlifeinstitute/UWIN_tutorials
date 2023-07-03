@@ -394,7 +394,7 @@ avg_parm
 ```
 
 ### Next steps
-Now we can backtransform our estimates for occupancy on a scale between 0 and 1. We can do this with the `predict` function (see below).
+Now we can backtransform our estimates for occupancy on a scale of 0 to 1 (because we are working with probabilities. We can do this with the `predict` function (see below).
 
 <a name="plots"></a>
 
@@ -417,7 +417,7 @@ Because the null model does not consider any covariates, we will only use the `p
 For our null hypothesis, we estimate **$\Psi$ (occupancy) = 0.59 (95%CI: 0.49, 0.69)** and **$\rho$ (detection) = 0.53 (95%CI: 0.48, 0.57)**.
 
 ### spatial model (impervious cover & income)
-To make predictions for this model, we will generate realistic 'clean' data (to make pretty plots!) for impervious cover and income. To do this, we want to examine our actual data to set probable intervals of data. We also need to scale this data since we fed scaled data into our models.
+To make predictions for our spatial model, we will generate realistic 'clean' data (to make pretty plots!) for impervious cover and income. To do this, we want to examine our actual data to set probable intervals of data. We also need to scale this data since we fed scaled data into our models.
 
 ```R
 # look at real data
@@ -477,20 +477,21 @@ plot(
 )
 lines(opo_imperv$lower ~ imperv$Impervious, lwd = 2, lty = 2)
 lines(opo_imperv$upper ~ imperv$Impervious, lwd = 2, lty = 2)
-
 ```
-If you want to save this plot locally and control the size, you can wrap this code in a `png` function. You can also play around with the color using the package `colourpicker`. You can add multiple colors at a time or delete the extra colors to add one at a time. Once you install the library, simply click **Addins> Colour Picker** on the top of the R console and select any color.
+<p float="center">
+  <img src="./plots/opo_imperv_basic.png" alt="Occupancy plot of opossum across impervious cover using plot()" width="500" height="auto" />
+</p>
 
-let's try to make this plot again using `ggplot` and our new functions.
+If you want to save this plot locally and control the size, you can wrap this code in a `png` function ending with `dev.off()`. You can also play around with the color using the package `colourpicker`. You can add multiple colors at a time or delete the extra colors to add one at a time. Once you install the library, simply click **Addins> Colour Picker** on the top of the R console and select any color.
+
+let's try to make this plot again using `ggplot` and `Colour Picker`. To save a ggplot locally, we can use the `ggsave` function.
 
 ```R
 library(colourpicker)
 
-# change size
-png("opo_imperv_ggplot.png", height = 700, width = 700)
-
+ggsave("plots/opo_imperv_ggplot.tiff", width = 6, height = 6)
 ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) + # we can use colour picker for `fill = `
   geom_path(size = 1) + # adds line
   labs(x = "Impervious cover", y = "Occupancy probability") +
   ggtitle("Opossum Occupancy")+
@@ -498,10 +499,10 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
   theme(plot.title=element_text(hjust=0.5)) # centers titles
-
-# this tells R that your plotting is done
-dev.off()
 ```
+<p float="center">
+  <img src="./plots/opo_imperv_ggplot.tiff" alt="Occupancy plot of opossum across impervious cover using ggplot()" width="500" height="auto" />
+</p>
 
 Note this won't plot within R, but will save to your local working directory which you can check with `get.wd()`
 
