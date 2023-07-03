@@ -236,7 +236,7 @@ aic_results <- compare_models(
 aic_results
 ```
 
-It appears that the temporal model best explaines our data. 
+It appears that the temporal model best explaines our data! Normally, we would only continue to examine and plot our best fit model, m3, but for training, we will walk through all the models.
 
 #### Model averaging
 It is possible to model average if AIC values are similar, however we recommend using this method with caution. 
@@ -414,8 +414,8 @@ Because the null model does not consider any covariates, we will only use the `p
     type = "rho"))
 ```
 
-For our null hypothesis, we estimate **$\Psi$ = .59 (95%CI: 0.49, 0.69)** and **$\rho$ = .53 (95%CI: 0.48, 0.57)**.
+For our null hypothesis, we estimate **$\Psi$ (occupancy) = 0.59 (95%CI: 0.49, 0.69)** and **$\rho$ (detection) = 0.53 (95%CI: 0.48, 0.57)**.
 
 ### spatial model (impervious cover & income)
-
+To make predictions for this model, we will generate realistic 'clean' data (to make pretty plots!) for impervious cover and income.  
 
