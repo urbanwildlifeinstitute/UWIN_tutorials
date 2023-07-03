@@ -368,7 +368,7 @@ opo_income <- predict(
 )
 
 # Now we are ready to plot!
-png("opo_imperv_basic.png", height = 700, width = 700)
+png("plots/opo_imperv_basic.png", height = 700, width = 700)
 plot(
   opo_imperv$estimate ~ imperv$Impervious,
   bty = "l",
@@ -403,8 +403,7 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
 library(colourpicker)
 
 # go to your 'Addins' tab and select `colourpicker`. 
-
-png("opo_imperv_ggplot.png", height = 700, width = 700)
+ggsave("plots/opo_imperv_ggplot.tiff", width = 6, height = 6)
 ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
   geom_path(size = 1) + # adds line
@@ -414,5 +413,5 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
   theme(plot.title=element_text(hjust=0.5)) # centers titles
-dev.off()
+
 
