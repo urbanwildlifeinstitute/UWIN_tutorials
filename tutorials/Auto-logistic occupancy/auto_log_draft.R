@@ -403,7 +403,7 @@ ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
 library(colourpicker)
 
 # go to your 'Addins' tab and select `colourpicker`. 
-ggsave("plots/opo_imperv_ggplot.tiff", width = 6, height = 6)
+ggsave("plots/opo_imperv_ggplot.jpg", width = 6, height = 6)
 ggplot(imperv_plot, aes(x = Impervious, y = estimate)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
   geom_path(size = 1) + # adds line
