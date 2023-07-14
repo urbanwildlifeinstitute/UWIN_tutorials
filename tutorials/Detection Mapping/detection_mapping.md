@@ -1,5 +1,5 @@
 
-# UWIN Tutorial: Detection Mapping
+# UWIN Tutorial: Spatial Mapping - Detections
 *Created by Kimberly Rivera - last updated July 2023 by Kimberly Rivera*
 
 This tutorial is aimed at folks interested and new to spatial mapping, or as refesher for those already familiar. 
@@ -12,7 +12,7 @@ This tutorial is aimed at folks interested and new to spatial mapping, or as ref
 
 #### <a href="#spatial"> 1. Why do we need spatial data?</a>
 
-#### <a href="#formatting"> 2. Reading & Formatting data</a>
+#### <a href="#formatting"> 2. Reading and formatting data</a>
 
 #### <a href="#plots"> 3. Plotting spatial data</a>
 
