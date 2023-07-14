@@ -20,7 +20,7 @@ This tutorial is aimed at folks interested and new to spatial mapping, or as ref
 <a name="spatial"></a>
 
 ## 1.  Why do we need spatial data?
-A key component in studying and managing wildlife is to better understand wildife habitat, or where species are found in space and time. Thus, being able to incorperate spatial data into statistical and reporting tools is crucial. Though spatial information is increadibly useful when stored as metadata and implemented in analyses, it is an incredibly powerful tool for mapping and storytelling. 
+The study of species habitat is a key component in understanding and managing wildlife. Thus, being able to collect, process, and manipulate spatial data is cruciual to this field. Though spatial information is increadibly useful to inform hypotheses and statistical analyses, it is also an incredibly powerful tool for storytelling via mapping. 
 
 
 <a name="formatting"></a>
