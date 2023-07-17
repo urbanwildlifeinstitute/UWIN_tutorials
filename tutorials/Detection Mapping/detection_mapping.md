@@ -123,6 +123,9 @@ coyote_sum <- coyote_det_2021 %>%
 # map coyote detections with a different color
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
+
+# if you want to save your ggplot locally
+ggsave("coyote_map.jpg", width = 6, height = 6) # run this function after your desired plot
 ```
  <p float="left">
   <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
@@ -130,7 +133,55 @@ ggmap::ggmap(chicago) +
 
 </details>
 
+We can also map multiple species at once. Since plotting multiple species may become crowded or overwhelming to interpret as a viewer, it's helpful to know why and for who you are making these maps. Depending on your desired 'story' you may want to map certain groups of species together or separatly.
 
+Perhaps we are interested in the co-occurence of domestic dogs with raccoon and coyote. We hypothesize that dogs are more likley to co-occur with raccoons then with coyotes based on previous research. We will certainly want to explore this hypothesis with statical models, such as a multi-species occupancy model, but we may also want to visualize our data to inform our hypotheses or supplement our findings in reports or manuscripts. Let's plot these three species together: raccoon, coyote, and dogs.
+
+```R
+carnivore_det_2021 <- sp_data_2021 %>% 
+  filter(commonName == "Raccoon" | commonName == "Coyote" | commonName == "Domestic dog")
+
+# count detections by location
+carnivore_sum <- carnivore_det_2021 %>% 
+  group_by(locationAbbr) %>% 
+  mutate(detections = n()) %>% 
+  ungroup() %>% 
+  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
+
+# map species these together
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             stroke = 1, data = carnivore_sum, shape = 21)
+ggsave("carn_map.jpg", width = 6, height = 6)
+```
+ <p float="left">
+  <img src="./plots/carn_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+</p>
+
+If we look closely at our map, we can see that all the raccoon detections appear to be visable but, by referencing the last map, it seems we are missing coyote detections. These data are not actually missing, but raccoon detections are overlapping the other species detections and overwritting them as those detections are plotted last.
+
+We can fix this by changing the plotting shapes and by adding a bit of randomness to their locations using the `jitter()` function. We can also tidy up our map using a few additional ggplot commands.
+
+```R
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, 
+             position=position_jitter(h=0.01,w=0.01)) + # moved points to be slightly off-center
+  scale_shape_manual(values= c(21, 22, 23))+ # assigns each species a unique shape
+  ggtitle("Chicago, IL USA Detections 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(color = "Species")+ # to edit labels on color/shape legend title
+  labs(shape = "Species")+
+  labs(size = "Detections") # to edit label on detections legend title
+ggsave("species_map_final.jpg", width = 6, height = 6)
+```
+ <p float="left">
+  <img src="./plots/species_map_final.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+</p>
+
+If we want to instead focus our attend on a specific area, we can adjust out bounding box and map level zoom.
 
 
 
