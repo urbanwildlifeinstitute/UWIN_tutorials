@@ -104,7 +104,31 @@ ggmap::ggmap(chicago) +
   <img src="./plots/raccoon_map.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
+Try this again for coyote detections. Make this plot using another color. 
 
+<details closed><summary>Solution</a></summary>
+
+```R
+# subset detections of coyotes
+coyote_det_2021 <- sp_data_2021 %>% 
+  filter(commonName == "Coyote")
+
+# count detections by location
+coyote_sum <- coyote_det_2021 %>% 
+  group_by(locationAbbr) %>% 
+  mutate(detections = n()) %>% 
+  ungroup() %>% 
+  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat)
+
+# map coyote detections with a different color
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
+```
+ <p float="left">
+  <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+</p>
+
+</details>
 
 
 
