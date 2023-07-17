@@ -79,7 +79,7 @@ coyote_sum <- coyote_det_2021 %>%
   ungroup() %>% 
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
-ggsave("coyote_map.tiff", width = 6, height = 6)
+ggsave("coyote_map.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
 
@@ -96,6 +96,7 @@ carnivore_sum <- carnivore_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 # lets map these together
+ggsave("carn_map.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
              stroke = 1, data = carnivore_sum, shape = 21)
@@ -108,7 +109,7 @@ ggmap::ggmap(chicago) +
 # we can fix this by changing rhe shapes and add a bit of randomness to their location
 # using the jitter() function
 
-ggsave("species_map.tiff", width = 6, height = 6)
+ggsave("species_map.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
@@ -116,7 +117,7 @@ ggmap::ggmap(chicago) +
   scale_shape_manual(values= c(21, 22, 23))  
 
 # We can also clean up our labels and axes 
-ggsave("species_map_final.tiff", width = 6, height = 6)
+ggsave("species_map_final.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
@@ -139,7 +140,7 @@ lincoln_park <- get_stamenmap(bbox = c(left = -87.7, bottom = 41.9,
                                   right = -87.6, top = 42.0), 
                          zoom = 12)
 
-ggsave("species_map_LP.tiff", width = 6, height = 6)
+ggsave("species_map_LP.jpg", width = 6, height = 6)
 ggmap::ggmap(lincoln_park) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
@@ -161,7 +162,7 @@ montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950,
                                        right = -87.620, top = 41.975), 
                               zoom = 14)
 
-ggsave("species_map_montrose.tiff", width = 6, height = 6)
+ggsave("species_map_montrose.jpg", width = 6, height = 6)
 ggmap::ggmap(montrose) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
@@ -185,7 +186,7 @@ sp_rich <- sp_data_2021 %>%
   distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
 
 # mapping alpha diversity
-ggsave("alpha_diversity.tiff", width = 6, height = 6)
+ggsave("alpha_diversity.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = sp_rich, 
              position=position_jitter(h=0.01,w=0.01)) +
@@ -211,7 +212,7 @@ carn_rich <- native_carn %>%
   distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
 
 # mapping alpha diversity for native carnivores
-ggsave("carn_alpha_diversity.tiff", width = 6, height = 6)
+ggsave("carn_alpha_diversity.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = carn_rich) +
   # scale_shape_manual(values= c(21, 22, 23))+
