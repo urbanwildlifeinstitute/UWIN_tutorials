@@ -93,13 +93,16 @@ chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55,
                          zoom = 11)
 ```
 
-The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. We are plotting our data using latitude and longitude which is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
+The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. Though we are plotting our data using latitude and longitude, it is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
 
 ```R
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
 ```
 
+<p float="left">
+  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="500" height="auto" />
+</p>
 
 
 
