@@ -2,6 +2,7 @@
 # https://stackoverflow.com/questions/34901615/plotting-points-on-a-map-with-size-depending-on-category-count
 # https://ggplot2-book.org/maps.html
 # https://stackoverflow.com/questions/47955292/visualizing-two-or-more-data-points-where-they-overlap-ggplot-r
+# https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.05787
 
 setwd("E:/GitHub/UWIN_tutorials/tutorials/Detection Mapping")
 
@@ -9,9 +10,9 @@ setwd("E:/GitHub/UWIN_tutorials/tutorials/Detection Mapping")
 library(readr)
 library(tidyr)
 library(dplyr)
-library(broom)
+#library(broom)
 library(ggplot2)
-library(ggExtra)
+#library(ggExtra)
 library(maps)
 library(RColorBrewer)
 
@@ -49,19 +50,20 @@ raccoon_sum <- raccoon_det_2021 %>%
 
 
 library(ggmap)
-library(osmdata)
+#library(osmdata)
 
 #chicago = get_map(location = getbb("chicago"), zoom = 10, scale = 1, source = "stamen")
 # this may take a few minutes ot load 
 #my_map = ggmap::ggmap(chicago)
 
 #devtools::install_github("dkahle/ggmap", ref = "tidyup")
-library(ggmap)
+#https://www.r-bloggers.com/2018/10/getting-started-stamen-maps-with-ggmap/
+# http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
 ?get_stamenmap
 chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
                                   right = -87.4, top = 42.3), 
                          zoom = 11)
-ggsave("raccoon_map.tiff", width = 6, height = 6)
+ggsave("raccoon_map.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
 
@@ -79,7 +81,7 @@ coyote_sum <- coyote_det_2021 %>%
 
 ggsave("coyote_map.tiff", width = 6, height = 6)
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum)
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
 
 
 # let's try this again with three species of your choosing in 2021
@@ -225,7 +227,7 @@ ggmap::ggmap(chicago) +
 # species richness (color for zero sp. detections)
 
 
-# Let's do this over a landcover map. For an exmaple, we can use ESA data
+# Let's do this over a landcover map. For an example, we can use ESA data
 # see: 
 # download libraries
 library(devtools)
