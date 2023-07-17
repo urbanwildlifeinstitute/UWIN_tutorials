@@ -125,7 +125,7 @@ ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
 ```
  <p float="left">
-  <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/carn_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
 </p>
 
 </details>
