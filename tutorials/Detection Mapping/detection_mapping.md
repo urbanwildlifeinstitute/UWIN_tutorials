@@ -155,7 +155,7 @@ ggmap::ggmap(chicago) +
 ggsave("carn_map.jpg", width = 6, height = 6)
 ```
  <p float="left">
-  <img src="./plots/carn_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/carn_map.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
 If we look closely at our map, we can see that all the raccoon detections appear to be visable but, by referencing the last map, it seems we are missing coyote detections. These data are not actually missing, but raccoon detections are overlapping the other species detections and overwritting them as those detections are plotted last.
@@ -178,10 +178,84 @@ ggmap::ggmap(chicago) +
 ggsave("species_map_final.jpg", width = 6, height = 6)
 ```
  <p float="left">
-  <img src="./plots/species_map_final.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/species_map_final.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
-If we want to instead focus our attend on a specific area, we can adjust out bounding box and map level zoom.
+If we want to instead focus our attention on a specific area, we can adjust the bounding box and map level zoom.
+
+```R
+# set new extend with a new name
+lincoln_park <- get_stamenmap(bbox = c(left = -87.7, bottom = 41.9, 
+                                  right = -87.6, top = 42.0), 
+                         zoom = 12)
+
+# create map with new extent
+ggmap::ggmap(lincoln_park) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, 
+             position=position_jitter(h=0.0025,w=0.0025)) +
+  scale_shape_manual(values= c(21, 22, 23))+
+  ggtitle("Lincoln Park, IL USA Detections 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(color = "Species")+ # to edit labels on color/shape legend title
+  labs(shape = "Species")+
+  labs(size = "Detections") # to edit label on detections legend title
+```
+ <p float="left">
+  <img src="./plots/species_map_LP.jpg" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
+</p>
+
+We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are reletive to what sites
+
+```R
+montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
+                                       right = -87.620, top = 41.975), 
+                              zoom = 14)
+
+ggmap::ggmap(montrose) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, 
+             position=position_jitter(h=0.001,w=0.001)) +
+  scale_shape_manual(values= c(21, 22, 23))+
+  ggtitle("Montrose, IL USA Detections 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(color = "Species")+ # to edit labels on color/shape legend title
+  labs(shape = "Species")+
+  labs(size = "Detections") # to edit label on detections legend title
+```
+<p float="left">
+  <img src="./plots/species_map_montrose.jpg" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
+</p>
+
+It can be diffcult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago.
+
+```R
+# summarize detections for all wildlife
+sp_rich <- sp_data_2021 %>% 
+  group_by(locationAbbr) %>% # group by location to summarise all species detections
+  mutate(detections = n()) %>% # count the number of detectionsat each site
+  ungroup() %>% # ungroup data to retain additional information like lat/long
+  distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+
+# mapping alpha diversity
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = sp_rich, 
+             position=position_jitter(h=0.01,w=0.01)) +
+ # scale_shape_manual(values= c(21, 22, 23))+
+  ggtitle("Chicago, IL USA Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(size = "Detections") # to edit label on detections legend title
+```
+<p float="left">
+  <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
+</p>
+
 
 
 
