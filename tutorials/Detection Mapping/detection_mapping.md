@@ -101,7 +101,7 @@ ggmap::ggmap(chicago) +
 ```
 
 <p float="left">
-  <img src="./plots/raccoon_map.tiff" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
 
