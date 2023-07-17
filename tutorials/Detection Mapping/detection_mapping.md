@@ -25,7 +25,7 @@ The study of species habitat, or where species are found in space and time, is a
 <a name="formatting"></a>
 
 ## 2. Processing and formatting data
-Some reasons spatial data can be complicated to work with is that is can come in many data types (shapefiles, goesptial images, etc.) with varying information extents (affilited metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [Stamen maps[(http://maps.stamen.com/#watercolor/12/37.7707/-122.3783), accessed via `ggmap()` and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
+Some reasons spatial data can be complicated to work with is that is can come in many data types (shapefiles, goesptial images, etc.) with varying information extents (affilited metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [Stamen maps](http://maps.stamen.com/#watercolor/12/37.7707/-122.3783), accessed via `ggmap()` and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
 
 ```R
 setwd()
@@ -93,7 +93,13 @@ chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55,
                          zoom = 11)
 ```
 
-The `ggmap` package allows us to plot over maps using the ggplot format we have used in previous tutorials. 
+The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. We are plotting our data using latitude and longitude which is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
+
+```R
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
+```
+
 
 
 
