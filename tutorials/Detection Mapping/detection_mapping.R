@@ -221,6 +221,9 @@ ggmap::ggmap(chicago) +
   labs(size = "Detections") # to edit label on detections legend title
 ggsave("carn_alpha_diversity.jpg", width = 6, height = 6)
 
+# we could use same plotting functions to map seasonal detections or diel detections
+# by manipulating our dataset to detections of interest!
+
 # We could also use difference base maps to make this plot. We can use ESA landcover maps as an example----
 
 
@@ -230,12 +233,15 @@ ggsave("carn_alpha_diversity.jpg", width = 6, height = 6)
 # Let's do this over a landcover map. For an example, we can use ESA data
 # see: 
 # download libraries
-library(devtools)
 library(sf)
-library(uwinspatialtools)
-library(raster)
+library(terra)
 library(rgdal)
-library(FedData)
+library(tidyterra)
+library(devtools)
+# library(raster)
+
+# helpful resources
+# https://dieghernan.github.io/tidyterra/reference/geom_spatraster.html#source
 
 # make this data spatial data by assigning the appropriate crs
 sites = sf::st_as_sf(     #sf = spatial tool
@@ -245,35 +251,69 @@ sites = sf::st_as_sf(     #sf = spatial tool
 
 
 # read your raster in
-my_map = raster("E:/GitHub/Partner_Transects/ESA_landcover/Chicago/Chicago_merged.tif") #path to where raster data is
+my_map = rast("E:/GitHub/Partner_Transects/ESA_landcover/Chicago/Chicago_merged.tif") #path to where raster data is
 
 # Transform your site data into data which is cohesive with the ESA raster
 dat <- sf::st_transform(
   sites,
-  crs = projection(my_map)
+  crs = crs(my_map)
 )
 
-crop <- crop(my_map, extent(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
-                              c(-.0,.0,-.0,.0)))
+crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
+                              c(-.05,.05,-.05,.05)))
 
 # crop <- crop(my_map, extent(sf::st_bbox(c(xmin = -88.3, xmax = -87.45, ymin = 41.6, ymax = 42.3)) +
 #                               c(-.0,.0,-.0,.0)))
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
 
-crop_stack <- stack(crop)
-crop_df <- as.data.frame(crop_stack, xy = TRUE) %>% 
-  drop_na()
-
-# need space work around for this
-gc() # garbage collection helps clear up space
+# help files: https://dieghernan.github.io/tidyterra/
+# legend help: chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://worldcover2020.esa.int/data/docs/WorldCover_PUM_V1.1.pdf
+# plot with breaks
 ggplot() +
-  geom_raster(aes(x = x, y = y, fill = Chicago_merged), data = crop_df)+
-  scale_fill_viridis_c() +
-  theme_void() 
+  geom_spatraster(data = crop, aes(fill = Chicago_merged))+
+  facet_wrap(~lyr, ncol = 1)+
+  coord_sf(crs = 4326)
 
-# need to figure this out in base R
-plot(crop)
-points(sf::st_coordinates(dat), col = unique(carnivore_sum$commonName))
+#playing with color pallet 
+ggplot() +
+  geom_spatraster(data = crop)+
+  facet_wrap(~lyr, ncol = 1)+
+  coord_sf(crs = 4326)+
+  scale_fill_whitebox_c(
+  palette = "muted",
+  labels = c("NA","Tree", "Shrubland", "Grassland", "Cropland", "Built",
+             "Bare/ spare vegetation", "Snow and Ice", "Permanent water", "Herbaceous wetlands"),
+  n.breaks = 9,
+  guide = guide_legend(reverse = TRUE))+
+  scale_x_continuous(expand = expansion(0)) + 
+  scale_y_continuous(expand = expansion(0))
 
-plot(carnivore_sum$DD_Long, carnivore_sum$DD_Lat, col = alpha("black", .2), add = TRUE)
+#playing with labels
+m<- c(0,0,0,10,10,1,20,20,2,30,30,3,40,40,4,
+                          50,50,5,60,60,6,80,80,8,90,90,9)
+mat = matrix(m,ncol=3, byrow = TRUE)
+reclass_crop <- classify(crop, mat)
+plot(reclass_crop)
+
+ggplot() +
+  geom_spatraster(data = reclass_crop, aes(fill = Chicago_merged))+
+  facet_wrap(~lyr, ncol = 1)+
+  coord_sf(crs = 4326)
+
+ggplot() +
+  geom_spatraster(data = crop, na.rm = TRUE, aes(fill = Chicago_merged))+
+  facet_wrap(~lyr, ncol = 1)+
+  scale_alpha_manual(
+    values = cols,
+    palette = "muted",
+    aesthetics = c("colour", "fill"),
+    labels = c("NA","Tree", "Grassland", "Cropland", "Built",
+               "Bare/ spare vegetation", "Permanent water", "Herbaceous wetlands"),
+    breaks = c("0","10","30","40","50","60","80", "90"),
+    guide = guide_legend(reverse = TRUE))+
+  coord_sf(crs = 4326)+
+  scale_x_continuous(expand = expansion(0)) + 
+  scale_y_continuous(expand = expansion(0)) 
+
+
