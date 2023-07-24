@@ -80,7 +80,13 @@ raccoon_sum <- raccoon_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) # allows us to retain site level data
 ```
 
-Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. 
+
+<a name="plots"></a>
+
+## 3. Plotting spatial data
+### ggmap
+There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
 
 ```R
 # install libraries
@@ -256,6 +262,7 @@ ggmap::ggmap(chicago) +
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
+### Raster layers
 We can also build these plots with other geospatial layers. Let's use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://worldcover2020.esa.int/data/docs/WorldCover_PUM_V1.1.pdf) for more information.
 
 ```R
