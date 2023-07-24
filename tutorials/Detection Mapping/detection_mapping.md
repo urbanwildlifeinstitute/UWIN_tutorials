@@ -263,7 +263,7 @@ ggmap::ggmap(chicago) +
 </p>
 
 ### Using other raster layers
-We can also build these plots with other geospatial layers. Let's use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://worldcover2020.esa.int/data/docs/WorldCover_PUM_V1.1.pdf) for more information.
+We can also build these plots with other geospatial layers. Let's use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
 
 ```R
 # load in libraries
