@@ -256,7 +256,49 @@ ggmap::ggmap(chicago) +
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
+We can also build these plots with other geospatial layers. Let's use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://worldcover2020.esa.int/data/docs/WorldCover_PUM_V1.1.pdf) for more information.
 
+```R
+# load in libraries
+library(sf)
+library(terra)
+library(rgdal)
+library(tidyterra)
+library(devtools)
 
+# convert latitude/longitude data into spatial data by assigning the appropriate crs
+sites = sf::st_as_sf(     #sf = spatial tool
+  sp_data,
+  coords = c("DD_Long", "DD_Lat"), # note these labels coordinate with labeling in your csv
+  crs = 4326)                          # if you used lat/long in your .csv, use that here.                       
+```
 
+Above we are telling R that sp_data contains spatial data in DD_long and DD_lat. Making these data spatial will allow us to set our mapping layer to the appropriate CRS, or coordinator reference system to further manipulate the map. This is helpful if you are reading in a large map that needs to be cropped to a specific region. 
 
+```R
+# read in raster layer
+my_map = rast("/Chicago_merged.tif") #path to where raster layer is
+
+# Transform your site data into data which is cohesive with the ESA raster
+dat <- sf::st_transform(
+  sites,
+  crs = crs(my_map)
+)
+
+# Crop map around buffer area of sites
+crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
+                              c(-.05,.05,-.05,.05)))
+
+# Plot cropped map and points
+plot(crop)
+points(sf::st_coordinates(dat), pch = 19)
+
+```
+
+We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which can be in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
+
+```R
+ggplot() +
+  geom_spatraster(data = crop, aes(fill = Chicago_merged))+
+  ggtitle("Chicago, IL USA Land cover")
+```
