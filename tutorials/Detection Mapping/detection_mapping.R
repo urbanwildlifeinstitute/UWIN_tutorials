@@ -262,8 +262,10 @@ dat <- sf::st_transform(
 crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
                               c(-.05,.05,-.05,.05)))
 
+png("plots/chi_sites.png", height = 700, width = 700)
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
+dev.off()
 
 # help files: https://dieghernan.github.io/tidyterra/
 # legend help: chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://worldcover2020.esa.int/data/docs/WorldCover_PUM_V1.1.pdf
