@@ -213,7 +213,7 @@ ggmap::ggmap(lincoln_park) +
   <img src="./plots/species_map_LP.jpg" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
 </p>
 
-We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are reletive to what sites
+We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are relative to what sites
 
 ```R
 montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
