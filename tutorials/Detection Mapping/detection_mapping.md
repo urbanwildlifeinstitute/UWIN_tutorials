@@ -237,7 +237,7 @@ ggmap::ggmap(montrose) +
   <img src="./plots/species_map_montrose.jpg" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
 </p>
 
-It can be diffcult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago.
+It can be diffcult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago in 2021.
 
 ```R
 # summarize detections for all wildlife
