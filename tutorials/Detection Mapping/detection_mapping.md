@@ -80,7 +80,13 @@ raccoon_sum <- raccoon_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) # allows us to retain site level data
 ```
 
-Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. 
+
+<a name="plots"></a>
+
+## 3. Plotting spatial data
+### Using ggmap
+There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
 
 ```R
 # install libraries
@@ -207,7 +213,7 @@ ggmap::ggmap(lincoln_park) +
   <img src="./plots/species_map_LP.jpg" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
 </p>
 
-We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are reletive to what sites
+We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are relative to what sites
 
 ```R
 montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
@@ -231,7 +237,7 @@ ggmap::ggmap(montrose) +
   <img src="./plots/species_map_montrose.jpg" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
 </p>
 
-It can be diffcult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago.
+It can be diffcult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago in 2021.
 
 ```R
 # summarize detections for all wildlife
@@ -256,7 +262,50 @@ ggmap::ggmap(chicago) +
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
+### Using other raster layers
+We can also build these plots with other geospatial layers. We're using the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
 
+```R
+# load in libraries
+library(sf)
+library(terra)
+library(rgdal)
+library(tidyterra)
+library(devtools)
 
+# convert latitude/longitude data into spatial data by assigning the appropriate crs
+sites = sf::st_as_sf(     #sf = spatial tool
+  sp_data,
+  coords = c("DD_Long", "DD_Lat"), # note these labels coordinate with labeling in your csv
+  crs = 4326)                          # if you used lat/long in your .csv, use that here.                       
+```
 
+Above we are telling R that sp_data contains spatial data in DD_long and DD_lat. Classifying these data as 'spatial' will allow us to set our mapping layer to the appropriate CRS, or coordinator reference system, to further manipulate the map. This is helpful if you are reading in a large map that needs to be cropped to a specific region. 
 
+```R
+# read in raster layer
+my_map = rast("/Chicago_merged.tif") #path to where raster layer is
+
+# Transform your site data into data which is cohesive with the ESA raster
+dat <- sf::st_transform(
+  sites,
+  crs = crs(my_map)
+)
+
+# Crop map around buffer area of sites
+crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
+                              c(-.05,.05,-.05,.05)))
+
+# Plot cropped map and points
+plot(crop)
+points(sf::st_coordinates(dat), pch = 19)
+
+```
+
+We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which can be in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` (done above) which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
+
+```R
+ggplot() +
+  geom_spatraster(data = crop, aes(fill = Chicago_merged))+
+  ggtitle("Chicago, IL USA Land cover")
+```
