@@ -63,7 +63,7 @@ library(ggmap)
 chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
                                   right = -87.4, top = 42.3), 
                          zoom = 11)
-ggsave("raccoon_map.jpg", width = 6, height = 6)
+ggsave("plots/raccoon_map.jpg", width = 6, height = 6)
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
 
@@ -81,7 +81,7 @@ coyote_sum <- coyote_det_2021 %>%
 
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
-ggsave("coyote_map.jpg", width = 6, height = 6)
+ggsave("plots/coyote_map.jpg", width = 6, height = 6)
 
 # let's try this again with three species of your choosing in 2021
 carnivore_det_2021 <- sp_data_2021 %>% 
@@ -98,7 +98,7 @@ carnivore_sum <- carnivore_det_2021 %>%
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
              stroke = 1, data = carnivore_sum, shape = 21)
-ggsave("carn_map.jpg", width = 6, height = 6)
+ggsave("plots/carn_map.jpg", width = 6, height = 6)
 
 # If we look closely we can see that all the raccoon detections appear to be on this map 
 # but by referencing the last map, it seems we are missing coyote detections. Whats
@@ -113,7 +113,7 @@ ggmap::ggmap(chicago) +
                  shape = commonName), stroke = 1, data = carnivore_sum, 
              position=position_jitter(h=0.01,w=0.01)) +
   scale_shape_manual(values= c(21, 22, 23))  
-ggsave("species_map.jpg", width = 6, height = 6)
+ggsave("plots/species_map.jpg", width = 6, height = 6)
 
 # We can also clean up our labels and axes 
 ggmap::ggmap(chicago) +
@@ -128,7 +128,7 @@ ggmap::ggmap(chicago) +
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("species_map_final.jpg", width = 6, height = 6)
+ggsave("plots/species_map_final.jpg", width = 6, height = 6)
 
 # If there is a certain area of interest, we can also update our bounding box to focus on a certain 
 # region
@@ -151,7 +151,7 @@ ggmap::ggmap(lincoln_park) +
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("species_map_LP.jpg", width = 6, height = 6)
+ggsave("plots/species_map_LP.jpg", width = 6, height = 6)
 
 # or even more detailed
 # Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of 
@@ -173,7 +173,7 @@ ggmap::ggmap(montrose) +
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("species_map_montrose.jpg", width = 6, height = 6)
+ggsave("plots/species_map_montrose.jpg", width = 6, height = 6)
 
 # It can be hard to overlap all species of interest so it's best to do this in small groups
 # or we can also map alpha diversity, or species richness (number of species), in a given wildlife community
@@ -194,7 +194,7 @@ ggmap::ggmap(chicago) +
   xlab("Longitude")+
   ylab("Latitude")+
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("alpha_diversity.jpg", width = 6, height = 6)
+ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
 
 # we can also do this for groups of species, like alpha diversity of native carnivores
 # first we need to filter data to only these species
@@ -219,7 +219,7 @@ ggmap::ggmap(chicago) +
   xlab("Longitude")+
   ylab("Latitude")+
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("carn_alpha_diversity.jpg", width = 6, height = 6)
+ggsave("plots/carn_alpha_diversity.jpg", width = 6, height = 6)
 
 # we could use same plotting functions to map seasonal detections or diel detections
 # by manipulating our dataset to detections of interest!
@@ -262,8 +262,6 @@ dat <- sf::st_transform(
 crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
                               c(-.05,.05,-.05,.05)))
 
-# crop <- crop(my_map, extent(sf::st_bbox(c(xmin = -88.3, xmax = -87.45, ymin = 41.6, ymax = 42.3)) +
-#                               c(-.0,.0,-.0,.0)))
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
 
@@ -272,13 +270,15 @@ points(sf::st_coordinates(dat), pch = 19)
 # plot with breaks
 ggplot() +
   geom_spatraster(data = crop, aes(fill = Chicago_merged))+
-  facet_wrap(~lyr, ncol = 1)+
-  coord_sf(crs = 4326)
+  ggtitle("Chicago, IL USA Land cover")
+ggsave("plots/carn_alpha_diversity_gradient.jpg", width = 6, height = 6)
+  #facet_wrap(~lyr, ncol = 1)+
+  #coord_sf(crs = 4326)
 
 #playing with color pallet 
 ggplot() +
   geom_spatraster(data = crop)+
-  facet_wrap(~lyr, ncol = 1)+
+  #facet_wrap(~lyr, ncol = 1)+
   coord_sf(crs = 4326)+
   scale_fill_whitebox_c(
   palette = "muted",
@@ -286,8 +286,17 @@ ggplot() +
              "Bare/ spare vegetation", "Snow and Ice", "Permanent water", "Herbaceous wetlands"),
   n.breaks = 9,
   guide = guide_legend(reverse = TRUE))+
-  scale_x_continuous(expand = expansion(0)) + 
-  scale_y_continuous(expand = expansion(0))
+  scale_x_continuous(expand = expansion(0))+ #expands plot to axes
+  scale_y_continuous(expand = expansion(0))+
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = carn_rich) +
+  ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(fill = "Landcover Class")+ # change legend title
+  labs(size = "Detections") # to edit label on detections legend title
+ggsave("plots/carn_alpha_diversity_ESA.jpg", width = 6, height = 6)
+
 
 #playing with labels
 m<- c(0,0,0,10,10,1,20,20,2,30,30,3,40,40,4,
