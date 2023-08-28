@@ -178,17 +178,56 @@ ggsave("plots/species_map_montrose.jpg", width = 6, height = 6)
 # It can be hard to overlap all species of interest so it's best to do this in small groups
 # or we can also map alpha diversity, or species richness (number of species), in a given wildlife community
 
+# sp_rich <- sp_data_2021 %>% 
+#   group_by(locationAbbr) %>% # group by location to summarise all species detections
+#   mutate(detections = n()) %>% # count the number of detectionsat each site
+#   ungroup() %>% # ungroup data to retain additional information like lat/long
+#   distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+
 sp_rich <- sp_data_2021 %>% 
   group_by(locationAbbr) %>% # group by location to summarise all species detections
-  mutate(detections = n()) %>% # count the number of detectionsat each site
+  mutate(sp_det = length(unique(commonName))) %>% # count the number of species detected at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
 
 # mapping alpha diversity
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = sp_rich, 
-             position=position_jitter(h=0.01,w=0.01)) +
- # scale_shape_manual(values= c(21, 22, 23))+
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = sp_det), stroke = 1, shape = 1, 
+             data = sp_rich) +
+  scale_shape_manual(values= c(17))+
+  scale_color_manual(values = c("#5C9171", "#B39030", "#855757"))+
+  ggtitle("Chicago, IL USA Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(size = "Detections") # to edit label on detections legend title
+ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
+
+# We could also bin our data in groups to make this a bit more clear
+sp_rich_bin <- sp_rich %>% 
+  mutate(det_size = case_when(
+    sp_det >= 10 ~ "large",
+    sp_det <= 5 ~ "small",
+    sp_det > 5 | sp_det < 10 ~ "medium",
+    FALSE ~ as.character(sp_det)))
+
+sp_rich_bin <- sp_rich %>% 
+  mutate(det_size = case_when(
+    sp_det >= 12 ~ 3,
+    sp_det <= 5 ~ 1,
+    sp_det > 5 | sp_det < 12 ~ 2,
+    FALSE ~ as.numeric(sp_det)))
+
+sp_rich_bin <- sp_rich_bin %>% 
+  mutate(det_size = as.factor(det_size))
+
+# cant seem to get this to combine into one plot--------------------------------
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = as.numeric(det_size), color = det_size), 
+             stroke = 1, shape = 1, 
+             data = sp_rich_bin) +
+  scale_size_discrete(breaks=c(1,2,3))+
+  scale_shape_manual(values= c(17))+
   ggtitle("Chicago, IL USA Alpha Diversity 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
@@ -206,13 +245,14 @@ native_carn <- sp_data_2021 %>%
 
 carn_rich <- native_carn %>% 
   group_by(locationAbbr) %>% # group by location to summarise all species detections
-  mutate(detections = n()) %>% # count the number of detectionsat each site
+  mutate(sp_det = length(unique(commonName))) %>% 
+ # mutate(detections = n()) %>% # count the number of detections at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
 
 # mapping alpha diversity for native carnivores
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = carn_rich) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = sp_det), shape = 1, stroke = 1, data = carn_rich) +
   # scale_shape_manual(values= c(21, 22, 23))+
   ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
@@ -276,6 +316,8 @@ ggplot() +
 ggsave("plots/carn_alpha_diversity_gradient.jpg", width = 6, height = 6)
   #facet_wrap(~lyr, ncol = 1)+
   #coord_sf(crs = 4326)
+
+write.csv(carn_rich, "carn_rich.csv")
 
 #playing with color pallet 
 ggplot() +

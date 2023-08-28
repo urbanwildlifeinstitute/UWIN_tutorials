@@ -118,7 +118,7 @@ library("unmarked")
 ?unmarkedFrameOccu()
 
 y <- raccoon_wk %>% 
-  select(visit_1:visit_5)
+  select(Week_1:Week_5)
 
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
@@ -138,7 +138,7 @@ siteCovs <- siteCovs %>%
   mutate(forest_scale = scale(forest)) %>% 
   select(-c(water, forest))
 
-# Make sure this is a dataframe object
+# Make sure this is a data.frame object
 siteCovs_df <- data.frame(siteCovs)
   
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
