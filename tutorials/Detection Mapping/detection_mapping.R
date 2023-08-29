@@ -188,7 +188,7 @@ sp_rich <- sp_data_2021 %>%
   group_by(locationAbbr) %>% # group by location to summarise all species detections
   mutate(sp_det = length(unique(commonName))) %>% # count the number of species detected at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep 
 
 # mapping alpha diversity
 ggmap::ggmap(chicago) +
@@ -204,26 +204,31 @@ ggmap::ggmap(chicago) +
 ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
 
 # We could also bin our data in groups to make this a bit more clear
-sp_rich_bin <- sp_rich %>% 
-  mutate(det_size = case_when(
-    sp_det >= 10 ~ "large",
-    sp_det <= 5 ~ "small",
-    sp_det > 5 | sp_det < 10 ~ "medium",
-    FALSE ~ as.character(sp_det)))
+median(sp_rich$sp_det)
 
 sp_rich_bin <- sp_rich %>% 
   mutate(det_size = case_when(
-    sp_det >= 12 ~ 3,
-    sp_det <= 5 ~ 1,
-    sp_det > 5 | sp_det < 12 ~ 2,
-    FALSE ~ as.numeric(sp_det)))
+    sp_det >= 10 ~ "large",
+    sp_det <= 6 ~ "small",
+    sp_det > 6 | sp_det < 10 ~ "medium",
+    FALSE ~ as.character(sp_det)))
+
+# sp_rich_bin <- sp_rich %>% 
+#   mutate(det_size = case_when(
+#     sp_det >= 12 ~ 3,
+#     sp_det <= 5 ~ 1,
+#     sp_det > 5 | sp_det < 12 ~ 2,
+#     FALSE ~ as.numeric(sp_det)))
 
 sp_rich_bin <- sp_rich_bin %>% 
   mutate(det_size = as.factor(det_size))
 
-# cant seem to get this to combine into one plot--------------------------------
+library(forcats)
+sp_rich_bin <- sp_rich_bin %>% 
+  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, size = as.numeric(det_size), color = det_size), 
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = det_size, color = det_size), 
              stroke = 1, shape = 1, 
              data = sp_rich_bin) +
   scale_size_discrete(breaks=c(1,2,3))+
@@ -232,8 +237,8 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
-ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
+  labs(color = "Detections") # to edit label on detections legend title
+ggsave("plots/bin_alpha_diversity.jpg", width = 6, height = 6)
 
 # we can also do this for groups of species, like alpha diversity of native carnivores
 # first we need to filter data to only these species
