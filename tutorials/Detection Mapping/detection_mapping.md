@@ -104,6 +104,7 @@ The `ggmap` package allows us to plot over maps using the ggplot format we have 
 ```R
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
+
 ```
 <p float="left">
   <img src="./plots/raccoon_map.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
