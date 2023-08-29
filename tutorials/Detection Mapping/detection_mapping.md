@@ -243,15 +243,16 @@ It can be diffcult to visualize many species at once so we can also consider map
 # summarize detections for all wildlife
 sp_rich <- sp_data_2021 %>% 
   group_by(locationAbbr) %>% # group by location to summarise all species detections
-  mutate(detections = n()) %>% # count the number of detectionsat each site
+  mutate(sp_det = length(unique(commonName))) %>% # count the number of species detected at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(detections, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep  
 
 # mapping alpha diversity
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), stroke = 1, data = sp_rich, 
-             position=position_jitter(h=0.01,w=0.01)) +
- # scale_shape_manual(values= c(21, 22, 23))+
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = sp_det), stroke = 1, shape = 1, 
+             data = sp_rich) +
+  scale_shape_manual(values= c(17))+
+  scale_color_manual(values = c("#5C9171", "#B39030", "#855757"))+
   ggtitle("Chicago, IL USA Alpha Diversity 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
@@ -260,6 +261,31 @@ ggmap::ggmap(chicago) +
 ```
 <p float="left">
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
+</p>
+
+ We could also bin our data in groups to make the map a bit more clear
+
+ ```R
+median(sp_rich$sp_det)
+
+sp_rich_bin <- sp_rich %>% 
+  mutate(det_size = case_when(
+    sp_det >= 10 ~ "large",
+    sp_det <= 6 ~ "small",
+    sp_det > 6 | sp_det < 10 ~ "medium",
+    FALSE ~ as.character(sp_det)))
+
+# convert der_size to a factor
+sp_rich_bin <- sp_rich_bin %>% 
+  mutate(det_size = as.factor(det_size))
+
+# use the forcats library to relevel det_size to correct order
+library(forcats)
+sp_rich_bin <- sp_rich_bin %>% 
+  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+```
+<p float="left">
+  <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
 ### Using other raster layers
