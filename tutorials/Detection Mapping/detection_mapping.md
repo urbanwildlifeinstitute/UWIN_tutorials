@@ -291,6 +291,7 @@ sp_rich_bin <- sp_rich_bin %>%
 We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivore species and 3) make a plot of counts of unique carnivore species at each of our sites (similar to above) 
 
 <details closed><summary>Solution</a></summary>  
+
 ```R
 unique(sp_data_2021$commonName)
 
@@ -319,7 +320,6 @@ ggmap::ggmap(chicago) +
 </p>
 
 </details>
-
 
 ### Using other raster layers
 We can also build these plots with other geospatial layers. We're using the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
