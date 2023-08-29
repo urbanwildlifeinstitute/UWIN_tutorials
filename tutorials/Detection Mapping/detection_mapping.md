@@ -290,7 +290,7 @@ sp_rich_bin <- sp_rich_bin %>%
 
 We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivore species and 3) make a plot of counts of unique carnivore species at each of our sites (similar to above) 
 
-<details closed><summary>Solution</a></summary>
+<details closed><summary>Solution</a></summary>  
 ```R
 unique(sp_data_2021$commonName)
 
@@ -314,7 +314,6 @@ ggmap::ggmap(chicago) +
   ylab("Latitude")+
   labs(size = "Detections") # to edit label on detections legend title
 ```
-
  <p float="left">
   <img src="./plots/carn_alpha_diversity.jpg" alt="Alpha Diversity of carnivores in Chicago, 2021" width="500" height="auto" />
 </p>
