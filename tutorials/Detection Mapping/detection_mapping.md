@@ -288,6 +288,39 @@ sp_rich_bin <- sp_rich_bin %>%
   <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
+We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivores species and 3) make a plot of unique carnivore species at each of our sites (similar to above) 
+
+<details closed><summary>Solution</a></summary>
+
+```R
+unique(sp_data_2021$commonName)
+
+native_carn <- sp_data_2021 %>% 
+  filter(commonName == "American mink" | commonName == "Coyote"| commonName == "Raccoon"
+         | commonName == "Striped Skunk"| commonName == "Red fox")
+
+carn_rich <- native_carn %>% 
+  group_by(locationAbbr) %>% # group by location to summarise all species detections
+  mutate(sp_det = length(unique(commonName))) %>% 
+  ungroup() %>% # ungroup data to retain additional information like lat/long
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+
+# mapping alpha diversity for native carnivores
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = sp_det), shape = 1, stroke = 1, data = carn_rich) +
+  # scale_shape_manual(values= c(21, 22, 23))+
+  ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(size = "Detections") # to edit label on detections legend title
+```
+ <p float="left">
+  <img src="./plots/carn_alpha_diversity.jpg" alt="Alpha Diversity of carnivores in Chicago, 2021" width="500" height="auto" />
+</p>
+
+</details>
+
 ### Using other raster layers
 We can also build these plots with other geospatial layers. We're using the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
 
