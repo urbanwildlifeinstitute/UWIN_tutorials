@@ -364,6 +364,7 @@ points(sf::st_coordinates(dat), pch = 19)
   <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="500" height="auto"/>
   <img src="./plots/landcover_class.png" alt="Key to ESA landcover classes" width="250" height="auto"/>
 </p>
+Note that the map key does not include all values in the ESA landcover key. This is because `plot()` is only plotting the values in the plotted extent.
 
 We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which are in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` (done above) which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
 
@@ -376,5 +377,33 @@ ggplot() +
   <img src="./plots/carn_alpha_diversity_gradient.jpg" alt="Map of Chicago landcover" width="500" height="auto" />
 </p>
 
-We can see that the default map plots landcover as a continue variable leading to the blue gradient in the key. We can make these discrete with a few additions to the ggplot command. We can also use our previous code to add alpha diversity across 
+We can see that the default map plots landcover as a continue variable leading to the blue gradient in the key. We can make these discrete with a few additions to the ggplot command. We can also use our previous code to plot alpha diversity across all of our study sites. 
 
+```R
+ggplot() +
+  geom_spatraster(data = crop)+
+  #facet_wrap(~lyr, ncol = 1)+
+  coord_sf(crs = 4326)+
+  scale_fill_whitebox_c(
+    palette = "muted",
+    labels = c("NA","Tree", "Shrubland", "Grassland", "Cropland", "Built",
+               "Bare/ spare vegetation", "Snow and Ice", "Permanent water", "Herbaceous wetlands"),
+    n.breaks = 9,
+    guide = guide_legend(reverse = TRUE))+
+  scale_x_continuous(expand = expansion(0))+ # expands plot to axes
+  scale_y_continuous(expand = expansion(0))+
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = sp_det), size = 2,
+             data = sp_rich)+ #this adds location point data
+  ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(fill = "Landcover Class")+ # change legend title
+  labs(color = "Detections")+ # to edit label on detections legend title
+  scale_color_gradient(low="lightblue", high="navy") # we can manually change the scale color pallet
+```
+<p float="left">
+  <img src="./plots/carn_alpha_diversity_ESA.jpg" alt="Map of Alpha Diversity across Chicago, 2021" width="500" height="auto" />
+</p>
+
+Nice work! There are lots of other ways we can manipulate and visualize spatial data and we're off to a good start.
