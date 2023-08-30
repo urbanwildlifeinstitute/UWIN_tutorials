@@ -324,7 +324,33 @@ ggsave("plots/carn_alpha_diversity_gradient.jpg", width = 6, height = 6)
 
 write.csv(carn_rich, "carn_rich.csv")
 
-#playing with color pallet 
+# plot with key of landcover
+ggplot() +
+  geom_spatraster(data = crop)+
+  #facet_wrap(~lyr, ncol = 1)+
+  coord_sf(crs = 4326)+
+  scale_fill_whitebox_c(
+    palette = "muted",
+    labels = c("NA","Tree", "Shrubland", "Grassland", "Cropland", "Built",
+               "Bare/ spare vegetation", "Snow and Ice", "Permanent water", "Herbaceous wetlands"),
+    n.breaks = 9,
+    guide = guide_legend(reverse = TRUE))+
+  scale_x_continuous(expand = expansion(0))+ #expands plot to axes
+  scale_y_continuous(expand = expansion(0))+
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = sp_det), size = 2,
+             data = sp_rich)+
+  ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(fill = "Landcover Class")+ # change legend title
+  labs(color = "Detections")+ # to edit label on detections legend title+
+  scale_color_gradient(low="lightblue", high="navy")
+  
+ggsave("plots/carn_alpha_diversity_ESA.jpg", width = 6, height = 6)
+
+
+# playing with color pallet 
 ggplot() +
   geom_spatraster(data = crop)+
   #facet_wrap(~lyr, ncol = 1)+
@@ -344,7 +370,6 @@ ggplot() +
   ylab("Latitude")+
   labs(fill = "Landcover Class")+ # change legend title
   labs(size = "Detections") # to edit label on detections legend title
-ggsave("plots/carn_alpha_diversity_ESA.jpg", width = 6, height = 6)
 
 
 #playing with labels
