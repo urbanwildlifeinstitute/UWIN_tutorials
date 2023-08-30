@@ -406,5 +406,4 @@ ggplot() +
 <p float="left">
   <img src="./plots/carn_alpha_diversity_ESA.jpg" alt="Map of Alpha Diversity across Chicago, 2021" width="500" height="auto" />
 </p>
-
 Nice work! There are lots of other ways we can manipulate and visualize spatial data and we're off to a good start.
