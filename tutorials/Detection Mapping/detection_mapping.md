@@ -366,6 +366,7 @@ points(sf::st_coordinates(dat), pch = 19)
 </div>
 
 <div class = "column">
+  
 ## show table
 | Number | landcover class | 
 | --------------- | --------------- | 
@@ -380,6 +381,7 @@ points(sf::st_coordinates(dat), pch = 19)
 | 90 | Herbaceous wetland | 
 | 95 | Mangroves | 
 |100 | Moss and lichen | 
+
 </div>
 </div>
 
