@@ -164,7 +164,7 @@ ggsave("carn_map.jpg", width = 6, height = 6)
   <img src="./plots/carn_map.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
-If we look closely at our map, we can see that all the raccoon detections appear to be visable but, by referencing the last map, it seems we are missing coyote detections. These data are not actually missing, but raccoon detections are overlapping the other species detections and overwritting them as those detections are plotted last.
+If we look closely at our map, we can see that all the raccoon detections appear to be visable but, by referencing the last map, it seems we are missing coyote detections. These data are not actually missing, but raccoon detections are overlapping the other species detections and overwritting them as those detections are plotted last. 
 
 We can fix this by changing the plotting shapes and by adding a bit of randomness to their locations using the `jitter()` function. We can also tidy up our map using a few additional ggplot commands.
 
@@ -364,6 +364,7 @@ points(sf::st_coordinates(dat), pch = 19)
   <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="500" height="auto"/>
   <img src="./plots/landcover_class.png" alt="Key to ESA landcover classes" width="250" height="auto"/>
 </p>
+
 Note that the map key does not include all values in the ESA landcover key. This is because `plot()` is only plotting the values in the plotted extent.
 
 We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which are in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` (done above) which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
