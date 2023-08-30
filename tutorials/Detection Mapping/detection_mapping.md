@@ -359,6 +359,31 @@ crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
 ```
+<div class = "row">
+<div class = "column">
+## show figure
+<img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="450" height="auto" /> 
+</div>
+
+<div class = "column">
+## show table
+| Number | landcover class | 
+| --------------- | --------------- | 
+| 10 | Tree cover | 
+|20 | Shrubland | 
+| 30 | Grassland | 
+| 40 | Cropland | 
+|50 | Built | 
+| 60 | Bare/ Sparse vegetation | 
+| 70 | Snow and Ice | 
+|80 | Permanent water bodies | 
+| 90 | Herbaceous wetland | 
+| 95 | Mangroves | 
+|100 | Moss and lichen | 
+</div>
+</div>
+
+
 The ESA landcover classes are as follows (note the plot only includes those in the map extent):
 <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="450" height="auto" /> 
 
