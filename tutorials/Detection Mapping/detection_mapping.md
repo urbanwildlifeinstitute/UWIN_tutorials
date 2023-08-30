@@ -288,7 +288,7 @@ sp_rich_bin <- sp_rich_bin %>%
   <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
-We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivore species and 3) make a plot of counts of unique carnivore species at each of our sites (similar to above) 
+We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivore species and 3) make a plot of counts of unique carnivore species detected at each of our sites (similar to above) 
 
 <details closed><summary>Solution</a></summary>  
 
