@@ -360,6 +360,23 @@ plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
 
 ```
+
+By using the `plot()` function, we can get a simple map which breaks down landcover classes. To get some easy functionaility we are familiar with, we can also use `ggplot()`. The ESA landcover classes are as follows:
+
+| Number | landcover class | 
+| --------------- | --------------- | 
+| 10 | Tree cover | 
+|20 | Shrubland | 
+| 30 | Grassland | 
+| 40 | Cropland | 
+|50 | Built | 
+| 60 | Bare/ Sparse vegetation | 
+| 70 | Snow and Ice | 
+|80 | Permanent water bodies | 
+| 90 | Herbaceous wetland | 
+| 95 | Mangroves | 
+|100 | Moss and lichen | 
+
 <p float="left">
   <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="500" height="auto" />
 </p>
