@@ -358,13 +358,9 @@ crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
 # Plot cropped map and points
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
-
 ```
-<p float="left">
-  <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="500" height="auto" />
-</p>
-
-The ESA landcover classes are as follows:
+<img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="450" height="auto" /> 
+The ESA landcover classes are as follows (note the plot only includes those in the map extent):
 | Number | landcover class | 
 | --------------- | --------------- | 
 | 10 | Tree cover | 
