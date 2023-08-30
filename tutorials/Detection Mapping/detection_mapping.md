@@ -362,7 +362,7 @@ points(sf::st_coordinates(dat), pch = 19)
 
 <p float="left">
   <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="400" height="auto"/>
-  <img src="./plots/landcover_class.png" alt="Key to ESA landcover classes" width="100" height="auto"/>
+  <img src="./plots/landcover_class.png" alt="Key to ESA landcover classes" width="300" height="auto"/>
 </p>
 
 We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which are in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` (done above) which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
