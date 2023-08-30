@@ -288,8 +288,41 @@ sp_rich_bin <- sp_rich_bin %>%
   <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
 </p>
 
+We can also do this for groups of species. Let's 1) examine all the species in our study area, 2) filter down to carnivore species and 3) make a plot of counts of unique carnivore species detected at each of our sites (similar to above) 
+
+<details closed><summary>Solution</a></summary>  
+
+```R
+unique(sp_data_2021$commonName)
+
+native_carn <- sp_data_2021 %>% 
+  filter(commonName == "American mink" | commonName == "Coyote"| commonName == "Raccoon"
+         | commonName == "Striped Skunk"| commonName == "Red fox")
+
+carn_rich <- native_carn %>% 
+  group_by(locationAbbr) %>% # group by location to summarise all species detections
+  mutate(sp_det = length(unique(commonName))) %>% 
+  ungroup() %>% # ungroup data to retain additional information like lat/long
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the column to keep 
+
+# mapping alpha diversity for native carnivores
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = sp_det), shape = 1, stroke = 1, data = carn_rich) +
+  # scale_shape_manual(values= c(21, 22, 23))+
+  ggtitle("Chicago, IL USA Native Carnivore Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(size = "Detections") # to edit label on detections legend title
+```
+ <p float="left">
+  <img src="./plots/carn_alpha_diversity.jpg" alt="Alpha Diversity of carnivores in Chicago, 2021" width="500" height="auto" />
+</p>
+
+</details>
+
 ### Using other raster layers
-We can also build these plots with other geospatial layers. We're using the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) as our example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
+We can also build these plots with other geospatial layers. We can use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) for an example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
 
 ```R
 # load in libraries
@@ -325,11 +358,51 @@ crop <- crop(my_map, ext(sf::st_bbox(dat)[c("xmin","xmax","ymin","ymax")] +
 # Plot cropped map and points
 plot(crop)
 points(sf::st_coordinates(dat), pch = 19)
-
 ```
-<p float="left">
-  <img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="500" height="auto" />
-</p>
+<div class = "row">
+<div class = "column">
+## show figure
+<img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="450" height="auto" /> 
+</div>
+
+<div class = "column">
+  
+## show table
+| Number | landcover class | 
+| --------------- | --------------- | 
+| 10 | Tree cover | 
+|20 | Shrubland | 
+| 30 | Grassland | 
+| 40 | Cropland | 
+|50 | Built | 
+| 60 | Bare/ Sparse vegetation | 
+| 70 | Snow and Ice | 
+|80 | Permanent water bodies | 
+| 90 | Herbaceous wetland | 
+| 95 | Mangroves | 
+|100 | Moss and lichen | 
+
+</div>
+</div>
+
+
+The ESA landcover classes are as follows (note the plot only includes those in the map extent):
+<img src="./plots/chi_sites.png" alt="Map of camera sampling sites across Chicago landcover" width="450" height="auto" /> 
+
+
+| Number | landcover class | 
+| --------------- | --------------- | 
+| 10 | Tree cover | 
+|20 | Shrubland | 
+| 30 | Grassland | 
+| 40 | Cropland | 
+|50 | Built | 
+| 60 | Bare/ Sparse vegetation | 
+| 70 | Snow and Ice | 
+|80 | Permanent water bodies | 
+| 90 | Herbaceous wetland | 
+| 95 | Mangroves | 
+|100 | Moss and lichen | 
 
 We will continue to use `ggplot` to visualize our data with a few adaptations to the previous code. Unlike the standard `plot` function, `ggplot` requires specific data-types which can be in the form of a *data.frame* or *SpatRaster*. Though we could simply convert our map, `crop`, using `as.data.frame()`, it would take a very long time to process and will likley fail to plot depending on your computers local storage. Rather, we can use the ggplot function `geom_spatraster(data = crop)` by installing the package `tidyterra` (done above) which was developed by Diego Hernangómez (more on tidyterra [here](https://dieghernan.github.io/tidyterra/)). 
 
