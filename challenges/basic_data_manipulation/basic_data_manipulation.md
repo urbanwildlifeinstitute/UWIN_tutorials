@@ -1,7 +1,8 @@
 # UWIN Challenge: Basic Data Manipulation
 ## Coding Club Reference tutorial [__here.__](https://ourcodingclub.github.io/tutorials/data-manip-intro/)
 
-Let's take a peek at some real data collected by the Urban Wildlife Information Network. Start by loading in neccessary libraries and UWIN data. Today we are going to use `ggplot2` and `dplyr`.
+### Cleaning and classifying data using basic functions
+Now that we have a few basic skills to manipulate and clean data we can test our skills with some likley examples we may see in our UWIN data. We will also learn how to manage time data using similar skills.
 
 ```R
 # Load in libraries
@@ -21,12 +22,9 @@ str(field_data)
 str(cap_hist)
 ```
 
-### Cleaning and classifying data using basic functions
-Now that we have a few basic skills to manipulate and clean data we can test our skills with some likley examples we may see in our UWIN data. We will also learn how to reclass time data using similar skills.
-
 ## Challenge 1. 
 ### Classifying time data
-By examining our data with 'str()' above, we can see that 'date' and 'time' are classifies as characters. 
+By examining our data with 'str()' above, we can see that 'date' and 'time' are classified as characters. 
 
 ```R
 class(field_data$Date)
@@ -34,21 +32,40 @@ class(field_data$Time)
 ```
 However, we will need to classify these as an appropriate date/time format if we want to extract and manipulate data with helpful R functions
 
-As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert 'Date' and 'Time' to usebale time classes, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information in this time class and other formats review [NEON Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r)
+As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert 'Date' and 'Time' to usebale time format, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information in this time class and other formats review [NEON's Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r).
 
+An easy way to manipulate time series data is using the `lubridate` package. 
+```R
+library(lubridate)
+?lubridate
+OlsonNames()
+```
+Review the lubridate help file and convert 'Date' and 'Time' fields into a POSIXct format. 
 
 <details closed><summary>Solution</a></summary>
 
 ```R
-UWIN_data <- rename(UWIN_data, det_days = Y, cam_days = J)
-head(UWIN_data)
+# reclass 'Date'
+field_data$Date <- mdy(field_data$Date, tz = "US/Central")
+# confirm this worked
+class(field_data$Date)
+
+# reclass 'Time'
+field_data$Time <- hm(field_data$Time)
+# confirm this worked
+class(field_data$Time)
 ```
              
 </details>
 
-  
+Nice work. This package is very handy and can be used to easily extract certain time components, for example:
+```R
+minute(field_data$Time)
+day(field_data$Date)
+```
+
 ## Challenge 2. 
-### Summarizing and plotting data
+### Cleaning data
 Nice work! We decided we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
   
 Start by creating a new data set `UWIN_east` for these cities which only includes raccoon detections.
