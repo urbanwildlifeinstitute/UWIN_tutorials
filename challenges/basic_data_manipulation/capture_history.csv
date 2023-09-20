@@ -1,0 +1,21 @@
+Site,Long,Lat,Crs,Species,Season,City,Detections
+Chi-E-Prk-1,-87.57,41.71,4326,armadillo,SU23,chil,1
+Chi-E-Prk-2,-87.32,41.65,4326,armadillo,SU23,chil,0
+Chi-F-For-1,-87.52,41.69,4326,armadillo,SP23,chil,2
+Chi-J-Jun-1,-87.56,41.68,4326,armadillo,SU22,chil,6
+Chi-E-Prk-1,-87.57,41.71,4326,white-tailed deer,SU23,chil,7
+Chi-E-Prk-2,-87.32,41.65,4326,white-tailed deer,SU23,chil,11
+Chi-F-For-1,-87.52,41.69,4326,white-tailed deer,SP23,chil,16
+Chi-J-Jun-1,-87.56,41.68,4326,white-tailed deer,SU22,chil,3
+Chi-E-Prk-1,-87.57,41.71,4326,red fox,SU23,chil,0
+Chi-E-Prk-2,-87.32,41.65,4326,red fox,SU23,chil,1
+Chi-F-For-1,-87.52,41.69,4326,red fox,SP23,chil,0
+Chi-J-Jun-1,-87.56,41.68,4326,red fox,SU22,chil,0
+Chi-E-Prk-1,-87.57,41.71,4326,flying squirrel,SU23,chil,0
+Chi-E-Prk-2,-87.32,41.65,4326,flying squirrel,SU23,chil,1
+Chi-F-For-1,-87.52,41.69,4326,flying squirrel,SP23,chil,1
+Chi-J-Jun-1,-87.56,41.68,4326,flying squirrel,SU22,chil,0
+Chi-E-Prk-1,-87.57,41.71,4326,eastern cottontail,SU23,chil,5
+Chi-E-Prk-2,-87.32,41.65,4326,eastern cottontail,SU23,chil,8
+Chi-F-For-1,-87.52,41.69,4326,eastern cottontail,SP23,chil,16
+Chi-J-Jun-1,-87.56,41.68,4326,eastern cottontail,SU22,chil,4
