@@ -116,53 +116,5 @@ field_data[field_data$Lure == "None",]$Lure <- "none"
 </details>
 
   
-## Challenge 3. 
-### Joining data
-Now that our 'field_data' appears to be cleaned up, we can use begin using this data or link it to other datasets like 'cap_hist'. 
-
-When collecting or managing data, it is often helpful to break-up data into multiple data sheets (in the field) or data tables (multiple .csv's). However, to link these data later, it is important to have a column, or 'key', that is shared across datasets.
-
-For our purposes, we may want to know if there were lures present during camera deployments to account for variation in species' detection. However, lure is not a column in our 'cap_hist' data.frame. We can add this to the 'cap_hist' data.frame with the join() function. It's important to note that the best way to link data is through a unique identifier. In our case, one table, 'field_data' contains data specific to camera deployments or visits while the other table 'cap_hist' is specific to a camera station. Here, there is no one unique identifier which links both datasets.
-
-It is still possible to link these tables however, but certain elements will be repeated. Therefor it is important to consider how variables are linked and what variables are necessary to your analyses. If we assume that the presence of a lure has an equal impact on detections across a sampling periods (e.g. the lure's scent does not vary across visits--set, check, and pulls), we can link the column *Lure* to each camera station for each year (to account for lure presence which may vary year to year). 
-    
-<details closed><summary>Solution</a></summary>
-
-To determine which species occur in both cities of your choosing, start by filtering down to these cities AND filter to detections `det_days` greater than zero. 
-```R
-# filter to cities of interest
-UWIN_subset <- filter(UWIN_data, City %in% c("atga", "wide")) 
-
-# Filter out zero detections to find species present in your cities of interest
-UWIN_subset <- filter(UWIN_subset, det_days > 0)
-
-# Now let's see which species occur in both cities
-UWIN_atga <- filter(UWIN_subset, City == "atga")
-UWIN_wide <- filter(UWIN_subset, City == "wide")
-
-int <- intersect(UWIN_atga$Species, UWIN_wide$Species)
-int
-```
-       
-Filter down to 3 species of interest which occur in both cities
-```R
-UWIN_subset <- filter(UWIN_subset, Species %in% c("virginia_opossum", "red_fox",
-                                                   "weasel_sp"))
-```
-  
-Now, plot detections for each species
-```R
-ggplot(data = UWIN_subset, aes(x = Species, y = det_days, fill = City)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Species Detections", x = "Species", y = "Detections") +
-  theme_minimal() 
-```
-
-<p float="left">
-  <img src="./plots/sp_det.png" alt="A plot of species detections in two cities." width="500" height="auto" />
-</p>
-             
-</details>
-
 
   
