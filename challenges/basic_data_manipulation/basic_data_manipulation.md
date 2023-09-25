@@ -58,7 +58,7 @@ class(field_data$Time)
              
 </details>
 
-Nice work. This package is very handy and can be used to easily extract certain time components, for example:
+Nice work. This package is very handy and can be used to easily extract specific time components, for example:
 ```R
 minute(field_data$Time)
 day(field_data$Date)
