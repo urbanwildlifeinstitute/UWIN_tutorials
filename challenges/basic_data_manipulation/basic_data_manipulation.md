@@ -117,10 +117,14 @@ field_data[field_data$Lure == "None",]$Lure <- "none"
 
   
 ## Challenge 3. 
-### More filtering and plotting pratice
-Wow, there is a lot of variability of raccoon detections across these cities! Let's see how detections vary across a few other species in two of these cities. Choose two of these cities and create a new dataframe for three new species (e.g. not raccoon) which occur in both cities. Hint: the `intersect` function may come in handy. 
-  
-Then create a barplot that plots the detections for each species (on the x-axis) for each City using colors. Hint: see 'Barplot of diet' from the Coding Club Tutorial.
+### Joining data
+Now that our 'field_data' appears to be cleaned up, we can use begin using this data or link it to other datasets like 'cap_hist'. 
+
+When collecting or managing data, it is often helpful to break-up data into multiple data sheets (in the field) or data tables (multiple .csv's). However, to link these data later, it is important to have a column, or 'key', that is shared across datasets.
+
+For our pruposes, we may want to know if there were lures present during camera deployments to account for variation in species' detection. However, lure is not a column in our 'cap_hist' data.frame. We can add this to the 'cap_hist' data.frame with the join() function. It's important to note that the best way to link data is through a unique identifier. In our case, one table, 'field_data' contains data specific to camera deployments or visits while the other table 'cap_hist' is specific to a camera station. 
+
+It is still possible to link these tables but certain columns may be repeated depending on what information we seek to link. Therefor it is important to consider how variables are linked and what variables are necessary to your analyses. If we assume that lures have an equal impact on detections across a sampling periods (e.g. the lure's scent does not vary across visits-set, check, pull), we can link lure presence to each camera station for each year (to account for lure presence which may vary year to year). 
     
 <details closed><summary>Solution</a></summary>
 
