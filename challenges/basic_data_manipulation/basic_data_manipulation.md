@@ -107,22 +107,12 @@ Let's correct two more mistakes. We will fix an entry in *Camera.sensitivity* fr
 <details closed><summary>Solution</a></summary>
   
 ```R
-# This can be done using the 'geom_bar' function
-ggplot(data = det_city, aes(x = City, y = det_total)) +
-  geom_bar(stat = "identity", fill = "lightblue") +
-  labs(title = "Raccoon Detections", x = "City", y = "Detections") +
-  theme_minimal() 
+unique(field_data$Camera.sensitivity)
+field_data[field_data$Camera.sensitivity == "Nrmal",]$Camera.sensitivity <- "normal"
 
-# or the 'geom_col' function
-ggplot(data = det_city, aes(x = City, y = det_total)) +
-  geom_col(fill = "lightblue") +
-  labs(title = "Raccoon Detections", x = "City", y = "Detections") +
-  theme_minimal() 
+unique(field_data$Lure)
+field_data[field_data$Lure == "None",]$Lure <- "none"
 ```
-
-<p float="left">
-  <img src="./plots/raccoon_det.png" alt="A plot of raccoon detections in four cities." width="500" height="auto" />
-</p>
 
 </details>
 
