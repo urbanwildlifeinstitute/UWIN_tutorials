@@ -84,8 +84,7 @@ field_data[field_data$Date == "6/39/2022",]$Date <- "6/30/2022"
 # Now we need to update Date and Time variables with corrected data
 field_data$Date <- mdy(field_data$Date, tz = "US/Central")
 field_data$Time <- hm(field_data$Time)
-```
-             
+```         
 </details>
 
 We also notice another entry mistake when examining our data. One year was entered incorrectly, 2003 rather then 2023. We can correct this using a logical condition as done above.
