@@ -24,7 +24,7 @@ str(cap_hist)
 
 ## Challenge 1. 
 ### Classifying time data
-By examining our data with 'str()' above, we can see that 'date' and 'time' are classified as characters. 
+By examining our data with 'str()' above, we can see that *Date* and *Time* are classified as characters. 
 
 ```R
 class(field_data$Date)
@@ -32,7 +32,7 @@ class(field_data$Time)
 ```
 However, we will need to classify these as an appropriate date/time format if we want to extract and manipulate data with helpful R functions
 
-As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert 'Date' and 'Time' to a usebale time format, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information on this time class and other formats review [NEON's Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r).
+As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert *Date* and *Time* to a usebale time format, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information on this time class and other formats review [NEON's Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r).
 
 An easy way to manipulate time series data is using the `lubridate` package. 
 ```R
@@ -40,7 +40,7 @@ library(lubridate)
 ?lubridate
 OlsonNames()
 ```
-Review the lubridate help file and convert 'Date' and 'Time' fields into a POSIXct format. 
+Review the lubridate help file and convert *Date* and *Time* fields into a POSIXct format. 
 
 <details closed><summary>Solution</a></summary>
 
@@ -66,7 +66,7 @@ day(field_data$Date)
 
 ## Challenge 2. 
 ### Cleaning data
-When examening our data, we notice there is an issue with our 'Date' field. One value was converted to an 'NA'. If we reload the data, we can see that there was an error when someone entered the data. Let's fix it to the correct date--6/30/2022.
+When examening our data, we notice there is an issue with our *Date* field. One value was converted to an 'NA'. If we reload the data, we can see that there was an error when someone entered the data. Let's fix it to the correct date--6/30/2022.
 
 We can do this two different ways, with a row/column location or with a logicial condition (column name). Try this both ways.
 
