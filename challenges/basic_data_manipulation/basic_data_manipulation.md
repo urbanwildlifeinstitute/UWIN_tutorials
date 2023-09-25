@@ -32,7 +32,7 @@ class(field_data$Time)
 ```
 However, we will need to classify these as an appropriate date/time format if we want to extract and manipulate data with helpful R functions
 
-As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert 'Date' and 'Time' to usebale time format, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information in this time class and other formats review [NEON's Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r).
+As in the coding club tutorial, where we converted 'zone' from a character to a factor, we need to convert 'Date' and 'Time' to a usebale time format, specifically to a format called 'POSIXct' which can store date and time together with their affiliated time zone in one column (or two). For more information on this time class and other formats review [NEON's Time Series Tutorial](https://www.neonscience.org/resources/learning-hub/tutorials/dc-convert-date-time-posix-r).
 
 An easy way to manipulate time series data is using the `lubridate` package. 
 ```R
