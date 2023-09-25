@@ -66,39 +66,43 @@ day(field_data$Date)
 
 ## Challenge 2. 
 ### Cleaning data
-Nice work! We decided we're interested in examining four east coast cities: `atga`, `wide`, `rony`, and `safl`. We specifically want to summarize how detections of raccoons vary across these cities (across all sites) and make a bar plot to visualize the differences. 
-  
-Start by creating a new data set `UWIN_east` for these cities which only includes raccoon detections.
-  
+When examening our data, we notice there is an issue with our 'Date' field. One value was converted to an 'NA'. If we reload the data, we can see that there was an error when someone entered the data. Let's fix it to the correct date--6/30/2022.
+
+We can do this two different ways, with a row/column location or with a logicial condition (column name). Try this both ways.
+
 <details closed><summary>Solution</a></summary>
   
 ```R
-# Use the filter function to focus on four cities of interest
-UWIN_east <- filter(UWIN_data, City %in% c("atga", "wide", "rony", "safl")) 
+# do this first with the row and column location of the incorrect date
+field_data[10,9] <- mdy("6/30/2022", tz = "US/Central") 
 
-# We can check this worked by viewing the unique cities
-unique(UWIN_east$City)
-             
-# filter only species of interest
-raccoon_east <- filter(UWIN_east, Species == "raccoon")
-unique(raccoon_east$Species)
+# If we wanted to do this using logical conditions (by column names), 
+# we can reload data and convert again. 
+field_data <- read.csv("field_data.csv", header = TRUE) 
+field_data[field_data$Date == "6/39/2022",]$Date <- "6/30/2022" 
+
+# Now we need to update Date and Time variables with corrected data
+field_data$Date <- mdy(field_data$Date, tz = "US/Central")
+field_data$Time <- hm(field_data$Time)
 ```
              
 </details>
 
-Now we want to sum all raccoon detections across all of the sites for each city. Create a new 2-column dataframe called `det_total` which is a count of all raccoon detections for each east coast city
-  
+We also notice another entry mistake when examining our data. One year was entered incorrectly, 2003 rather then 2023. We can correct this using a logical condition as done above.
+
 <details closed><summary>Solution</a></summary>
   
 ```R
-det_city <- raccoon_east %>% 
-  group_by(City) %>% 
-  summarise(det_total = sum(det_days))
+unique(field_data$Year)
+# let's use logical conditions to look at the whole row including this data point
+field_data[field_data$Year == "2003",] 
+# based on the 'Date' column, we can correct the 'Year' to 2023. Try this now.
+field_data[field_data$Year == "2003",]$Year <- "2023" 
 ```
-             
+          
 </details>
 
-Good deal. Let's use this new dataframe to make a bar plot. 
+Let's correct two more mistakes. We will fix an entry in *Camera.sensitivity* from 'Nrmal' to 'normal' and in *Lure*, an entry from 'None' to 'none'. We do this because all other entries are wrtitten as 'none' and we need to keep all columns consistent for later analysis. Remember R is case sensitive, meaning 'None' and 'none' will be read as two different values. 
   
 <details closed><summary>Solution</a></summary>
   
