@@ -2,7 +2,7 @@
 ## Coding Club Reference tutorial [__here.__](https://ourcodingclub.github.io/tutorials/data-manip-intro/)
 
 ### Cleaning and classifying data using basic functions
-Now that we have a few basic skills to manipulate and clean data we can test our skills with some likley examples we may see in our UWIN data. We will also learn how to manage time data using similar skills.
+Now that we have a few basic tool we can use to manipulate and clean data, we can test our skills with some data we may see while conducting urban wildlife research with UWIN. We will also apply the same skills to managing and manipulating time data.
 
 ```R
 # Load in libraries
