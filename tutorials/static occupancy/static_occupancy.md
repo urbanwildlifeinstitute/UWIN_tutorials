@@ -1,5 +1,5 @@
 # UWIN Tutorial: Static Occupancy
-*Created by Kimberly Rivera - last updated April 2023 by Kimberly Rivera*
+*Created by Kimberly Rivera - last updated September 2023 by Kimberly Rivera*
 
 This tutorial is aimed at folks interested and new to occupancy modeling, or as a refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
