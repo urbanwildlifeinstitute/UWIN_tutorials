@@ -1,10 +1,10 @@
 Site Name,Station ID,Season,Year,Camera ID,Camera type,Camera sensitivity,Visit type,Date,Time,Camera condition,Action 1,Action 2,Action 3,Lure,Comments
-Eagle Park,Chi-E-Prk-1,Su,2023,CHI-102,Bushnell low-glow,normal,set,6/30/2023,11:02,undisturbed/ operable,placed camera,,,none,
-Eagle Park,Chi-E-Prk-1,Su,2023,CHI-102,Bushnell low-glow,Nrmal,check,7/14/2023,12:12,undisturbed/ operable,replaced batteries,replaced memory card,,none,
-Eagle Park,Chi-E-Prk-1,Su,2023,CHI-102,Bushnell low-glow,normal,pull,8/2/2023,13:42,disturbed/ operable,removed camera,,,none,"camera hanging off tree, no damage on camera"
-Eagle Park,Chi-E-Prk-2,Su,2003,CHI-143,Bushnell low-glow,normal,set,6/30/2023,10:02,undisturbed/ operable,placed camera,,,none,
-Eagle Park,Chi-E-Prk-2,Su,2023,CHI-159,Bushnell low-glow,normal,check,7/14/2023,11:22,disturbed/ inoperable,replaced camera,replaced batteries,replaced memory card,none,camera smashed and needed to be replaced
-Eagle Park,Chi-E-Prk-2,Su,2023,CHI-159,Bushnell low-glow,normal,pull,8/3/2023,13:04,undisturbed/ operable,removed camera,,,none,
+Eagle Park,Chi-E-Prk-1,Su,2022,CHI-102,Bushnell low-glow,normal,set,6/30/2022,11:02,undisturbed/ operable,placed camera,,,skunk bait,
+Eagle Park,Chi-E-Prk-1,Su,2022,CHI-102,Bushnell low-glow,Nrmal,check,7/14/2022,12:12,undisturbed/ operable,replaced batteries,replaced memory card,,skunk bait,
+Eagle Park,Chi-E-Prk-1,Su,2022,CHI-102,Bushnell low-glow,normal,pull,8/2/2022,13:42,disturbed/ operable,removed camera,,,skunk bait,"camera hanging off tree, no damage on camera"
+Eagle Park,Chi-E-Prk-1,Su,2003,CHI-143,Bushnell low-glow,normal,set,6/30/2023,10:02,undisturbed/ operable,placed camera,,,none,
+Eagle Park,Chi-E-Prk-1,Su,2023,CHI-159,Bushnell low-glow,normal,check,7/14/2023,11:22,disturbed/ inoperable,replaced camera,replaced batteries,replaced memory card,none,camera smashed and needed to be replaced
+Eagle Park,Chi-E-Prk-1,Su,2023,CHI-159,Bushnell low-glow,normal,pull,8/3/2023,13:04,undisturbed/ operable,removed camera,,,none,
 Frog Forest,Chi-F-For-1,Sp,2023,CHI-56,Bushnell optics,low,set,3/28/2023,14:30,undisturbed/ operable,placed camera,,,skunk bait,
 Frog Forest,Chi-F-For-1,Sp,2023,CHI-56,Bushnell optics,low,check,4/15/2023,15:04,undisturbed/ operable,replaced batteries,replaced memory card,baited,skunk bait,
 Frog Forest,Chi-F-For-1,Sp,2023,CHI-56,Bushnell optics,low,pull,5/1/2023,15:56,undisturbed/ operable,removed camera,rebaited,,skunk bait,
