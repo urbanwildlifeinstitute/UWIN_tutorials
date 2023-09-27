@@ -24,25 +24,25 @@ This tutorial is aimed at folks interested and new to occupancy modeling, or as 
 
 ## 1. What is occuancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species across space and time. 'Occupancy' can be defined as the probability that a site is occupied by a particular species. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors to monitor environments that may or may not host our species (specifically 'unmarked species') of interest. 
+Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species. 'Occupancy' can be defined as the probability that a site (space) is occupied by a particular species at a particular time. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor environments that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns). 
 
 <a name="assumptions"></a>
 
 ## 1. Occupancy model assumptions
 
-Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between our observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
+Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
 
-1. Detectiton probability is constant across sites or vists or explained by covariates
-2. Occupancy probability is constant across sites or visits or explained by covariates
+1. Detectiton probability is constant across sites or vists, or explained by covariates
+2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys
 
-We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorperating relevant and measurable covariates. 
+We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorperating relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
 
 ## 1. Formatting data
 
-Let's learn more about occupancy through an exmaple. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
+Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
 Let's take a peek at the data! Start by loading in neccessary libraries and `chicago_raccoon.csv`. We will continue to use `dplyr` and `ggplot2`.
 
@@ -100,14 +100,14 @@ colnames(week_summary) <- paste0("Week_",1:n_weeks)
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
+Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop the last sampling day.
 
 ```R
 raccoon_wk <- raccoon_wk %>% 
   select(-Week_6)
 ```
 
-Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
+Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Learn more about mapping in the ['Detection Mapping'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Detection%20Mapping) tutorial. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
