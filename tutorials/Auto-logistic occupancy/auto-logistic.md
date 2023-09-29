@@ -1,7 +1,7 @@
 # UWIN Tutorial: Autologistic Occupancy
 *Created by Kimberly Rivera - last updated May 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occupancy modeling, or as refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at folks interested and new to occupancy modeling, or as refresher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. [An introduction to auto-logistic occupancy models](https://masonfidino.com/autologistic_occupancy_model/) - Mason Fidino
@@ -21,7 +21,7 @@ This tutorial is aimed at folks interested and new to occupancy modeling, or as 
 <a name="occupancy"></a>
 
 ## 1. What is Autologistic occupancy?
-Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in the environment or species occupancy. By considering a dynamic system, we can account for a lot of things like changing environmental conditions (such as climate or fire), impacts of management interventions, variations in sampling methodologies, or life stages of species. Often, scientists are interested in modeling temporal dynamics or how species ecology or habitat use changes across time (diel, seasonally, or yearly). There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dyanmic system. Some common ways to account for temporal changes include dynamic occupancy models, multi-state occupancy models, or the incorpertion of random site effects. However, all these methods require large amounts of data to estimate all affiliated parameters. An alternative to these methods is using a temporal autologistic parameter where occupancy for *t = 2...5* (where t is time) is dependent on the previous *t*'s occupancy. This method only introduces one new parameter, unlike the models listed above. To get into the nitty gritty of the equations, please review [this blog post](https://masonfidino.com/autologistic_occupancy_model/) (also listed in references above). Rather, let's get into an example and see how this approach can be applied. 
+Though static occupancy models can be a useful tool when studying species ecology, they are limited to a 'static' system, meaning we cannot account for changes in the environment or species occupancy. By considering a dynamic system, we can account for a lot of things like changing environmental conditions (such as climate or fire), impacts of management interventions, variations in sampling methodologies, or life stages of species. Often, scientists are interested in modeling temporal dynamics or how species ecology or habitat use changes across time (diel, seasonally, or yearly). There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dyanmic system. Some common ways to account for temporal changes include dynamic occupancy models, multi-state occupancy models, or the incorporation of random site effects. However, all these methods require large amounts of data to estimate all affiliated parameters. An alternative to these methods is using a temporal autologistic parameter where occupancy for *t = 2...5* (where t is time) is dependent on the previous *t*'s occupancy. This method only introduces one new parameter, unlike the models listed above. To get into the nitty gritty of the equations, please review [this blog post](https://masonfidino.com/autologistic_occupancy_model/) (also listed in references above). Rather, let's get into an example and see how this approach can be applied. 
 
 <a name="formatting"></a>
 
@@ -163,7 +163,7 @@ We will fit 3 models, one for a null hypothesis, one with spatial covariates, an
 
 **null** - opossum occupancy is constant across sites <br>
 **habitat hypothesis** - opossum occupancy is explained by spatial variables, impervious cover and income. We hypothesize that opossum occupancy will decrease with impervious cover due to limited habitat availability and increase with income as we suspect communities of higher income will be built closer to water and forested landscapes.  <br>
-**temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likley to hunker down in dens and spend less time foraging.
+**temporal hypothesis** - opossum occupancy varies seasonally and we hypothesize occupancy will be lowest in the coldest months when they are mostly likely to hunker down in dens and spend less time foraging.
 
 ### null model (no covariates)
 ```R
@@ -192,7 +192,7 @@ summary(m2)
 ```
 Note, we could include the same variables for detection if we believed that impervious cover and income would reduce the probability of detecting opossum. For this example, we'll keep it simple and only hypothesize about occupancy.
 
-Here, $\Psi$ - $\theta$, is a positive **1.794**. Similiar to the last model, this value indicates that if opossum were present at a site at *t-1* they are much more likely to be present at the same site at time *t*. 
+Here, $\Psi$ - $\theta$, is a positive **1.794**. Similar to the last model, this value indicates that if opossum were present at a site at *t-1* they are much more likely to be present at the same site at time *t*. 
 
 ### temporal model (season)
 We can also add complexity with a categorical temporal covariate 'Season'. Remember that temporally varying covariates need to be a named list. For this example, the seasonal information is in the opossum detection history (opossum_det_hist).
@@ -236,12 +236,12 @@ aic_results <- compare_models(
 aic_results
 ```
 
-It appears that the temporal model best explaines our data! Normally, we would only continue to examine and plot our best fit model, m3, but for training, we will walk through all the models.
+It appears that the temporal model best explains our data! Normally, we would only continue to examine and plot our best fit model, m3, but for training, we will walk through all the models.
 
 #### Model averaging
 It is possible to model average if AIC values are similar, however we recommend using this method with caution. 
 
-That is because 1) it is very difficult to make model predictions (even though many people do) because it does not use the identity link (i.e., it is not a linear model) and 2) there may be a lot of uninformative parameters in your most competitive models. Some papers that go more in depth on this incude:
+That is because 1) it is very difficult to make model predictions (even though many people do) because it does not use the identity link (i.e., it is not a linear model) and 2) there may be a lot of uninformative parameters in your most competitive models. Some papers that go more in depth on this include:
 * Cade, B. S. (2015). Model averaging and muddled multimodel inferences. Ecology, 96(9), 2370-2382.
 * Arnold, T. W. (2010). Uninformative parameters and model selection using Akaike's Information Criterion. The Journal of Wildlife Management, 74(6), 1175-1178.
 
