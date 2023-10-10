@@ -28,7 +28,7 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 <a name="assumptions"></a>
 
-## 1. Occupancy model assumptions
+## 2. Occupancy model assumptions
 
 Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
 
@@ -40,7 +40,7 @@ We comply to these assumptions by carefully developing our study design (based o
 
 <a name="formatting"></a>
 
-## 1. Formatting data
+## 3. Formatting data
 
 Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
