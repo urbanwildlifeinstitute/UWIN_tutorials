@@ -190,10 +190,6 @@ habitat_model <- occu(~1 # detection
                         data = raccoon_occ)
 null_model
 habitat_model
-
-# Let's look at 
-plogis(coef(null_model, type = "state")) # for occupancy
-plogis(coef(intercept_model, type = "det")) # for detection
 ```
 
 We can also use functions `fitList` and `modSel` in `unmarked` to compare our models.
