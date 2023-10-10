@@ -48,6 +48,8 @@ Let's take a peek at the data! Start by loading in necessary libraries and `chic
 
 ```R
 # Load in libraries
+install.packages("dplyr")
+install.packages("ggplot2")
 library(dplyr)
 library(ggplot2)
 
@@ -130,6 +132,7 @@ Be mindful that it is OK to have missing or NA observation data BUT for each obs
 We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. 
 
 ```R
+install.packages("unmarked")
 library("unmarked")
 ?unmarkedFrameOccu()
 ```
