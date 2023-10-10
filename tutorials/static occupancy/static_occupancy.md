@@ -71,7 +71,8 @@ day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
 
-# and write a function that keeps each occasion with all NA's as such and those > 0 as 1
+# and write a function that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
+
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
   for(i in 1:length(groups)){
