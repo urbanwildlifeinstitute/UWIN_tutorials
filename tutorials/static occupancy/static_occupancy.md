@@ -256,6 +256,7 @@ plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
      xlab = "Scaled proportion forest", # x label
      ylab = "Occupancy", # y label
      ylim = c(0, 1), # range to y axis
+     xlim = c(0,1),
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
