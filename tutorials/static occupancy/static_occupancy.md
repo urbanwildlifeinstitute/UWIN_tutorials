@@ -140,7 +140,7 @@ We see there are a few necessary arguments we need to specify to run the `occu()
 
 ```R
 y <- raccoon_wk %>% 
-  select(visit_1:visit_5)
+  select(Week_1:Week_5)
 
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
