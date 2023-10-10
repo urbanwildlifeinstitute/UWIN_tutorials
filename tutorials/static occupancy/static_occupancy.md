@@ -212,7 +212,7 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
                          
-# Convert back to probability
+# Convert confidence errors back to probability
 plogis(occ_error)
 plogis(det_error)
 ```
