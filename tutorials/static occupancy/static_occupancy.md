@@ -272,7 +272,7 @@ lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
 )
 ```
 <p float="center">
-  <img src="./plots/occ_forest_basic.png" alt="Occupancy plot of raccoons using plot()" width="501" height="auto" />
+  <img src="./plots/occ_forest_basic.png" alt="Plot of raccoon occupancy across percent forest using plot()" width="500" height="auto" />
 </p>
 
 We can make this a bit cleaner using `ggplot` functions.
@@ -292,7 +292,7 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   theme(plot.title=element_text(hjust=0.5)) # centers titles
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
+  <img src="./plots/occ_forest_ggplot.jpg" alt="Plot of raccoon occupancy across percent forest using ggplot" width="500" height="auto" />
 </p>
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
