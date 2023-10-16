@@ -1,7 +1,7 @@
 # UWIN Tutorial: Static Occupancy
-*Created by Kimberly Rivera - last updated April 2023 by Kimberly Rivera*
+*Created by Kimberly Rivera - last updated September 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occuapncy modeling, or as a refesher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at folks interested and new to occupancy modeling, or as a refresher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
@@ -22,32 +22,36 @@ This tutorial is aimed at folks interested and new to occuapncy modeling, or as 
 
 <a name="occupancy"></a>
 
-## 1. What is occuancy?
+## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species occurence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurence of species across space and time. 'Occupancy' can be defined as the probability that a site is occupied by a particular species. Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors to monitor environments that may or may not host our species (specifically 'unmarked species') of interest. 
+Often in wildlife ecology, we are interested in unpacking the relationship between species occurrence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurrence of species. 'Occupancy' can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$. 
+
+Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor environments that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns). 
 
 <a name="assumptions"></a>
 
-## 1. Occupancy model assumptions
+## 2. Occupancy model assumptions
 
-Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between our observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
+Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
 
-1. Detectiton probability is constant across sites or vists or explained by covariates
-2. Occupancy probability is constant across sites or visits or explained by covariates
+1. Detection probability is constant across sites or visits, or explained by covariates
+2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys
 
-We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorperating relevant and measurable covariates. 
+We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating  relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
 
-## 1. Formatting data
+## 3. Formatting data
 
-Let's learn more about occupancy through an exmaple. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
+Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
-Let's take a peek at the data! Start by loading in neccessary libraries and `chicago_raccoon.csv`. We will continue to use `dplyr` and `ggplot2`.
+Let's take a peek at the data! Start by loading in necessary libraries and `chicago_raccoon.csv`. We will continue to use `dplyr` and `ggplot2`.
 
 ```R
 # Load in libraries
+install.packages("dplyr")
+install.packages("ggplot2")
 library(dplyr)
 library(ggplot2)
 
@@ -58,7 +62,7 @@ raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3)
 # Check out what data we're working with.
 head(raccoon)
 ```
-We see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
+By glancing at our environment, we see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
 
 ```R
 # Let's confirm that there are no repeated sites
@@ -71,7 +75,8 @@ day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
 
-# and write a function that keeps each occasion with all NA's as such and those > 0 as 1
+# and write a function that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
+
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
   for(i in 1:length(groups)){
@@ -100,14 +105,14 @@ colnames(week_summary) <- paste0("Week_",1:n_weeks)
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop that last sampling day.
+Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop the last sampling day.
 
 ```R
 raccoon_wk <- raccoon_wk %>% 
   select(-Week_6)
 ```
 
-Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covarites to our occasion data. These data were extracted using the `FedData` package in R. Column values are the percent landcover within 1000m of each camera site.  
+Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covariates to our occasion data. These data were extracted using the `FedData` package in R. Learn more about mapping in the ['Detection Mapping'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Detection%20Mapping) tutorial. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
@@ -129,14 +134,15 @@ Be mindful that it is OK to have missing or NA observation data BUT for each obs
 We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. 
 
 ```R
+install.packages("unmarked")
 library("unmarked")
 ?unmarkedFrameOccu()
 ```
-We see there are a few neccessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
+We see there are a few necessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
 
 ```R
 y <- raccoon_wk %>% 
-  select(visit_1:visit_5)
+  select(Week_1:Week_5)
 
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
@@ -186,10 +192,6 @@ habitat_model <- occu(~1 # detection
                         data = raccoon_occ)
 null_model
 habitat_model
-
-# Let's look at 
-plogis(coef(null_model, type = "state")) # for occupancy
-plogis(coef(intercept_model, type = "det")) # for detection
 ```
 
 We can also use functions `fitList` and `modSel` in `unmarked` to compare our models.
@@ -201,8 +203,8 @@ modSel(fitlist)
 Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
-plogis(coef(null_model, type = "state")) # for occupancy
-plogis(coef(null_model, type = "det")) # for detection
+plogis(coef(null_model, type = "state")) # probability for occupancy
+plogis(coef(null_model, type = "det")) # probability for detection
 
 # We can also use `confit` to calculate the associated error
 # 95% confidence intervals for occupancy
@@ -212,7 +214,7 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
                          
-# Convert back to probability
+# Convert confidence intervals back to probability 
 plogis(occ_error)
 plogis(det_error)
 ```
@@ -256,6 +258,7 @@ plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
      xlab = "Scaled proportion forest", # x label
      ylab = "Occupancy", # y label
      ylim = c(0, 1), # range to y axis
+     xlim = c(0,1),
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
@@ -292,4 +295,4 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
 
-Nice work! If you are interested in furthering your occupancy journey, try this tutorial with your own data or check out other UWIN tutorials like 'Autologistic occupancy'.
+Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
