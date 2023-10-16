@@ -203,8 +203,8 @@ modSel(fitlist)
 Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
-plogis(coef(null_model, type = "state")) # for occupancy
-plogis(coef(null_model, type = "det")) # for detection
+plogis(coef(null_model, type = "state")) # probability for occupancy
+plogis(coef(null_model, type = "det")) # probability for detection
 
 # We can also use `confit` to calculate the associated error
 # 95% confidence intervals for occupancy
@@ -214,7 +214,7 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
                          
-# Convert confidence errors back to probability
+# Convert confidence intervals back to probability 
 plogis(occ_error)
 plogis(det_error)
 ```
