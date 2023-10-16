@@ -272,7 +272,7 @@ lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
 )
 ```
 <p float="center">
-  <img src="./plots/occ_forest_basic.png" alt="Plot of raccoon occupancy across percent forest using plot()" width="500" height="auto" />
+  <img src="./plots/occ_forest_basic.png" alt="Plot of raccoon occupancy across percent forest using plot()" width="501" height="auto" />
 </p>
 
 We can make this a bit cleaner using `ggplot` functions.
