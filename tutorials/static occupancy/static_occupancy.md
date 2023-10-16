@@ -24,7 +24,7 @@ This tutorial is aimed at folks interested and new to occupancy modeling, or as 
 
 ## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species occurrence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurrence of species. 'Occupancy' can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented with $\Psi$. 
+Often in wildlife ecology, we are interested in unpacking the relationship between species occurrence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurrence of species. 'Occupancy' can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$. 
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor environments that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns). 
 
