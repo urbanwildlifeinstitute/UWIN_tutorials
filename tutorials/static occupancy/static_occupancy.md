@@ -62,7 +62,7 @@ raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3)
 # Check out what data we're working with.
 head(raccoon)
 ```
-We see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
+By glancing at our environment, we see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
 
 ```R
 # Let's confirm that there are no repeated sites
