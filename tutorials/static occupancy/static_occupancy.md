@@ -298,5 +298,5 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
 
 <p float="center">
-  <img src="./plots/raccoon.png" alt="Image of raccoon in trash can by Kim Rivera" width="500" height="auto" />
+  <img src="./plots/raccoon.png" alt="Image of raccoon in trash can by Kim Rivera" width="400" height="auto" />
 </p>
