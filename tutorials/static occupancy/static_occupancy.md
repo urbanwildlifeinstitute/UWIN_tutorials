@@ -299,6 +299,7 @@ Nice work! If you are interested in furthering your occupancy journey, try this 
 
 
 
+   
 <p float="center">
   <img src="./plots/raccoon.png" alt="Image of raccoon in trash can by Kim Rivera" width="400" height="auto" />
 </p>
