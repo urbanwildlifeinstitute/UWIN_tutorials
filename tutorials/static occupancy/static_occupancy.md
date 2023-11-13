@@ -46,8 +46,7 @@ We can convert surveys into mathematical equations by creating 'detection histor
 </p>
 
 <a name="assumptions"></a>
-
-In these equations, $\Psi$ represents the probability a site is occupied by a species while *p* represents the probability of detecting a species during that particular visit.  
+In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
 
 
 ## 2. Occupancy model assumptions
