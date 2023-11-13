@@ -39,7 +39,7 @@ When conducting surveys, the following may occur:
 <a name="assumptions"></a>
 
 
-We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no detection) and '1's (detection) where rows indicate sites and columns indicate repeate vistis. For example:
+We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat vistis. For example:
 
 <p float="center">
   <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
