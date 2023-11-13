@@ -28,7 +28,9 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
 
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. When conducting surveys, the following may occur:
+However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
+
+When conducting surveys, the following may occur:
 
 <p float="center">
   <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
@@ -37,15 +39,15 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 <a name="assumptions"></a>
 
 
-We can convert our surveys into mathematical equations by creating 'detection hitories'. These typically are formed as tables of '0's (no detection) and '1's (detection) over a series of sampling occasions. 
+We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat vistis. For example:
 
 <p float="center">
-  <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="850" height="auto" />
+  <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
 <a name="assumptions"></a>
+In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
 
-We will focus here on the most simple occupancy model, a single-species, single-season model. 
 
 ## 2. Occupancy model assumptions
 
