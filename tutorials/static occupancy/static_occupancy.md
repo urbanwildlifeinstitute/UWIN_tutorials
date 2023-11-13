@@ -33,7 +33,7 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 When conducting surveys, the following may occur:
 
 <p float="center">
-  <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+  <img src="./plots/det_states.png" alt="Figure on occupancy states" width="510" height="auto" />
 </p>
 
 <a name="assumptions"></a>
