@@ -24,17 +24,18 @@ This tutorial is aimed at folks interested and new to occupancy modeling, or as 
 
 ## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). Occupancy is a low cost, effective way to model the occurrence of species. 'Occupancy' can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
+Often in wildlife ecology, we are interested in unpacking the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
 
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from the 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into an occupancy model. When conducting surveys, the following may occur:
+However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. When conducting surveys, the following may occur:
 
 <p float="center">
   <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="400" height="auto" />
 </p>
 
 <a name="assumptions"></a>
+
 
 ## 2. Occupancy model assumptions
 
