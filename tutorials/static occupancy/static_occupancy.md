@@ -36,14 +36,16 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 
 <a name="assumptions"></a>
 
+We will focus here on the most simple occupancy model, a single-species, single-season model. 
 
 ## 2. Occupancy model assumptions
 
-Because detecting wildlife via camera traps, acoustic detectors, etc. is imperfect, we can use occupancy modeling to account for the differences between observations and reality. We do so by repeatedly visiting sites to determine if our species of interest was detected or not. During this monitoring period we assume that:
+Under this model we assume that:
 
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
-3. The occupancy status does not change over our repeated surveys
+3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
+4. There are no false detections (detecting a species when it is truely *not* there)
 
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating  relevant and measurable covariates (e.g. environmental variability). 
 
