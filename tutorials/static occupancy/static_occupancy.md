@@ -36,6 +36,7 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 
 <a name="assumptions"></a>
 
+
 We can convert our surveys into mathematical equations by creating 'detection hitories'. These typically are formed as tables of '0's (no detection) and '1's (detection) over a series of sampling occasions. 
 
 <p float="center">
