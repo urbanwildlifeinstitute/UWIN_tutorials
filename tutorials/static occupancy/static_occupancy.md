@@ -242,8 +242,6 @@ modSel(fitlist)
 Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
-plogis(coef(null_model, type = "state")) # probability for occupancy
-plogis(coef(null_model, type = "det")) # probability for detection
 
 # We can also use `confit` to calculate the associated error for each estimate
 # 95% confidence intervals for occupancy
@@ -252,13 +250,16 @@ occ_error <- cbind(coef(null_model, type = "state"),
 # 95% confidence intervals for detection
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
-                         
+```
+Our estimates here are given as log-odds or the ratio of the probability of success and the probability of failure. These can be tricky to interpret so we will convert these estimate to probabilities on a scale of 0 to 1. 
+
+```R
 # Convert confidence intervals back to probability from log-odds estimate
 # plogis() = to exp() / 1 + exp()
 plogis(occ_error)
 plogis(det_error)
 ```
-How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites.
+How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy as it does not consider imperfect detection (detections we may miss). 
 
 ```R
 # Our naive occupancy
