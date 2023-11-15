@@ -28,12 +28,12 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
 
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
+However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
 When conducting surveys, the following may occur:
 
 <p float="center">
-  <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+  <img src="./plots/det_states.png" alt="Figure on occupancy states" width="510" height="auto" />
 </p>
 
 <a name="assumptions"></a>
@@ -56,9 +56,9 @@ Under this model we assume that:
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
-4. There are no false detections (detecting a species when it is truely *not* there)
+4. There are no false detections (detecting a species when it is truely *not* there or misidentifying a species)
 
-We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating  relevant and measurable covariates (e.g. environmental variability). 
+We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
 
@@ -122,7 +122,11 @@ week_summary <- t( # this transposes our matrix
 
 # Now update names
 colnames(week_summary) <- paste0("Week_",1:n_weeks)
+
+# drop visits
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
+
+# and add occasions
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
 Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop the last sampling day.
