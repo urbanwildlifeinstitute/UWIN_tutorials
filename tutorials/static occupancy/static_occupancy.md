@@ -171,7 +171,9 @@ y <- raccoon_wk %>%
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
 
-# We should also examine our covariates of interest to see if they should be scaled
+```
+We should also examine our covariates of interest to see if they should be scaled.
+```R
 ggplot(raccoon_wk, aes(x = water)) +
   geom_histogram() +
   theme_minimal() +
