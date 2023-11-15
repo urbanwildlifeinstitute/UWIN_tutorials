@@ -172,12 +172,21 @@ siteCovs <- raccoon_wk %>%
   select(c(water, forest))
 
 # We should also examine our covariates of interest to see if they should be scaled
-hist(raccoon_wk$water)
-hist(raccoon_wk$forest)
+ggplot(raccoon_wk, aes(x = water)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion water", y = "Site count")
+
+ggplot(raccoon_wk, aes(x = forest)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion forest", y = "Site count") 
 ```
 <p float="left">
-  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="500" height="auto" />
-  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="500" height="auto" /> 
+  <img src="./plots/water_hist.tiff" alt="A plot of water site covariate." width="500" height="auto" />
+  <img src="./plots/forest_hist.tiff" alt="A plot of forest site covariate." width="500" height="auto" /> 
 </p>
 
 Looks like it's a good idea to scale these data before adding to our `occu()` data.frame
