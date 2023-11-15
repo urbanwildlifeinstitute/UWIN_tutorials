@@ -184,9 +184,10 @@ ggplot(raccoon_wk, aes(x = forest)) +
   theme(text = element_text(size = 18)) +
   labs(x = "Proportion forest", y = "Site count") 
 ```
+
 <p float="left">
-  <img src="./plots/water_hist.tiff" alt="A plot of water site covariate." width="500" height="auto" />
-  <img src="./plots/forest_hist.tiff" alt="A plot of forest site covariate." width="500" height="auto" /> 
+  <img src="./plots/water_hist.tiff" alt="A plot of counts of proportion of water at each site" width="500" height="auto" />
+  <img src="./plots/forest_hist.tiff" alt="A plot of counts of proportion of forest at each site" width="500" height="auto" /> 
 </p>
 
 Looks like it's a good idea to scale these data before adding to our `occu()` data.frame
