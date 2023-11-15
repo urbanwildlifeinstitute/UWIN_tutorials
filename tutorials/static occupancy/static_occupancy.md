@@ -198,13 +198,14 @@ In this case, we have two covariates which share the same scale/units and fall w
 # scale covariates
 siteCovs <- siteCovs %>% 
   mutate(water_scale = scale(water)) %>% 
-  mutate(forest_scale = scale(forest)) %>% 
-  select(-c(water, forest)) # drop unscaled covariates
+  mutate(forest_scale = scale(forest))
 
 siteCovs_df <- data.frame(siteCovs)
 
 # Now we can make our unmarkedFrameOccu() dataframe
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
+
+# examine covariate details and site summary
 summary(raccoon_occ)
 ```
 
@@ -217,6 +218,7 @@ Let's fit two models, one for a null hypothesis and one which considers the habi
 **habitat hypothesis** - raccoon occupancy is explained by habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
 
 ```R
+# learn more about this function modeled after MacKenzie et al. (2002)
 ?occu()
 
 null_model <- occu(~1 # detection
@@ -226,11 +228,12 @@ null_model <- occu(~1 # detection
 habitat_model <- occu(~1 # detection
                       ~ forest_scale + water_scale, # occupancy
                         data = raccoon_occ)
+# examine model estimates and standard errors
 null_model
 habitat_model
 ```
 
-We can also use functions `fitList` and `modSel` in `unmarked` to compare our models.
+We can also use functions `fitList` and `modSel` in `unmarked` to compare our models using AIC (Akaike information criterion which  estimates the prediction error/ quality of the models).
 
 ```R
 fitlist <- fitList(m1 = null_model, m2 = habitat_model)
@@ -242,7 +245,7 @@ Our best fit model is that with the lowest AIC. Here, we see that our null model
 plogis(coef(null_model, type = "state")) # probability for occupancy
 plogis(coef(null_model, type = "det")) # probability for detection
 
-# We can also use `confit` to calculate the associated error
+# We can also use `confit` to calculate the associated error for each estimate
 # 95% confidence intervals for occupancy
 occ_error <- cbind(coef(null_model, type = "state"),
                          confint(null_model, type = "state"))
@@ -250,7 +253,8 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
                          
-# Convert confidence intervals back to probability 
+# Convert confidence intervals back to probability from log-odds estimate
+# plogis() = to exp() / 1 + exp()
 plogis(occ_error)
 plogis(det_error)
 ```
