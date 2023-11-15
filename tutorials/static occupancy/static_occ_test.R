@@ -87,7 +87,21 @@ siteCovs <- raccoon_wk %>%
 
 # We should also examine our covariates of interest to see if they should be scaled
 hist(raccoon_wk$water)
+ggsave("water_hist.tiff", width = 6, height = 6)
+ggplot(raccoon_wk, aes(x = water)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion water", y = "Site count") 
+  
 hist(raccoon_wk$forest)
+ggsave("forest_hist.tiff", width = 6, height = 6)
+ggplot(raccoon_wk, aes(x = forest)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion forest", y = "Site count") 
+
 
 # scale covariates
 siteCovs <- siteCovs %>% 
