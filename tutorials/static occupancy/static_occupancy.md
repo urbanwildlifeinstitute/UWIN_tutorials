@@ -259,7 +259,7 @@ Our estimates here are given as log-odds or the ratio of the probability of succ
 plogis(occ_error)
 plogis(det_error)
 ```
-How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy as it does not consider imperfect detection (detections we may miss). 
+How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy. 
 
 ```R
 # Our naive occupancy
@@ -274,7 +274,7 @@ mean(siteValue)
 
 ## 5. Predicting & plotting model outputs
 
-If we chose to go with our habitat hypothesis, we could use `habitat_model` to predict occupancy across varying proportions of forest or water. Let's plot changes in occupancy with proportion of forest as an example.
+If we found greater support for our habitat hypothesis (e.g. a lower AIC), we could use `habitat_model` to predict occupancy across varying proportions of forest or water. Let's plot changes in occupancy with proportion of forest as an example.
 
 We know that the proportion of forest ranges from 0 to 1, so we will predict across these values in intervals of .05 while holding water equal to the mean scaled value. We also have to remember that we scaled our predictors, so we must do that again here.
 
