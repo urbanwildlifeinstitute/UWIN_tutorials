@@ -329,11 +329,12 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
+
 <p float="center">
   <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
 </p>
 
-We can make this a bit cleaner using `ggplot` functions.
+We can also plot this figure using `ggplot` functions.
   
 ```R
 # first merge the two datasets (predicted occupancy and forest data)
