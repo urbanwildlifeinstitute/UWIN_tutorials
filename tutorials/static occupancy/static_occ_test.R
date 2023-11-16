@@ -217,14 +217,16 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
 dev.off()
 
 # first merge the two datasets (predicted occupancy and forest data)
-all_dat <- bind_cols(pred_forest, new_dat)
+all_dat <- bind_cols(pred_forest, dat_plot)
 
+ggsave("plots/occ_forest_ggplot_corrected.tiff", width = 6, height = 6)
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
-  labs(x = "Proportion forest (scaled)", y = "Occupancy probability") +
+  labs(x = "Proportion forest", y = "Occupancy probability") +
   ggtitle("Raccoon Occupancy")+
-  scale_x_continuous(limits = c(0,1)) +
+  scale_x_continuous(limits = c(0,.5)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(hjust=0.5), axis.text.x = element_text(size = 15), 
+        text = element_text(size = 18))
