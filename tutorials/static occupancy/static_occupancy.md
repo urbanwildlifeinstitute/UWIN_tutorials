@@ -172,7 +172,7 @@ siteCovs <- raccoon_wk %>%
   select(c(water, forest))
 
 ```
-We should also examine the covariates and note their structure, scale, and distribution.
+We should also examine our covariates and note their structure, scale, and distribution.
 ```R
 ggplot(raccoon_wk, aes(x = water)) +
   geom_histogram() +
@@ -192,9 +192,9 @@ ggplot(raccoon_wk, aes(x = forest)) +
   <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
 </p>
 
-In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorperate covarites of various scales and ranges, thus scaling would be neccessary. In addition, we also need to consider the biological meaning of our covarites within the framework of our model. For occupancy, it is generally helpful to make the intercept of the model the mean of each covarite. This can help us interpret whether species occurence falls below or above the an average value. 
+In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorperate covariates of various scales and ranges, thus scaling would be neccessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to make the intercept of the model the mean of each covariate. This can help us interpret whether species occurence falls below or above average values. 
 
-Thus, we will scale both 'water' and 'forest' before adding to our `occu()` data.frame.
+Thus, we will scale both 'water' and 'forest' before adding them to our `occu()` data.frame.
 
 ```R
 # scale covariates
