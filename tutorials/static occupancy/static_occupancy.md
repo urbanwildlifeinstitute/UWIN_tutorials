@@ -172,7 +172,7 @@ siteCovs <- raccoon_wk %>%
   select(c(water, forest))
 
 ```
-We should also examine our covariates of interest to see if they should be scaled.
+We should also examine the covariates and note their structure, scale, and distribution.
 ```R
 ggplot(raccoon_wk, aes(x = water)) +
   geom_histogram() +
@@ -192,7 +192,7 @@ ggplot(raccoon_wk, aes(x = forest)) +
   <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
 </p>
 
-In this case, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorperate covarites of various scales and ranges, thus scaling will be neccessary. As an exmaple, we will scale both 'water' and 'forest' before adding to our `occu()` data.frame.
+In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorperate covarites of various scales and ranges, thus scaling would be neccessary. As an exmaple, we will scale both 'water' and 'forest' before adding to our `occu()` data.frame.
 
 ```R
 # scale covariates
