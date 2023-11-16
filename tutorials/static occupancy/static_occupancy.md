@@ -253,7 +253,7 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
 ```
-Our estimates here are given as log-odds or the ratio of the probability of success and the probability of failure. These can be tricky to interpret so we will convert these estimate to probabilities on a scale of 0 to 1. 
+This occupancy model is fit with a log-link function, thus our estimates are given as log-odds or the ratio of the probability of success and the probability of failure. These can be tricky to interpret so it is good practice to convert these estimate to probabilities on a scale of 0 to 1. 
 
 ```R
 # Convert confidence intervals back to probability from log-odds estimate
@@ -276,46 +276,61 @@ mean(siteValue)
 
 ## 5. Predicting & plotting model outputs
 
-If we found greater support for our habitat hypothesis (e.g. a lower AIC), we could use `habitat_model` to predict occupancy across varying proportions of forest or water. Let's plot changes in occupancy with proportion of forest as an example.
+Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to exemplify how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest.
 
-We know that the proportion of forest ranges from 0 to 1, so we will predict across these values in intervals of .05 while holding water equal to the mean scaled value. We also have to remember that we scaled our predictors, so we must do that again here.
+To do this we need to consider two types of data, our original forest values, and the scaled values we fed into our model. Let's examine the ranges of those data to inform our prediction data set.
 
 ```R
-# Create a new dataframe 
-new_dat <- data.frame(forest = seq(from = 0, to = 1, by = 0.05),
-                     water_scale = mean(siteCovs$water_scale))
-# Scale the data
-new_dat <- new_dat %>% 
-  mutate(forest_scale = scale(forest))
-  
+# examine the ranges of both data types
+range(siteCovs_df$forest)
+range(siteCovs_df$forest_scale)
+```
+Since we want to make a 'clean' or pretty plot, we will want to use the real range of our forest data to pick our plotting values without extrapolating our model. Here, our real (unscaled) 'forest' data ranges from 0 to .49. For plotting purposes, we will create a new prediction dataframe from 0 to .5 and scale this clean data set in the same way we scaled our real data fed into the model. We must also add other model covariate data into our predicted dataframe, in this case, water. Since we are just interested in how occupancy changes across variation in forest cover, we will hold water to it's mean scaled value, or zero (remember when we scale data, the means will center on zero). 
+
+```R
+# recreate 'clean' data for plotting later
+forest_real <- c(0, 0.5)
+
+# Create a prediction dataframe and make sure to use the same covariate names as included in the occupancy model
+dat_plot <- data.frame(
+  forest_scale = seq(forest_real[1], forest_real[2], length.out = 400),
+  water_scale = 0 # zero because water has been scaled/centered
+)
+
+# rescale 'clean' forest data exactly how we did in our model
+dat_pred <- dat_plot
+dat_pred$forest_scale <- (dat_pred$forest_scale - mean(siteCovs_df$forest)) / sd(siteCovs_df$forest)
+```
+Now that we have the cleaned version of our data scaled, we are ready to make predictions and plot. 
+```R
 # Make predictions with these data
-pred_forest <- predict(habitat_model, type = "state", newdata = new_dat)
+pred_forest <- predict(habitat_model, type = "state", newdata = dat_pred)
 head(pred_forest)
 ```
-Now we are in good shape for plotting! Let's make a rough plot first then play around with `ggplot`.
+Note that the `predict()` function converts data into probabilities so we do not need to use `plogis()` as we have done previously with the output of the `occu()`
 
+We can use base R to plot our predicted occupancy values and confidence intervals on the y-axis and our clean/pretty covariate data on the x-axis.
 ```R
-plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
+plot(pred_forest$Predicted ~ dat_plot$forest_scale, # y-axis ~ x-axis
      type = "l",  # plot out a line
      bty = "l", # box type is an L around plot
-     xlab = "Scaled proportion forest", # x label
+     xlab = "Proportion forest", # x label
      ylab = "Occupancy", # y label
      ylim = c(0, 1), # range to y axis
-     xlim = c(0,1),
+     xlim = c(0,.5),
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
-  
 # add 95% confidence intervals
-lines(pred_forest$lower ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$lower ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 ) 
-lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
 <p float="center">
-  <img src="./plots/occ_forest_basic.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
+  <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
 </p>
 
 We can make this a bit cleaner using `ggplot` functions.
