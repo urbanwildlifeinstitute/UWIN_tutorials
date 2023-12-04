@@ -329,28 +329,30 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
+
 <p float="center">
   <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
 </p>
 
-We can make this a bit cleaner using `ggplot` functions.
+We can also plot this figure using `ggplot` functions.
   
 ```R
 # first merge the two datasets (predicted occupancy and forest data)
-all_dat <- bind_cols(pred_forest, new_dat)
+all_dat <- bind_cols(pred_forest, dat_plot)
 
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
-  labs(x = "Proportion forest (scaled)", y = "Occupancy probability") +
+  labs(x = "Proportion forest", y = "Occupancy probability") +
   ggtitle("Raccoon Occupancy")+
-  scale_x_continuous(limits = c(0,1)) +
+  scale_x_continuous(limits = c(0,.5)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(hjust=0.5), axis.text.x = element_text(size = 15), 
+        text = element_text(size = 18))
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot.jpg" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
+  <img src="./plots/occ_forest_ggplot_corrected.tiff" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
