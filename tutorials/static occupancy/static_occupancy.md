@@ -45,7 +45,7 @@ Under this model we assume that:
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
-4. There are no false detections (detecting a species when it is truely *not* there)
+4. There are no false detections (detecting a species when it is truly *not* there)
 
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating  relevant and measurable covariates (e.g. environmental variability). 
 
