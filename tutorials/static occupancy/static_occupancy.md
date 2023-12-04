@@ -351,9 +351,8 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   theme(plot.title=element_text(hjust=0.5), axis.text.x = element_text(size = 15), 
         text = element_text(size = 18))
   ```
-
 <p float="center">
-  <img src="./plots/occ_forest_ggplot_corrected.tiff" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
+  <img src="./plots/occ_forest_ggplot_corrected.png" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
 
 
