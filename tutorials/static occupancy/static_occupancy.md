@@ -39,7 +39,7 @@ When conducting surveys, the following may occur:
 <a name="assumptions"></a>
 
 
-We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat vistis. For example:
+We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. For example:
 
 <p float="center">
   <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
@@ -56,7 +56,7 @@ Under this model we assume that:
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
-4. There are no false detections (detecting a species when it is truely *not* there or misidentifying a species)
+4. There are no false detections (detecting a species when it is truly *not* there or misidentifying a species)
 
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
@@ -192,7 +192,7 @@ ggplot(raccoon_wk, aes(x = forest)) +
   <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
 </p>
 
-In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorperate covariates of various scales and ranges, thus scaling would be neccessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to make the intercept of the model the mean of each covariate. This can help us interpret whether species occurence falls below or above average values. 
+In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to make the intercept of the model the mean of each covariate. This can help us interpret whether species occurrence falls below or above average values. 
 
 Thus, we will scale both 'water' and 'forest' before adding them to our `occu()` data.frame.
 
