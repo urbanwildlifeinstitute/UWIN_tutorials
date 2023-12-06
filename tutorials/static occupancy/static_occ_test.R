@@ -87,7 +87,7 @@ siteCovs <- raccoon_wk %>%
 
 # We should also examine our covariates of interest to see if they should be scaled
 hist(raccoon_wk$water)
-ggsave("water_hist.png", width = 4)
+ggsave("plots/water_hist.png", width = 4)
 ggplot(raccoon_wk, aes(x = water)) +
   geom_histogram() +
   theme_minimal() +
@@ -95,7 +95,7 @@ ggplot(raccoon_wk, aes(x = water)) +
   labs(x = "Proportion water", y = "Site count") 
   
 hist(raccoon_wk$forest)
-ggsave("forest_hist.png", width = 4)
+ggsave("plots/forest_hist.png", width = 4)
 ggplot(raccoon_wk, aes(x = forest)) +
   geom_histogram() +
   theme_minimal() +
@@ -219,7 +219,7 @@ dev.off()
 # first merge the two datasets (predicted occupancy and forest data)
 all_dat <- bind_cols(pred_forest, dat_plot)
 
-ggsave("plots/occ_forest_ggplot_corrected.tiff", width = 6, height = 6)
+ggsave("plots/occ_forest_ggplot_corrected.png", width = 6, height = 6)
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
