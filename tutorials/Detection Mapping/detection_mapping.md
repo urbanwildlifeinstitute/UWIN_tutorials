@@ -62,6 +62,7 @@ sp_det <- sp_data_2021 %>%
   summarise(detections = n())
 
 # we can see this list matches the number of unique species in 2021
+sp_det
 unique(sp_data_2021$commonName)
 ```
 
