@@ -29,6 +29,13 @@ Some reasons spatial data can be complicated to work with is that it exists in m
 
 ```R
 setwd()
+# install packages
+library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(maps)
+library(RColorBrewer)
 
 # load in libraries
 library(readr)
