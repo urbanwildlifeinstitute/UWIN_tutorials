@@ -26,7 +26,7 @@ The study of species habitat, or where species are found in space and time, is a
 <a name="formatting"></a>
 
 ## 2. Processing and formatting data
-Some reasons spatial data can be difficult to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [`ggmap`] package (https://cran.r-project.org/web/packages/ggmap/readme/README.html) and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
+Some reasons spatial data can be difficult to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from package [`ggmap`](https://cran.r-project.org/web/packages/ggmap/readme/README.html) and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
 
 ```R
 setwd() # set to the directory in which you have data saved 
