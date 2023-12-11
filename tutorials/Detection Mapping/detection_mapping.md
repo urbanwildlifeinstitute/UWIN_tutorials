@@ -197,7 +197,7 @@ ggmap::ggmap(chicago) +
              stroke = 1, data = carnivore_sum, shape = 21)
 ```
  <p float="left">
-  <img src="./plots/carn_map" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/carn_map.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
 If we look closely at our map, we can see that all the raccoon detections appear to be visible but, by referencing the last map, it seems we are missing coyote detections. These data are not actually missing, but raccoon detections are overlapping the other species detections and overwriting them as those detections are plotted last. 
