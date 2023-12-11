@@ -34,6 +34,7 @@ sp_det <- sp_data_2021 %>%
   group_by(commonName) %>% 
   summarise(detections = n())
 
+sp_det
 # we can confirm we have all the species by looking at unique species seen in 2021
 unique(sp_data_2021$commonName)
 
@@ -49,7 +50,15 @@ raccoon_sum <- raccoon_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 
-library(ggmap)
+# https://builtin.com/data-science/ggmap
+install.packages("ggmap")
+library('ggmap')
+install.packages('osmdata')
+library(osmdata)
+
+my_api <- 'AIzaSyBt73bzxdvlS6ioit4OTCaIE6SrZJ9aWnA'
+register_google(key = my_api)
+
 #library(osmdata)
 
 #chicago = get_map(location = getbb("chicago"), zoom = 10, scale = 1, source = "stamen")
@@ -59,13 +68,38 @@ library(ggmap)
 #devtools::install_github("dkahle/ggmap", ref = "tidyup")
 #https://www.r-bloggers.com/2018/10/getting-started-stamen-maps-with-ggmap/
 # http://maps.stamen.com/#watercolor/12/37.7706/-122.3782
-?get_stamenmap
-chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
-                                  right = -87.4, top = 42.3), 
-                         zoom = 11)
-ggsave("plots/raccoon_map.jpg", width = 6, height = 6)
+?get_map()
+# chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
+#                                   right = -87.4, top = 42.3), 
+#                          zoom = 11)
+chicago <- get_map("chicago", source= "google", api_key = my_api)
+ggmap(chicago)
+ggsave("plots/chicago_map_region.jpg", width = 6, height = 6)
+
+chicago <- get_map(c(left = -88.3, bottom = 41.55, right = -87.4, top = 42.3), 
+                   zoom = 10)
+ggmap(chicago)
+ggsave("plots/chicago_map_coord.jpg", width = 6, height = 6)
+
+# see difference between base R and ggplot style mapping
+plot(chicago)
+ggmap(chicago)
+
+# we can also pull other types data or other layers from Google Maps
+chicago_satellite <- get_map("chicago", maptype= "satellite", source= "google", api_key = my_api)
+ggmap(chicago_satellite)
+chicago_road <- get_map("chicago", maptype= "roadmap", source= "google", api_key = my_api)
+ggmap(chicago_road)
+
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections), 
+             data = raccoon_sum) +
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  labs(color = "Species") + # updates legend related to color (here 'commonName')
+  #guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
+
+ggsave("plots/raccoon_map.jpg", width = 6, height = 6)
 
 # Another species
 # lets run this for ones species
@@ -80,7 +114,10 @@ coyote_sum <- coyote_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             data = coyote_sum, color = "purple") +
+  labs(size = "Detection frequency") +
+  ggtitle("Coyote detections")
 ggsave("plots/coyote_map.jpg", width = 6, height = 6)
 
 # let's try this again with three species of your choosing in 2021
