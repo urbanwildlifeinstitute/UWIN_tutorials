@@ -7,6 +7,7 @@ This tutorial is aimed at folks interested and new to spatial mapping, or as ref
 ### Some helpful references:
 1. [Species occurrence and density maps](https://ourcodingclub.github.io/tutorials/seecc_1/index.html#Flickr) - Coding Club, Gergana, John, Francesca, Sandra and Isla
 2. [Elegant Graphics for Data Analysis](https://ggplot2-book.org/maps.html) -  Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen
+3. [A Guide to using ggmap](https://builtin.com/data-science/ggmap) - Ivo Bernardo
 
 ### Tutorial Aims:
 
@@ -25,17 +26,19 @@ The study of species habitat, or where species are found in space and time, is a
 <a name="formatting"></a>
 
 ## 2. Processing and formatting data
-Some reasons spatial data can be complicated to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [Stamen maps](http://maps.stamen.com/#watercolor/12/37.7707/-122.3783), accessed via `ggmap()` and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
+Some reasons spatial data can be difficult to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [`ggmap`] package (https://cran.r-project.org/web/packages/ggmap/readme/README.html) and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
 
 ```R
-setwd()
+setwd() # set to the directory in which you have data saved 
+
 # install packages
-library(readr)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(maps)
-library(RColorBrewer)
+install.packages("readr")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("maps")
+install.packages("RColorBrewer")
+install.packages("ggmap")
 
 # load in libraries
 library(readr)
@@ -44,6 +47,7 @@ library(dplyr)
 library(ggplot2)
 library(maps)
 library(RColorBrewer)
+library(ggmap)
 
 # read in example data
 sp_data <- read_csv("CHIL_Detections.csv")
@@ -59,7 +63,6 @@ sp_data <- sp_data %>%
 # we can use this column to subset our data to year 2021
 sp_data_2021 <- sp_data %>% filter(year == 2021)
 ```
-
 We will need to use the `group_by` function to count the number of detections for each species
 
 ```R
@@ -72,11 +75,10 @@ sp_det <- sp_data_2021 %>%
 sp_det
 unique(sp_data_2021$commonName)
 ```
-
-Let's simplify this task by focusing on mapping one species across all of our camera sites
+Let's simplify this task by focusing on mapping one species across all of our camera sites.
 
 ```R
-# subset detections to raccoons
+# subset to just detections of raccoons
 raccoon_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Raccoon")
 
@@ -87,14 +89,15 @@ raccoon_sum <- raccoon_det_2021 %>%
   ungroup() %>% 
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) # allows us to retain site level data
 ```
-
-Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. 
+Great! Now we have all the data we need in one place. We also have all the information we need to plot and map raccoon detections. 
 
 <a name="plots"></a>
 
 ## 3. Plotting spatial data
 ### Using ggmap
-There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+There are many packages and base maps we can use to display these data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+
+One limitation on using `ggmap` is we need to setup a project API, or application programming interface. These API's are free to use up to a $200 credit each month (28,500 maploads per month). If you already have a google account, follow [API setup instructions here](https://developers.google.com/maps/documentation/embed/get-api-key).
 
 ```R
 # install libraries
