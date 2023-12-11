@@ -169,7 +169,6 @@ ggmap::ggmap(chicago) +
 # a way to save your ggplot locally
 ggsave("coyote_map.jpg", width = 6, height = 6) # run this function after your desired plot
 ```
-
  <p float="left">
   <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
 </p>
