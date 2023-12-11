@@ -122,10 +122,12 @@ coyote_sum <- coyote_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
-             data = coyote_sum, color = "purple") +
-  labs(size = "Detection frequency") +
-  ggtitle("Coyote detections")
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = coyote_sum, color = "purple") + # control color of detections
+  ggtitle("Coyote detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(10, 100, by=10)) # control breaks of detection counts
+
 ggsave("plots/coyote_map.jpg", width = 6, height = 6)
 
 # let's try this again with three species of your choosing in 2021
