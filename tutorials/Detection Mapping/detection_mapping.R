@@ -159,6 +159,7 @@ ggmap::ggmap(chicago) +
              stroke = 1, data = carnivore_sum, shape = 21)
 ggsave("plots/species_map_basic.jpg", width = 6, height = 6)
 
+# We can also clean up our labels and axes 
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
@@ -172,64 +173,67 @@ ggmap::ggmap(chicago) +
   scale_shape_manual(values= c(21, 22, 23))  
 ggsave("plots/species_map_clean.jpg", width = 6, height = 6)
 
-# We can also clean up our labels and axes 
-ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
-                 shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.01,w=0.01)) +
-  scale_shape_manual(values= c(21, 22, 23))+
-  ggtitle("Chicago, IL USA Detections 2021")+
-  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
-  xlab("Longitude")+
-  ylab("Latitude")+
-  labs(color = "Species")+ # to edit labels on color/shape legend title
-  labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
-ggsave("plots/species_map_final.jpg", width = 6, height = 6)
+# ggmap::ggmap(chicago) +
+#   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+#                  shape = commonName), stroke = 1, data = carnivore_sum, 
+#              position=position_jitter(h=0.01,w=0.01)) +
+#   scale_shape_manual(values= c(21, 22, 23))+
+#   ggtitle("Chicago, IL USA Detections 2021")+
+#   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+#   xlab("Longitude")+
+#   ylab("Latitude")+
+#   labs(color = "Species")+ # to edit labels on color/shape legend title
+#   labs(shape = "Species")+
+#   labs(size = "Detections") # to edit label on detections legend title
+# ggsave("plots/species_map_final.jpg", width = 6, height = 6)
 
 # If there is a certain area of interest, we can also update our bounding box to focus on a certain 
 # region
 # lincoln_park_sum <- carnivore_sum %>% 
 #   filter(DD_Long >= 41.8 | DD_Long <= 41.5 | DD_Lat >= -87.5 | DD_Lat <= -87.7)
 
-lincoln_park <- get_stamenmap(bbox = c(left = -87.7, bottom = 41.9, 
+lincoln_park <- get_map(c(left = -87.7, bottom = 41.9, 
                                   right = -87.6, top = 42.0), 
                          zoom = 12)
 
 ggmap::ggmap(lincoln_park) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.0025,w=0.0025)) +
+             position=position_jitter(h=0.0025,w=0.0025))+
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue")) + # change colors for each species
   ggtitle("Lincoln Park, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detections")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_LP.jpg", width = 6, height = 6)
 
 # or even more detailed
 # Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of 
 # the map image 
 # we also need to decrease the 'jitter' so we can tell what detections are reletive to what sites
-montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
+montrose <- get_map(c(left = -87.652, bottom = 41.950, 
                                        right = -87.620, top = 41.975), 
-                              zoom = 14)
+                              zoom = 15)
 
 ggmap::ggmap(montrose) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
-                 shape = commonName), stroke = 1, data = carnivore_sum, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, # want to change plot size when we zoom in
              position=position_jitter(h=0.001,w=0.001)) +
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue"))+ # change colors for each species
   ggtitle("Montrose, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detections")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_montrose.jpg", width = 6, height = 6)
 
 # It can be hard to overlap all species of interest so it's best to do this in small groups
