@@ -121,11 +121,23 @@ The `ggmap` package allows us to plot over maps using the ggplot format we have 
 
 ```R
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections), 
+             data = raccoon_sum) +
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  #labs(color = "Species")  # updates legend related to color (here 'commonName')
+  guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
 
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = raccoon_sum, color = "dark blue") + # control color of detections
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
 ```
 <p float="left">
-  <img src="./plots/raccoon_map.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map1" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map2" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
 Try this again for coyote detections. Make this plot using another color. 
