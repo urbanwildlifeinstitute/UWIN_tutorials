@@ -120,6 +120,7 @@ ggmap(chicago)
 The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. Though we are plotting our data using latitude and longitude, it is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
 
 ```R
+# plot detections using common ggplot functions
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections), 
              data = raccoon_sum) +
@@ -128,6 +129,7 @@ ggmap::ggmap(chicago) +
   #labs(color = "Species")  # updates legend related to color (here 'commonName')
   guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
 
+# plot detections using additional ggplot functions to control other graphics
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
              data = raccoon_sum, color = "dark blue") + # control color of detections
@@ -140,12 +142,13 @@ ggmap::ggmap(chicago) +
   <img src="./plots/raccoon_map2.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
-Try this again for coyote detections. Make this plot using another color. 
+Try this same process again for coyote detections. Make this plot using another color. 
 
 <details closed><summary>Solution</a></summary>
 
 ```R
-# subset detections of coyotes
+# Another species
+# lets run this for ones species
 coyote_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Coyote")
 
@@ -154,13 +157,16 @@ coyote_sum <- coyote_det_2021 %>%
   group_by(locationAbbr) %>% 
   mutate(detections = n()) %>% 
   ungroup() %>% 
-  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat)
+  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
-# map coyote detections with a different color
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = coyote_sum, color = "purple") + # control color of detections
+  ggtitle("Coyote detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(10, 100, by=10)) # control breaks of detection counts
 
-# if you want to save your ggplot locally
+# a way to save your ggplot locally
 ggsave("coyote_map.jpg", width = 6, height = 6) # run this function after your desired plot
 ```
  <p float="left">
