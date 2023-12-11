@@ -38,6 +38,7 @@ install.packages("dplyr")
 install.packages("ggplot2")
 install.packages("maps")
 install.packages("RColorBrewer")
+install.packages("forcats")
 devtools::install_github("dkahle/ggmap", ref = "tidyup") # download source data
 
 # load in libraries
@@ -48,6 +49,7 @@ library(ggplot2)
 library(maps)
 library(RColorBrewer)
 library(ggmap)
+library(forcats)
 
 # read in example data
 sp_data <- read_csv("CHIL_Detections.csv")
