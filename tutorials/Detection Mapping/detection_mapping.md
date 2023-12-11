@@ -135,6 +135,7 @@ ggmap::ggmap(chicago) +
   labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
   scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
 ```
+
 <p float="left">
   <img src="./plots/raccoon_map1" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
   <img src="./plots/raccoon_map2" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
