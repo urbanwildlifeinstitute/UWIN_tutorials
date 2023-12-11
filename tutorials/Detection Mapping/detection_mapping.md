@@ -137,8 +137,8 @@ ggmap::ggmap(chicago) +
 ```
 
 <p float="left">
-  <img src="./plots/raccoon_map1" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
-  <img src="./plots/raccoon_map2" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map1.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map2.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
 Try this again for coyote detections. Make this plot using another color. 
