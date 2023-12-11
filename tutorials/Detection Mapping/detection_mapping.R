@@ -154,13 +154,23 @@ ggsave("plots/carn_map.jpg", width = 6, height = 6)
 
 # we can fix this by changing rhe shapes and add a bit of randomness to their location
 # using the jitter() function
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             stroke = 1, data = carnivore_sum, shape = 21)
+ggsave("plots/species_map_basic.jpg", width = 6, height = 6)
 
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
              position=position_jitter(h=0.01,w=0.01)) +
+  ggtitle("Carnivore detections") +
+  labs(size = "Detection frequency") +
+  labs(color = "Species") +
+  labs(color = "Species") +
+  labs(shape = "Species") +
+  scale_size_continuous(breaks=seq(50, 300, by=50)) +
   scale_shape_manual(values= c(21, 22, 23))  
-ggsave("plots/species_map.jpg", width = 6, height = 6)
+ggsave("plots/species_map_clean.jpg", width = 6, height = 6)
 
 # We can also clean up our labels and axes 
 ggmap::ggmap(chicago) +
