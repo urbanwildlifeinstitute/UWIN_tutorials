@@ -38,7 +38,7 @@ install.packages("dplyr")
 install.packages("ggplot2")
 install.packages("maps")
 install.packages("RColorBrewer")
-install.packages("ggmap")
+devtools::install_github("dkahle/ggmap", ref = "tidyup") # download source data
 
 # load in libraries
 library(readr)
@@ -95,19 +95,22 @@ Great! Now we have all the data we need in one place. We also have all the infor
 
 ## 3. Plotting spatial data
 ### Using ggmap
-There are many packages and base maps we can use to display these data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+There are many packages and base maps we can use to display these data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point/segment/polygon data!). 
 
 One limitation on using `ggmap` is we need to setup a project API, or application programming interface. These API's are free to use up to a $200 credit each month (28,500 maploads per month). If you already have a google account, follow [API setup instructions here](https://developers.google.com/maps/documentation/embed/get-api-key).
 
 ```R
-# install libraries
-devtools::install_github("dkahle/ggmap", ref = "tidyup") # this allows us to use Stamen maps
-library(ggmap)
+# setup API key to use `ggmap`
+my_api <- 'AIzaSyBt73bzxdvlS6ioit4OTCaIE6SrZJ9aWnA'
+register_google(key = my_api)
 
-# use package function to extract relevant mapping data using a bounding box
-chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
-                                  right = -87.4, top = 42.3), 
-                         zoom = 11)
+# use package function `get_map` to extract relevant mapping data using a regions names or bounding box with coordinate information (this allows us to be more specific)
+chicago <- get_map("chicago", source= "google", api_key = my_api)
+ggmap(chicago)
+
+chicago <- get_map(c(left = -88.3, bottom = 41.55, right = -87.4, top = 42.3), 
+                   zoom = 10)
+ggmap(chicago)
 ```
 
 The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. Though we are plotting our data using latitude and longitude, it is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
