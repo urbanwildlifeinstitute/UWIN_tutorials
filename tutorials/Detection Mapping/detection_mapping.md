@@ -251,7 +251,7 @@ ggmap::ggmap(lincoln_park) +
   scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ```
  <p float="left">
-  <img src="./plots/species_map_LP.jpg" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/species_map_LP" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
 </p>
 
 We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are relative to what sites
@@ -277,7 +277,7 @@ ggmap::ggmap(montrose) +
   scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ```
 <p float="left">
-  <img src="./plots/species_map_montrose.jpg" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/species_map_montrose" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
 </p>
 
 It can be difficult to visualize many species at once so we can also consider mapping alpha diversity, or species richness (number of species), in a given wildlife community. Let's do this for all species detected in Chicago in 2021.
