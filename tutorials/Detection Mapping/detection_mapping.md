@@ -166,9 +166,10 @@ ggmap::ggmap(chicago) +
   labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
   scale_size_continuous(breaks=seq(10, 100, by=10)) # control breaks of detection counts
 
-# if you want to save your ggplot locally
+# a way to save your ggplot locally
 ggsave("coyote_map.jpg", width = 6, height = 6) # run this function after your desired plot
 ```
+
  <p float="left">
   <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
 </p>
