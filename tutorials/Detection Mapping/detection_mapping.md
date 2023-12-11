@@ -180,6 +180,7 @@ We can also map multiple species at once. Since plotting multiple species may be
 Perhaps we are interested in the co-occurrence of domestic dogs with raccoon and coyote. We hypothesize that dogs are more likely to co-occur with raccoons then with coyotes based on previous research. We will certainly want to explore this hypothesis with statical models, such as a multi-species occupancy model, but we may also want to visualize our data to inform our hypotheses or supplement our findings in reports or manuscripts. Let's plot these three species together: raccoon, coyote, and dogs.
 
 ```R
+# let's try this again with three species of your choosing in 2021
 carnivore_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Raccoon" | commonName == "Coyote" | commonName == "Domestic dog")
 
@@ -190,11 +191,10 @@ carnivore_sum <- carnivore_det_2021 %>%
   ungroup() %>% 
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
-# map species these together
+# lets map these together
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
              stroke = 1, data = carnivore_sum, shape = 21)
-ggsave("carn_map.jpg", width = 6, height = 6)
 ```
  <p float="left">
   <img src="./plots/carn_map.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
@@ -205,22 +205,27 @@ If we look closely at our map, we can see that all the raccoon detections appear
 We can fix this by changing the plotting shapes and by adding a bit of randomness to their locations using the `jitter()` function. We can also tidy up our map using a few additional ggplot commands.
 
 ```R
+# using the jitter() function
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             stroke = 1, data = carnivore_sum, shape = 21)
+
+# We can also clean up our map using more labels and axes 
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.01,w=0.01)) + # moved points to be slightly off-center
-  scale_shape_manual(values= c(21, 22, 23))+ # assigns each species a unique shape
-  ggtitle("Chicago, IL USA Detections 2021")+
-  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
-  xlab("Longitude")+
-  ylab("Latitude")+
-  labs(color = "Species")+ # to edit labels on color/shape legend title
-  labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
-ggsave("species_map_final.jpg", width = 6, height = 6)
+             position=position_jitter(h=0.01,w=0.01)) +
+  ggtitle("Carnivore detections") +
+  labs(size = "Detection frequency") +
+  labs(color = "Species") +
+  labs(color = "Species") +
+  labs(shape = "Species") +
+  scale_size_continuous(breaks=seq(50, 300, by=50)) +
+  scale_shape_manual(values= c(21, 22, 23))  
 ```
  <p float="left">
-  <img src="./plots/species_map_final.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/species_map_basic.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
+   <img src="./plots/species_map_clean.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
 If we want to instead focus our attention on a specific area, we can adjust the bounding box and map level zoom.
