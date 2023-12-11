@@ -96,10 +96,18 @@ ggmap::ggmap(chicago) +
              data = raccoon_sum) +
   ggtitle("Raccoon detections") +
   labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
-  labs(color = "Species") + # updates legend related to color (here 'commonName')
-  #guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
+  #labs(color = "Species")  # updates legend related to color (here 'commonName')
+  guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
+ggsave("plots/raccoon_map1.jpg", width = 6, height = 6)
 
-ggsave("plots/raccoon_map.jpg", width = 6, height = 6)
+# control more of the graphics with other ggplot commands
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = raccoon_sum, color = "dark blue") + # control color of detections
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
+ggsave("plots/raccoon_map2.jpg", width = 6, height = 6)
 
 # Another species
 # lets run this for ones species
