@@ -36,13 +36,13 @@ package_load(
 
 #### [1. What is occupancy?](#1-what-is-occupancy)
 
-####  [2. Occupancy model assumptions](#occupancy-model-assumptions)
+####  [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
 
-#### [3. Formatting data](#formatting-data)
+#### [3. Formatting data](#3-formatting-data)
 
-####  [4. Fitting models](#fitting-models)
+####  [4. Fitting models](#4-fitting-models)
 
-#### [5. Predicting and plotting model outputs](#predicting-and-plotting-model-outputs)
+#### [5. Predicting and plotting model outputs](#5-predicting-and-plotting-model-outputs)
 
 
 
