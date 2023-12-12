@@ -15,6 +15,7 @@ library(ggplot2)
 #library(ggExtra)
 library(maps)
 library(RColorBrewer)
+library(forcats)
 
 sp_data <- read_csv("CHIL_Detections.csv")
 
@@ -208,7 +209,7 @@ ggmap::ggmap(lincoln_park) +
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections")+ # to edit label on detections legend title
+  labs(size = "Detection frequency")+ # to edit label on detections legend title
   scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_LP.jpg", width = 6, height = 6)
 
@@ -232,7 +233,7 @@ ggmap::ggmap(montrose) +
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections")+ # to edit label on detections legend title
+  labs(size = "Detection frequency")+ # to edit label on detections legend title
   scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_montrose.jpg", width = 6, height = 6)
 
@@ -261,17 +262,19 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
 
 # We could also bin our data in groups to make this a bit more clear
-median(sp_rich$sp_det)
+
+# check data range and use to inform bins
+range(sp_rich$sp_det)
 
 sp_rich_bin <- sp_rich %>% 
   mutate(det_size = case_when(
-    sp_det >= 10 ~ "large",
-    sp_det <= 6 ~ "small",
-    sp_det > 6 | sp_det < 10 ~ "medium",
+    sp_det >= 10 ~ "10+ detections",
+    sp_det <= 6 ~ "6-9 detections",
+    sp_det > 6 | sp_det < 10 ~ "< 6 detections",
     FALSE ~ as.character(sp_det)))
 
 # sp_rich_bin <- sp_rich %>% 
@@ -284,9 +287,9 @@ sp_rich_bin <- sp_rich %>%
 sp_rich_bin <- sp_rich_bin %>% 
   mutate(det_size = as.factor(det_size))
 
-library(forcats)
+# organize by increasing frequency of detections
 sp_rich_bin <- sp_rich_bin %>% 
-  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+  mutate(det_size = fct_relevel(det_size, c("< 6 detections", "6-9 detections", "10+ detections")))
 
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, size = det_size, color = det_size), 
@@ -298,7 +301,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(color = "Detections") # to edit label on detections legend title
+  labs(color = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/bin_alpha_diversity.jpg", width = 6, height = 6)
 
 # we can also do this for groups of species, like alpha diversity of native carnivores
@@ -324,7 +327,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/carn_alpha_diversity.jpg", width = 6, height = 6)
 
 # we could use same plotting functions to map seasonal detections or diel detections
