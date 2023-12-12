@@ -290,7 +290,7 @@ sp_rich <- sp_data_2021 %>%
   group_by(locationAbbr) %>% # group by location to summarise all species detections
   mutate(sp_det = length(unique(commonName))) %>% # count the number of species detected at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep  
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep 
 
 # mapping alpha diversity
 ggmap::ggmap(chicago) +
@@ -302,7 +302,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ```
 <p float="left">
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
@@ -311,23 +311,36 @@ ggmap::ggmap(chicago) +
  We could also bin our data in groups to make the map a bit more clear
 
  ```R
-median(sp_rich$sp_det)
+# check data range and use to inform bins
+range(sp_rich$sp_det)
 
 sp_rich_bin <- sp_rich %>% 
   mutate(det_size = case_when(
-    sp_det >= 10 ~ "large",
-    sp_det <= 6 ~ "small",
-    sp_det > 6 | sp_det < 10 ~ "medium",
+    sp_det >= 10 ~ "10+ detections",
+    sp_det <= 6 ~ "6-9 detections",
+    sp_det > 6 | sp_det < 10 ~ "< 6 detections",
     FALSE ~ as.character(sp_det)))
 
-# convert der_size to a factor
+# convert det_size to a factor
 sp_rich_bin <- sp_rich_bin %>% 
   mutate(det_size = as.factor(det_size))
 
-# use the forcats library to relevel det_size to correct order
+# using the forcats library, we can relevel det_size to correct order
 library(forcats)
 sp_rich_bin <- sp_rich_bin %>% 
-  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+  mutate(det_size = fct_relevel(det_size, c("< 6 detections", "6-9 detections", "10+ detections")))
+
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = det_size, color = det_size), 
+             stroke = 1, shape = 1, 
+             data = sp_rich_bin) +
+  scale_size_discrete(breaks=c(1,2,3))+
+  scale_shape_manual(values= c(17))+
+  ggtitle("Chicago, IL USA Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(color = "Detection frequency") # to edit label on detections legend title
 ```
 <p float="left">
   <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
