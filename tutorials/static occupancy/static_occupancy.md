@@ -1,4 +1,4 @@
-# [UWIN Tutorial: Static Occupancy](#uwin-tutorial-static-occupancy)
+# UWIN Tutorial: Static Occupancy
 *Created by Kimberly Rivera - last updated October 2023 by Kimberly Rivera*
 
 This tutorial is aimed at people who are either interested in and new to occupancy modeling, or as a refresher for those already familiar with occupancy modeling. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
@@ -7,7 +7,32 @@ This tutorial is aimed at people who are either interested in and new to occupan
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
 2. Lodestar's [Guide to 'Fitting occupancy models in unmarked'](https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html) - David Wilkinson
 
-### Tutorial Aims:
+### Packages needed for this tutorial
+
+There are a number of R packages that you will need to install in order to do this tutorial. This includes `dplyr`, `ggplot2`, and the `unmarked` package. Here is a helper function to check and see whether or not you have these packages locally installed (and if not will install them for you).
+
+```R
+package_load<-function(packages = NA, quiet=TRUE, verbose=FALSE, warn.conflicts=FALSE){
+  
+  # download required packages if they're not already
+  pkgsToDownload<- packages[!(packages  %in% installed.packages()[,"Package"])]
+  if(length(pkgsToDownload)>0)
+    install.packages(pkgsToDownload, repos="http://cran.us.r-project.org", quiet=quiet, verbose=verbose)
+  
+  # then load them
+  for(i in 1:length(packages))
+    require(packages[i], character.only=T, quietly=quiet, warn.conflicts=warn.conflicts)
+}
+
+package_load(
+  c(
+    "dplyr", "ggplot2", "unmarked"
+  )
+)
+
+```
+
+### [Tutorial Aims:](#tutorial-aims)
 
 #### <a href="#occupancy"> 1. What is occupancy?</a>
 
@@ -24,11 +49,11 @@ This tutorial is aimed at people who are either interested in and new to occupan
 
 ## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
+Often in wildlife ecology, we are interested  the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
 
-Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
+Estimating the abundance of species in a local area can be difficult and time-intensive. For example, to identify individuals you may need to conduct trapping, which is invasive, or you could identify certain species by unique markings like stripes. A less intensive and non-invasive option is to estimate occupancy, which is easier and can be done with passive tools such as camera traps or acoustic areas. Similarly, because we are most interested in whether a species is present on not in a local area, we don't need to worry about whether the species could have unique markings on them to identify down to the individual level. 
 
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
+However, survey tools and our ability to detect species is imperfect. Thankfully, occupancy models account for these uncertainties, which can improve our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
 When conducting surveys, the following may occur:
 
@@ -39,16 +64,19 @@ When conducting surveys, the following may occur:
 <a name="assumptions"></a>
 
 
-We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. For example:
+We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
 <p float="center">
   <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
 <a name="assumptions"></a>
-In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
 
-[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
+Written plainly, for the first detection history, we know that the species is present because it was detected. Furthermore, the species was not detected on survey 1 and 3, but it was detected on survey 2 and 4. Thus, we can calculate the probability of this specific detection history by taking the product of $\psi$ and the individual detection probabilities of each survey (or 1 minus that probability if the species was not detected). For the second detection history we have a full vector of 0's. This means one of two things, either the species was present and not detected on each survey or the species was not there. Because these two events are independent of one another, you can calculate the probability of each and just add them together. 
+
+Now, you do not need to construct these likelihoods, we are simply sharing what packages like `unmarked` are calculating under the hood once you supply data to them.
+
+[Back to table of contents ⤒](#tutorial-aims)
 ## 2. Occupancy model assumptions
 
 Under this model we assume that:
@@ -61,7 +89,7 @@ Under this model we assume that:
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
-[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
+[Back to table of contents ⤒](#tutorial-aims)
 ## 3. Formatting data
 
 Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
@@ -213,7 +241,7 @@ summary(raccoon_occ)
 
 <a name="models"></a>
 
-[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
+[Back to table of contents ⤒](#tutorial-aims)
 ## 4. Fitting models
 
 Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above: <br />
@@ -274,7 +302,7 @@ mean(siteValue)
 ```
 
 <a name="plots"></a>
-[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
+[Back to table of contents ⤒](#tutorial-aims)
 ## 5. Predicting & plotting model outputs
 
 Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to exemplify how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest.
@@ -362,4 +390,4 @@ Nice work! If you are interested in furthering your occupancy journey, try this 
 <p float="center">
   <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
-[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
+[Back to table of contents ⤒](#tutorial-aims)
