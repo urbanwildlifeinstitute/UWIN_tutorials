@@ -1,7 +1,7 @@
-# UWIN Tutorial: Static Occupancy
+# [UWIN Tutorial: Static Occupancy](#uwin-tutorial-static-occupancy)
 *Created by Kimberly Rivera - last updated October 2023 by Kimberly Rivera*
 
-This tutorial is aimed at folks interested and new to occupancy modeling, or as a refresher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at people who are either interested in and new to occupancy modeling, or as a refresher for those already familiar with occupancy modeling. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
@@ -48,7 +48,7 @@ We can convert surveys into mathematical equations by creating 'detection histor
 <a name="assumptions"></a>
 In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
 
-
+[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
 ## 2. Occupancy model assumptions
 
 Under this model we assume that:
@@ -61,7 +61,7 @@ Under this model we assume that:
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
-
+[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
 ## 3. Formatting data
 
 Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
@@ -213,6 +213,7 @@ summary(raccoon_occ)
 
 <a name="models"></a>
 
+[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
 ## 4. Fitting models
 
 Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above: <br />
@@ -273,7 +274,7 @@ mean(siteValue)
 ```
 
 <a name="plots"></a>
-
+[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
 ## 5. Predicting & plotting model outputs
 
 Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to exemplify how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest.
@@ -361,4 +362,4 @@ Nice work! If you are interested in furthering your occupancy journey, try this 
 <p float="center">
   <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
-
+[Back to table of contents ⤒](#uwin-tutorial-static-occupancy)
