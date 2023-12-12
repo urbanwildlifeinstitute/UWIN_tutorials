@@ -34,18 +34,18 @@ package_load(
 
 ### [Tutorial Aims:](#tutorial-aims)
 
-#### <a href="#occupancy"> 1. What is occupancy?</a>
+#### [1. What is occupancy?](#what-is-occupancy)
 
-#### <a href="#assumptions"> 2. Occupancy model assumptions</a>
+####  [2. Occupancy model assumptions](#occupancy-model-assumptions)
 
-#### <a href="#formatting"> 3. Formatting data</a>
+#### [3. Formatting data](#formatting-data)
 
-#### <a href="#models"> 4. Fitting models</a>
+####  [4. Fitting models](#fitting-models)
 
-#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
+#### [5. Predicting and plotting model outputs](#predicting-and-plotting-model-outputs)
 
 
-<a name="occupancy"></a>
+
 
 ## 1. What is occupancy?
 
@@ -61,8 +61,6 @@ When conducting surveys, the following may occur:
   <img src="./plots/det_states.png" alt="Figure on occupancy states" width="510" height="auto" />
 </p>
 
-<a name="assumptions"></a>
-
 
 We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
@@ -70,7 +68,6 @@ We can convert surveys into data that can be used within occupancy models by cre
   <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
-<a name="assumptions"></a>
 
 Written plainly, for the first detection history, we know that the species is present because it was detected at least once. The species was not detected on survey 1 and 3 and was detected on survey 2 and 4. Thus, we can calculate the probability of this specific detection history by taking the product of $\psi$ and the individual detection probabilities of each survey (or 1 minus that probability if the species was not detected). For the second detection history we have a full vector of 0's. This means one of two things, either the species was present and not detected on each survey or the species was not there. Because these two events are independent of one another, you can calculate the probability of each and just add them together. 
 
@@ -88,7 +85,7 @@ Like any type of statistical model, occupancy models make a number of assumption
 
 Hopefully, you can meet these assumptions by carefully developing your study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). Closure is perhaps the most likely assumption that is violated, especially as it is quite difficult to account for, but you can try to meet this assumption by having smaller sampling windows (e.g., a month of sampling vs a year of sampling).
 
-<a name="formatting"></a>
+
 [Back to table of contents ⤒](#tutorial-aims)
 ## 3. Formatting data
 
@@ -230,7 +227,6 @@ raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
 
-<a name="models"></a>
 
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Fitting models
@@ -295,9 +291,9 @@ siteValue <- apply(X = y,
 mean(siteValue)
 ```
 
-<a name="plots"></a>
+
 [Back to table of contents ⤒](#tutorial-aims)
-## 5. Predicting & plotting model outputs
+## 5. Predicting and plotting model outputs
 
 Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to demonstrate how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest cover.
 
