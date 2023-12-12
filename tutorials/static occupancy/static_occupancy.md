@@ -34,7 +34,7 @@ package_load(
 
 ### [Tutorial Aims:](#tutorial-aims)
 
-#### [1. What is occupancy?](#what-is-occupancy)
+#### [1. What is occupancy?](#1-what-is-occupancy)
 
 ####  [2. Occupancy model assumptions](#occupancy-model-assumptions)
 
