@@ -28,15 +28,27 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
 
+
 However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. When conducting surveys, the following may occur:
 
 <p float="center">
   <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+
 </p>
 
 <a name="assumptions"></a>
 
-We will focus here on the most simple occupancy model, a single-species, single-season model. 
+
+
+We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. For example:
+
+<p float="center">
+  <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
+</p>
+
+<a name="assumptions"></a>
+In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
+
 
 ## 2. Occupancy model assumptions
 
@@ -45,9 +57,10 @@ Under this model we assume that:
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
-4. There are no false detections (detecting a species when it is truly *not* there)
+4. There are no false detections (detecting a species when it is truly *not* there or misidentifying a species)
 
-We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating  relevant and measurable covariates (e.g. environmental variability). 
+
+We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
 <a name="formatting"></a>
 
@@ -111,7 +124,11 @@ week_summary <- t( # this transposes our matrix
 
 # Now update names
 colnames(week_summary) <- paste0("Week_",1:n_weeks)
+
+# drop visits
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
+
+# and add occasions
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
 Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop the last sampling day.
@@ -156,28 +173,43 @@ y <- raccoon_wk %>%
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
 
-# We should also examine our covariates of interest to see if they should be scaled
-hist(raccoon_wk$water)
-hist(raccoon_wk$forest)
 ```
+We should also examine our covariates and note their structure, scale, and distribution.
+```R
+ggplot(raccoon_wk, aes(x = water)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion water", y = "Site count")
+
+ggplot(raccoon_wk, aes(x = forest)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion forest", y = "Site count") 
+```
+
 <p float="left">
-  <img src="./plots/siteCovs_water.png" alt="A plot of water site covariate." width="500" height="auto" />
-  <img src="./plots/siteCovs_forest.png" alt="A plot of forest site covariate." width="500" height="auto" /> 
+  <img src="./plots/water_hist.png" alt="A plot of counts of proportion of water at each site" width="400" height="auto" />
+  <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
 </p>
 
-Looks like it's a good idea to scale these data before adding to our `occu()` data.frame
+In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to make the intercept of the model the mean of each covariate. This can help us interpret whether species occurrence falls below or above average values. 
+
+Thus, we will scale both 'water' and 'forest' before adding them to our `occu()` data.frame.
 
 ```R
 # scale covariates
 siteCovs <- siteCovs %>% 
   mutate(water_scale = scale(water)) %>% 
-  mutate(forest_scale = scale(forest)) %>% 
-  select(-c(water, forest)) # drop unscaled covariates
+  mutate(forest_scale = scale(forest))
 
 siteCovs_df <- data.frame(siteCovs)
 
 # Now we can make our unmarkedFrameOccu() dataframe
 raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
+
+# examine covariate details and site summary
 summary(raccoon_occ)
 ```
 
@@ -190,6 +222,7 @@ Let's fit two models, one for a null hypothesis and one which considers the habi
 **habitat hypothesis** - raccoon occupancy is explained by habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
 
 ```R
+# learn more about this function modeled after MacKenzie et al. (2002)
 ?occu()
 
 null_model <- occu(~1 # detection
@@ -199,11 +232,12 @@ null_model <- occu(~1 # detection
 habitat_model <- occu(~1 # detection
                       ~ forest_scale + water_scale, # occupancy
                         data = raccoon_occ)
+# examine model estimates and standard errors
 null_model
 habitat_model
 ```
 
-We can also use functions `fitList` and `modSel` in `unmarked` to compare our models.
+We can also use functions `fitList` and `modSel` in `unmarked` to compare our models using AIC (Akaike information criterion which  estimates the prediction error/ quality of the models).
 
 ```R
 fitlist <- fitList(m1 = null_model, m2 = habitat_model)
@@ -212,22 +246,24 @@ modSel(fitlist)
 Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
-plogis(coef(null_model, type = "state")) # probability for occupancy
-plogis(coef(null_model, type = "det")) # probability for detection
 
-# We can also use `confit` to calculate the associated error
+# We can also use `confit` to calculate the associated error for each estimate
 # 95% confidence intervals for occupancy
 occ_error <- cbind(coef(null_model, type = "state"),
                          confint(null_model, type = "state"))
 # 95% confidence intervals for detection
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
-                         
-# Convert confidence intervals back to probability 
+```
+This occupancy model is fit with a log-link function, thus our estimates are given as log-odds or the ratio of the probability of success and the probability of failure. These can be tricky to interpret so it is good practice to convert these estimate to probabilities on a scale of 0 to 1. 
+
+```R
+# Convert confidence intervals back to probability from log-odds estimate
+# plogis() = to exp() / 1 + exp()
 plogis(occ_error)
 plogis(det_error)
 ```
-How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites.
+How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy. 
 
 ```R
 # Our naive occupancy
@@ -242,73 +278,93 @@ mean(siteValue)
 
 ## 5. Predicting & plotting model outputs
 
-If we chose to go with our habitat hypothesis, we could use `habitat_model` to predict occupancy across varying proportions of forest or water. Let's plot changes in occupancy with proportion of forest as an example.
+Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to exemplify how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest.
 
-We know that the proportion of forest ranges from 0 to 1, so we will predict across these values in intervals of .05 while holding water equal to the mean scaled value. We also have to remember that we scaled our predictors, so we must do that again here.
+To do this we need to consider two types of data, our original forest values, and the scaled values we fed into our model. Let's examine the ranges of those data to inform our prediction data set.
 
 ```R
-# Create a new dataframe 
-new_dat <- data.frame(forest = seq(from = 0, to = 1, by = 0.05),
-                     water_scale = mean(siteCovs$water_scale))
-# Scale the data
-new_dat <- new_dat %>% 
-  mutate(forest_scale = scale(forest))
-  
+# examine the ranges of both data types
+range(siteCovs_df$forest)
+range(siteCovs_df$forest_scale)
+```
+Since we want to make a 'clean' or pretty plot, we will want to use the real range of our forest data to pick our plotting values without extrapolating our model. Here, our real (unscaled) 'forest' data ranges from 0 to .49. For plotting purposes, we will create a new prediction dataframe from 0 to .5 and scale this clean data set in the same way we scaled our real data fed into the model. We must also add other model covariate data into our predicted dataframe, in this case, water. Since we are just interested in how occupancy changes across variation in forest cover, we will hold water to it's mean scaled value, or zero (remember when we scale data, the means will center on zero). 
+
+```R
+# recreate 'clean' data for plotting later
+forest_real <- c(0, 0.5)
+
+# Create a prediction dataframe and make sure to use the same covariate names as included in the occupancy model
+dat_plot <- data.frame(
+  forest_scale = seq(forest_real[1], forest_real[2], length.out = 400),
+  water_scale = 0 # zero because water has been scaled/centered
+)
+
+# rescale 'clean' forest data exactly how we did in our model
+dat_pred <- dat_plot
+dat_pred$forest_scale <- (dat_pred$forest_scale - mean(siteCovs_df$forest)) / sd(siteCovs_df$forest)
+```
+Now that we have the cleaned version of our data scaled, we are ready to make predictions and plot. 
+```R
 # Make predictions with these data
-pred_forest <- predict(habitat_model, type = "state", newdata = new_dat)
+pred_forest <- predict(habitat_model, type = "state", newdata = dat_pred)
 head(pred_forest)
 ```
-Now we are in good shape for plotting! Let's make a rough plot first then play around with `ggplot`.
+Note that the `predict()` function converts data into probabilities so we do not need to use `plogis()` as we have done previously with the output of the `occu()`
 
+We can use base R to plot our predicted occupancy values and confidence intervals on the y-axis and our clean/pretty covariate data on the x-axis.
 ```R
-plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
+plot(pred_forest$Predicted ~ dat_plot$forest_scale, # y-axis ~ x-axis
      type = "l",  # plot out a line
      bty = "l", # box type is an L around plot
-     xlab = "Scaled proportion forest", # x label
+     xlab = "Proportion forest", # x label
      ylab = "Occupancy", # y label
      ylim = c(0, 1), # range to y axis
-     xlim = c(0,1),
+     xlim = c(0,.5),
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
-  
 # add 95% confidence intervals
-lines(pred_forest$lower ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$lower ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 ) 
-lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
 ```
+
 <p float="center">
-  <img src="./plots/occ_forest_basic.png" alt="Plot of raccoon occupancy across percent forest using plot()" width="501" height="auto" />
+
+  <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
+
 </p>
 
-We can make this a bit cleaner using `ggplot` functions.
+We can also plot this figure using `ggplot` functions.
   
 ```R
 # first merge the two datasets (predicted occupancy and forest data)
-all_dat <- bind_cols(pred_forest, new_dat)
+all_dat <- bind_cols(pred_forest, dat_plot)
 
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
-  labs(x = "Proportion forest (scaled)", y = "Occupancy probability") +
+  labs(x = "Proportion forest", y = "Occupancy probability") +
   ggtitle("Raccoon Occupancy")+
-  scale_x_continuous(limits = c(0,1)) +
+  scale_x_continuous(limits = c(0,.5)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(hjust=0.5), axis.text.x = element_text(size = 15), 
+        text = element_text(size = 18))
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot.jpg" alt="Plot of raccoon occupancy across percent forest using ggplot" width="500" height="auto" />
+  <img src="./plots/occ_forest_ggplot_corrected.png" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
+
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
 
 
-
-   
 <p float="center">
-  <img src="./plots/raccoon.png" alt="Image of raccoon in trash can by Kim Rivera" width="400" height="auto" />
+  <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
+
+

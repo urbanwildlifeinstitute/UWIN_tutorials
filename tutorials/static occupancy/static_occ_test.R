@@ -87,13 +87,26 @@ siteCovs <- raccoon_wk %>%
 
 # We should also examine our covariates of interest to see if they should be scaled
 hist(raccoon_wk$water)
+ggsave("plots/water_hist.png", width = 4)
+ggplot(raccoon_wk, aes(x = water)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion water", y = "Site count") 
+  
 hist(raccoon_wk$forest)
+ggsave("plots/forest_hist.png", width = 4)
+ggplot(raccoon_wk, aes(x = forest)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(text = element_text(size = 18)) +
+  labs(x = "Proportion forest", y = "Site count") 
+
 
 # scale covariates
 siteCovs <- siteCovs %>% 
   mutate(water_scale = scale(water)) %>% 
-  mutate(forest_scale = scale(forest)) %>% 
-  select(-c(water, forest)) # drop unscaled covariates
+  mutate(forest_scale = scale(forest))
 
 siteCovs_df <- data.frame(siteCovs)
 
@@ -116,11 +129,6 @@ habitat_model
 fitlist <- fitList(m1 = null_model, m2 = habitat_model)
 modSel(fitlist)
 
-plogis(coef(null_model, type = "state")) # for occupancy
-plogis(coef(null_model, type = "det")) # for detection
-
-backTransform(null_model, type = "state")
-backTransform(null_model, type = "det")
 
 # We can also use `confit` to calculate the associated error
 # 95% confidence intervals for occupancy
@@ -134,8 +142,23 @@ det_error <- cbind(coef(null_model, type = "det"),
 ## What if a coef vs. probability-----------------------------------------------
 
 # Convert confidence errors back to probability
+
+# plogis(coef(null_model, type = "state")) # for occupancy
+# plogis(coef(null_model, type = "det")) # for detection
+
+# backTransform(null_model, type = "state")
+# backTransform(null_model, type = "det")
+
 plogis(occ_error)
 plogis(det_error)
+
+# We can also use `confit` to calculate the associated error on the probability scale
+# # 95% confidence intervals for occupancy
+# occ_error_prob <- cbind(plogis(coef(null_model, type = "state")),
+#                           plogis(confint(null_model, type = "state")))
+# # 95% confidence intervals for detection
+# det_error_prob <- cbind(coef(null_model, type = "det"),
+#                    confint(null_model, type = "det"))
 
 # Our naive occupancy
 siteValue <- apply(X = y,
@@ -144,49 +167,66 @@ siteValue <- apply(X = y,
 
 mean(siteValue)
 
-# Create a new dataframe 
-new_dat <- data.frame(forest = seq(from = 0, to = 1, by = 0.05),
-                      water_scale = mean(siteCovs$water_scale))
-# Scale the data
-new_dat <- new_dat %>% 
-  mutate(forest_scale = scale(forest))
+# get range of data, look at it, and decide on a pretty range
+#  of values. Here, forest real is basically between 0 and 0.5, so we
+#  will use that for our range.
+
+# examine the ranges of both data types
+range(siteCovs_df$forest)
+range(siteCovs_df$forest_scale)
+
+# recreate 'clean' data to simplify plotting later
+forest_real <- c(0, 0.5)
+
+# Create a prediction dataframe and make sure to use the same covariate names
+# as included in the occupancy model
+dat_plot <- data.frame(
+  forest_scale = seq(forest_real[1], forest_real[2], length.out = 400),
+  water_scale = 0 # zero because water has been centered
+)
+
+# rescale 'clean' forest data exactly how we did in our model
+dat_pred <- dat_plot
+dat_pred$forest_scale <- (dat_pred$forest_scale - mean(siteCovs_df$forest)) / sd(siteCovs_df$forest)
+
 
 # Make predictions with these data
-pred_forest <- predict(habitat_model, type = "state", newdata = new_dat)
+pred_forest <- predict(habitat_model, type = "state", newdata = dat_pred)
 head(pred_forest)
 
-png("occ_forest_basic.png", height = 700, width = 700)
-plot(pred_forest$Predicted ~ new_dat$forest_scale, # y-axis ~ x-axis
+png("plots/occ_forest_basic_corrected.png", height = 800, width = 800)
+par(mar=c(5,7,4,2))
+plot(pred_forest$Predicted ~ dat_plot$forest_scale, # y-axis ~ x-axis
+     cex.lab=2, cex.axis=2,
      type = "l",  # plot out a line
      bty = "l", # box type is an L around plot
-     xlab = "Scaled proportion forest", # x label
-     ylab = "Occupancy", # y label
+     xlab = "Proportion forest", # x label
+     ylab = "Occupancy\n", # y label
      ylim = c(0, 1), # range to y axis
-     xlim = c(0,1),
+     xlim = c(0,.5),
      lwd = 2, # width of the line
      las = 1 # have numbers on y axis be vertical
 )
-dev.off()
-#### Update graph above add RACCONN IN PARTY HAT AT END
-
-
 # add 95% confidence intervals
-lines(pred_forest$lower ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$lower ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 ) 
-lines(pred_forest$upper ~ new_dat$forest_scale, # y-axis ~ x-axis
+lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
       lty = 2 # make a checked line
 )
+dev.off()
 
 # first merge the two datasets (predicted occupancy and forest data)
-all_dat <- bind_cols(pred_forest, new_dat)
+all_dat <- bind_cols(pred_forest, dat_plot)
 
+ggsave("plots/occ_forest_ggplot_corrected.png", width = 6, height = 6)
 ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "orange", alpha = 0.5) +
   geom_path(size = 1) + # adds line
-  labs(x = "Proportion forest (scaled)", y = "Occupancy probability") +
+  labs(x = "Proportion forest", y = "Occupancy probability") +
   ggtitle("Raccoon Occupancy")+
-  scale_x_continuous(limits = c(0,1)) +
+  scale_x_continuous(limits = c(0,.5)) +
   ylim(0,1)+
   theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(hjust=0.5)) # centers titles
+  theme(plot.title=element_text(hjust=0.5), axis.text.x = element_text(size = 15), 
+        text = element_text(size = 18))

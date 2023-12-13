@@ -110,6 +110,7 @@ ggmap::ggmap(chicago) +
   scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
 ggsave("plots/raccoon_map2.jpg", width = 6, height = 6)
 
+
 # Another species
 # lets run this for ones species
 coyote_det_2021 <- sp_data_2021 %>% 
@@ -123,6 +124,7 @@ coyote_sum <- coyote_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 ggmap::ggmap(chicago) +
+
   geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
              data = coyote_sum, color = "purple") + # control color of detections
   ggtitle("Coyote detections") +
