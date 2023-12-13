@@ -222,7 +222,6 @@ raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
 
-
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Fitting models
 
@@ -258,7 +257,6 @@ modSel(fitlist)
 Our model with the best relative fit is the one with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
-
 # We can also use `confit` to calculate the associated error for each estimate
 # 95% confidence intervals for occupancy
 occ_error <- cbind(coef(null_model, type = "state"),
