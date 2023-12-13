@@ -1,84 +1,100 @@
 # UWIN Tutorial: Static Occupancy
-*Created by Kimberly Rivera - last updated October 2023 by Kimberly Rivera*
+*Created by Kimberly Rivera and Mason Fidino - last updated December 2023*
 
-This tutorial is aimed at folks interested and new to occupancy modeling, or as a refresher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+This tutorial is aimed at people who are either interested in and new to occupancy modeling, or as a refresher for those already familiar with occupancy modeling. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
 ### Some helpful references:
 1. USGS's ['Occupancy to study wildlife'](https://pubs.usgs.gov/fs/2005/3096/fs20053096.pdf) - Larrisa Bailey
 2. Lodestar's [Guide to 'Fitting occupancy models in unmarked'](https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html) - David Wilkinson
 
-### Tutorial Aims:
+### Packages needed for this tutorial
 
-#### <a href="#occupancy"> 1. What is occupancy?</a>
+There are a number of R packages that you will need to install in order to do this tutorial. This includes `dplyr`, `ggplot2`, and the `unmarked` package. Here is a helper function to check and see whether or not you have these packages locally installed (and if not will install them for you).
 
-#### <a href="#assumptions"> 2. Occupancy model assumptions</a>
+```R
+package_load<-function(packages = NA, quiet=TRUE, verbose=FALSE, warn.conflicts=FALSE){
+  
+  # download required packages if they're not already
+  pkgsToDownload<- packages[!(packages  %in% installed.packages()[,"Package"])]
+  if(length(pkgsToDownload)>0)
+    install.packages(pkgsToDownload, repos="http://cran.us.r-project.org", quiet=quiet, verbose=verbose)
+  
+  # then load them
+  for(i in 1:length(packages))
+    require(packages[i], character.only=T, quietly=quiet, warn.conflicts=warn.conflicts)
+}
 
-#### <a href="#formatting"> 3. Formatting data</a>
+package_load(
+  c(
+    "dplyr", "ggplot2", "unmarked"
+  )
+)
 
-#### <a href="#models"> 4. Fitting models</a>
+```
 
-#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
+### [Tutorial Aims:](#tutorial-aims)
+
+ [1. What is occupancy?](#1-what-is-occupancy)
+
+  [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
+
+ [3. Formatting data](#3-formatting-data)
+
+ [4. Fitting models](#4-fitting-models)
+
+ [5. Predicting and plotting model outputs](#5-predicting-and-plotting-model-outputs)
 
 
-<a name="occupancy"></a>
+
 
 ## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested in unpacking the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
+Often in wildlife ecology, we are interested  the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
 
-Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
+Estimating the abundance of species in a local area can be difficult and time-intensive. For example, to identify individuals you may need to conduct trapping, which is invasive, or you could identify certain species by unique markings like stripes. A less intensive and non-invasive option is to estimate occupancy, which is easier and can be done with passive tools such as camera traps or acoustic areas. Similarly, because we are most interested in whether a species is present on not in a local area, we don't need to worry about whether the species could have unique markings on them to identify down to the individual level. 
 
-
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. When conducting surveys, the following may occur:
+However, survey tools and our ability to detect species is imperfect. Thankfully, occupancy models account for these uncertainties, which can improve our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
 <p float="center">
   <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
 
 </p>
 
-<a name="assumptions"></a>
 
 
-
-We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. For example:
+We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
 <p float="center">
   <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
-<a name="assumptions"></a>
-In these equations, $\Psi$ represents the probability a site is occupied by a species while ***p*** represents the probability of detecting a species during that particular visit.  
 
+Written plainly, for the first detection history, we know that the species is present because it was detected at least once. The species was not detected on survey 1 and 3 and was detected on survey 2 and 4. Thus, we can calculate the probability of this specific detection history by taking the product of $\psi$ and the individual detection probabilities of each survey (or 1 minus that probability if the species was not detected). For the second detection history we have a full vector of 0's. This means one of two things, either the species was present and not detected on each survey or the species was not there. Because these two events are independent of one another, you can calculate the probability of each and just add them together. 
 
+Note that you do not need to construct these likelihoods on your own. We are simply sharing what packages like `unmarked` are calculating under the hood once you supply data to them.
+
+[Back to table of contents ⤒](#tutorial-aims)
 ## 2. Occupancy model assumptions
 
-Under this model we assume that:
+Like any type of statistical model, occupancy models make a number of assumptions. Some of these include:
 
 1. Detection probability is constant across sites or visits, or explained by covariates
 2. Occupancy probability is constant across sites or visits. or explained by covariates
-3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
+3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change or the 'closure' assumption)
 4. There are no false detections (detecting a species when it is truly *not* there or misidentifying a species)
 
+Hopefully, you can meet these assumptions by carefully developing your study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). Closure is perhaps the most likely assumption that is violated, especially as it is quite difficult to account for, but you can try to meet this assumption by having smaller sampling windows (e.g., a month of sampling vs a year of sampling).
 
-We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
-<a name="formatting"></a>
-
+[Back to table of contents ⤒](#tutorial-aims)
 ## 3. Formatting data
 
-Let's learn more about occupancy through an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
+Let's learn more about occupancy modeling with an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
-Let's take a peek at the data! Start by loading in necessary libraries and `chicago_raccoon.csv`. We will continue to use `dplyr` and `ggplot2`.
+As a reminder, you should have loaded the packages you needed at the very start of this tutorial. If you have not, then load `dplyr`, `ggplot2`, and `unmarked` (see above). We assume that these packages have been loaded. Let's take a peek at the data! Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that
+`chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
 
 ```R
-# Load in libraries
-install.packages("dplyr")
-install.packages("ggplot2")
-library(dplyr)
-library(ggplot2)
-
-# Set your local working directory
-setwd()
 raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3) 
 
 # Check out what data we're working with.
@@ -138,7 +154,7 @@ raccoon_wk <- raccoon_wk %>%
   select(-Week_6)
 ```
 
-Though raccoons have adapted to urban ecosystems, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covariates to our occasion data. These data were extracted using the `FedData` package in R. Learn more about mapping in the ['Detection Mapping'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Detection%20Mapping) tutorial. Column values are the percent landcover within 1000m of each camera site.  
+Though raccoons are well adapted to urban environments, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covariates to our occasion data. These data were extracted using the `FedData` package in R. Learn more about mapping in the ['Detection Mapping'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Detection%20Mapping) tutorial. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
@@ -155,16 +171,14 @@ landcover <- rename(landcover, Site = sites)
 raccoon_wk <- left_join(raccoon_wk, landcover, by = 'Site') %>% 
   na.omit(.)
 ```
-Be mindful that it is OK to have missing or NA observation data BUT for each observation, there must be affiliated covariate data, otherwise this data will not be considered in the model and we won't be able to compare models using AIC. We only have landcover data for 119/170 sites, so these sites are dropped using `na.omit()`.
+Be mindful that it is OK to have missing or NA observation data (i.e., detection histories) BUT for each observation, there must be a covariate value otherwise this data will not be considered in the model and we won't be able to compare models using AIC. We only have landcover data for 119/170 sites, so these sites we do not have covariate data for are dropped using `na.omit()`.
 
-We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. 
+We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. The help file for this fucntion provides all the necessary details about how to format our data for analysis.
 
 ```R
-install.packages("unmarked")
-library("unmarked")
 ?unmarkedFrameOccu()
 ```
-We see there are a few necessary arguments we need to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Remember assumptions 1&2 from above? Occupancy and detection probability is constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
+We see there are is one necessary argument and two optional arguments we could to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and could supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
 
 ```R
 y <- raccoon_wk %>% 
@@ -194,9 +208,9 @@ ggplot(raccoon_wk, aes(x = forest)) +
   <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
 </p>
 
-In this example, we have two covariates which share the same scale/units and fall within a small range of values. Therefore, our model should converge without problem. However, it is common in occupancy models to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to make the intercept of the model the mean of each covariate. This can help us interpret whether species occurrence falls below or above average values. 
+In this example, we have two covariates which share the same scale/units and fall within a small range of values. This will make it easier for our model to converge (i.e., reach a solution). However, it is common in most regression based analyses to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to have the intercept of the model represent occupancy at an average site. This can help us interpret whether species occurrence falls below or above average values. 
 
-Thus, we will scale both 'water' and 'forest' before adding them to our `occu()` data.frame.
+Thus, we will scale both 'water' and 'forest' before adding them to our `occu()` data.frame. The `scale()` function will center and scale each covariate by subtracting the mean and dividing by the standard deviation. That means that a value of 0 is average and that the standard deviation of this scaled covariate is 1. 
 
 ```R
 # scale covariates
@@ -213,13 +227,15 @@ raccoon_occ <- unmarkedFrameOccu(y = y, siteCovs = siteCovs_df)
 summary(raccoon_occ)
 ```
 
-<a name="models"></a>
 
+[Back to table of contents ⤒](#tutorial-aims)
 ## 4. Fitting models
 
 Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above: <br />
 **null** - raccoon occupancy is constant across sites <br />
-**habitat hypothesis** - raccoon occupancy is explained by habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests
+**habitat hypothesis** - raccoon occupancy is explained by habitat variables, water and forest, where raccoon occupancy increases with increasing proportions of water and forests.
+
+Static occupancy models have two linear predictors, one for detection and one for occupancy. Within `unmarked` we use a slightly modified R formula syntax to specify our two models. First, you do not need to specify what the response variable is (the function already knows that detection history you input into `y` is the response variable). Second, you input two linear predictors which are ordered as 'detection model' then 'occupancy model'. Thus, the code to fit our two models would look something like: 
 
 ```R
 # learn more about this function modeled after MacKenzie et al. (2002)
@@ -243,7 +259,8 @@ We can also use functions `fitList` and `modSel` in `unmarked` to compare our mo
 fitlist <- fitList(m1 = null_model, m2 = habitat_model)
 modSel(fitlist)
 ```
-Our best fit model is that with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
+
+Our model with the best relative fit is the one with the lowest AIC. Here, we see that our null model has the lowest AIC. Let's examine the model parameters for detection and occupancy from this model
 
 ```R
 
@@ -255,7 +272,7 @@ occ_error <- cbind(coef(null_model, type = "state"),
 det_error <- cbind(coef(null_model, type = "det"),
                          confint(null_model, type = "det"))
 ```
-This occupancy model is fit with a log-link function, thus our estimates are given as log-odds or the ratio of the probability of success and the probability of failure. These can be tricky to interpret so it is good practice to convert these estimate to probabilities on a scale of 0 to 1. 
+This occupancy model is fit with a logit-link function, thus our estimates are given as log-odds or the logged ratio of the probability of success and the probability of failure. These can be tricky to interpret so it is good practice to convert these estimate to probabilities on a scale of 0 to 1. 
 
 ```R
 # Convert confidence intervals back to probability from log-odds estimate
@@ -274,11 +291,11 @@ siteValue <- apply(X = y,
 mean(siteValue)
 ```
 
-<a name="plots"></a>
 
-## 5. Predicting & plotting model outputs
+[Back to table of contents ⤒](#tutorial-aims)
+## 5. Predicting and plotting model outputs
 
-Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to exemplify how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest.
+Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to demonstrate how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest cover.
 
 To do this we need to consider two types of data, our original forest values, and the scaled values we fed into our model. Let's examine the ranges of those data to inform our prediction data set.
 
@@ -287,7 +304,7 @@ To do this we need to consider two types of data, our original forest values, an
 range(siteCovs_df$forest)
 range(siteCovs_df$forest_scale)
 ```
-Since we want to make a 'clean' or pretty plot, we will want to use the real range of our forest data to pick our plotting values without extrapolating our model. Here, our real (unscaled) 'forest' data ranges from 0 to .49. For plotting purposes, we will create a new prediction dataframe from 0 to .5 and scale this clean data set in the same way we scaled our real data fed into the model. We must also add other model covariate data into our predicted dataframe, in this case, water. Since we are just interested in how occupancy changes across variation in forest cover, we will hold water to it's mean scaled value, or zero (remember when we scale data, the means will center on zero). 
+Since we want to make a 'clean' or pretty plot, we will want to use the real range of our forest data to pick our plotting values without extrapolating our prediction. Here, our real (unscaled) 'forest' data ranges from 0 to .49. For plotting purposes, we will create a new prediction dataframe from 0 to .5 and scale this clean sequence of values in the same way we scaled our real data fed into the model. We must also add other model covariate data into our predicted dataframe, in this case, water. Since we are just interested in how occupancy changes across variation in forest cover, we will hold water to it's mean scaled value, or zero (remember when we scale data, the means will center on zero). 
 
 ```R
 # recreate 'clean' data for plotting later
@@ -361,6 +378,8 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
 
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
+
+[Back to table of contents ⤒](#tutorial-aims)
 
 
 <p float="center">
