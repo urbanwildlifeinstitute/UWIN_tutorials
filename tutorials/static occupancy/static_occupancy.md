@@ -60,9 +60,8 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
 <p float="center">
-  <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
+  <img src="./plots/det_hist.png" alt="Figure of two detection histories of a species along with their mathematical counterparts" width="700" height="auto" />
 </p>
-
 
 Written plainly, for the first detection history, we know that the species is present because it was detected at least once. The species was not detected on survey 1 and 3 and was detected on survey 2 and 4. Thus, we can calculate the probability of this specific detection history by taking the product of $\psi$ and the individual detection probabilities of each survey (or 1 minus that probability if the species was not detected). For the second detection history we have a full vector of 0's. This means one of two things, either the species was present and not detected on each survey or the species was not there. Because these two events are independent of one another, you can calculate the probability of each and just add them together. 
 
@@ -86,8 +85,9 @@ Hopefully, you can meet these assumptions by carefully developing your study des
 
 Let's learn more about occupancy modeling with an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
-As a reminder, you should have loaded the packages you needed at the very start of this tutorial. If you have not, then load `dplyr`, `ggplot2`, and `unmarked` (see above). We assume that these packages have been loaded. Let's take a peek at the data! Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that
-`chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
+As a reminder, you should have loaded the packages you needed at the very start of this tutorial. If you have not, then load `dplyr`, `ggplot2`, and `unmarked` (see above). We assume that these packages have been loaded. Let's take a peek at the data! 
+
+Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that `chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
 
 ```R
 raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3) 
@@ -173,7 +173,7 @@ We will be using the `unmarked` R package to model our data. Therefore, our data
 ```R
 ?unmarkedFrameOccu()
 ```
-We see there are is one necessary argument and two optional arguments we could to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and could supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
+We see there is one necessary argument and two optional arguments we can specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and can supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
 
 ```R
 y <- raccoon_wk %>% 
