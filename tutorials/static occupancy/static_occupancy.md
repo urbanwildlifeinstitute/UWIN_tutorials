@@ -199,8 +199,8 @@ ggplot(raccoon_wk, aes(x = forest)) +
 ```
 
 <p float="left">
-  <img src="./plots/water_hist.png" alt="A plot of counts of proportion of water at each site" width="400" height="auto" />
-  <img src="./plots/forest_hist.png" alt="A plot of counts of proportion of forest at each site" width="400" height="auto" /> 
+  <img src="./plots/water_hist.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
+  <img src="./plots/forest_hist.png" alt="A plot summarizing proportion of forest at each site" width="300" height="auto" /> 
 </p>
 
 In this example, we have two covariates which share the same scale/units and fall within a small range of values. This will make it easier for our model to converge (i.e., reach a solution). However, it is common in most regression based analyses to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to have the intercept of the model represent occupancy at an average site. This can help us interpret whether species occurrence falls below or above average values. 
