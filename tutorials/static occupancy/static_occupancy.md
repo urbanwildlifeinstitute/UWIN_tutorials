@@ -36,7 +36,7 @@ package_load(
 
  [1. What is occupancy?](#1-what-is-occupancy)
 
-  [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
+ [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
 
  [3. Formatting data](#3-formatting-data)
 
@@ -44,14 +44,11 @@ package_load(
 
  [5. Predicting and plotting model outputs](#5-predicting-and-plotting-model-outputs)
 
-
-
-
 ## 1. What is occupancy?
 
-Often in wildlife ecology, we are interested  the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
+Often in wildlife ecology, we are interested in the relationship between species presence and the environment, or species' occupied habitat (where species are found in space and time). 'Occupancy' is an effective way to model the occurrence of species and can be defined as the probability that a site (space) is occupied by a particular species at a particular time, mathematically represented as $\Psi$.
 
-Estimating the abundance of species in a local area can be difficult and time-intensive. For example, to identify individuals you may need to conduct trapping, which is invasive, or you could identify certain species by unique markings like stripes. A less intensive and non-invasive option is to estimate occupancy, which is easier and can be done with passive tools such as camera traps or acoustic areas. Similarly, because we are most interested in whether a species is present on not in a local area, we don't need to worry about whether the species could have unique markings on them to identify down to the individual level. 
+Estimating the abundance of species in a local area can be difficult and time-intensive. For example, to identify individuals you may need to conduct trapping, which is invasive, or you could identify certain species by unique markings, like stripes. A less intensive and non-invasive option is to estimate occupancy, which is easier and can be done with passive tools such as camera traps or acoustic monitors. Similarly, because we are most interested in whether a species is present on not in a local area, we don't need to worry about whether the species could have unique markings on them to identify them at an individual level. 
 
 However, survey tools and our ability to detect species is imperfect. Thankfully, occupancy models account for these uncertainties, which can improve our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
@@ -60,12 +57,10 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 
 </p>
 
-
-
 We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
 <p float="center">
-  <img src="./plots/det_hist.png" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
+  <img src="./plots/det_hist" alt="Figure of two detection histories along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
 
