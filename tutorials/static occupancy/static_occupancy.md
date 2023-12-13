@@ -85,8 +85,9 @@ Hopefully, you can meet these assumptions by carefully developing your study des
 
 Let's learn more about occupancy modeling with an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
-As a reminder, you should have loaded the packages you needed at the very start of this tutorial. If you have not, then load `dplyr`, `ggplot2`, and `unmarked` (see above). We assume that these packages have been loaded. Let's take a peek at the data! Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that
-`chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
+As a reminder, you should have loaded the packages you needed at the very start of this tutorial. If you have not, then load `dplyr`, `ggplot2`, and `unmarked` (see above). We assume that these packages have been loaded. Let's take a peek at the data! 
+
+Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that `chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
 
 ```R
 raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3) 
@@ -172,7 +173,7 @@ We will be using the `unmarked` R package to model our data. Therefore, our data
 ```R
 ?unmarkedFrameOccu()
 ```
-We see there are is one necessary argument and two optional arguments we could to specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and could supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
+We see there is one necessary argument and two optional arguments we can specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and can supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
 
 ```R
 y <- raccoon_wk %>% 
