@@ -55,11 +55,11 @@ Estimating the abundance of species in a local area can be difficult and time-in
 
 However, survey tools and our ability to detect species is imperfect. Thankfully, occupancy models account for these uncertainties, which can improve our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
-When conducting surveys, the following may occur:
-
 <p float="center">
-  <img src="./plots/det_states.png" alt="Figure on occupancy states" width="510" height="auto" />
+  <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+
 </p>
+
 
 
 We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
@@ -350,7 +350,9 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
 ```
 
 <p float="center">
+
   <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
+
 </p>
 
 We can also plot this figure using `ggplot` functions.
@@ -379,7 +381,9 @@ Nice work! If you are interested in furthering your occupancy journey, try this 
 
 [Back to table of contents ⤒](#tutorial-aims)
 
+
 <p float="center">
   <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
+
 
