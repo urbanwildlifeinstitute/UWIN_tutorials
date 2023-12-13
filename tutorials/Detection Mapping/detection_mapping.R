@@ -341,7 +341,7 @@ ggsave("plots/carn_alpha_diversity.jpg", width = 6, height = 6)
 
 # Let's do this over a landcover map. For an example, we can use ESA data
 # see: 
-# download libraries
+# Install libraries
 library(sf)
 library(terra)
 library(rgdal)
