@@ -15,6 +15,7 @@ library(ggplot2)
 #library(ggExtra)
 library(maps)
 library(RColorBrewer)
+library(forcats)
 
 sp_data <- read_csv("CHIL_Detections.csv")
 
@@ -96,10 +97,19 @@ ggmap::ggmap(chicago) +
              data = raccoon_sum) +
   ggtitle("Raccoon detections") +
   labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
-  labs(color = "Species") + # updates legend related to color (here 'commonName')
-  #guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
+  #labs(color = "Species")  # updates legend related to color (here 'commonName')
+  guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
+ggsave("plots/raccoon_map1.jpg", width = 6, height = 6)
 
-ggsave("plots/raccoon_map.jpg", width = 6, height = 6)
+# control more of the graphics with other ggplot commands
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = raccoon_sum, color = "dark blue") + # control color of detections
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
+ggsave("plots/raccoon_map2.jpg", width = 6, height = 6)
+
 
 # Another species
 # lets run this for ones species
@@ -114,10 +124,13 @@ coyote_sum <- coyote_det_2021 %>%
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
-             data = coyote_sum, color = "purple") +
-  labs(size = "Detection frequency") +
-  ggtitle("Coyote detections")
+
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = coyote_sum, color = "purple") + # control color of detections
+  ggtitle("Coyote detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(10, 100, by=10)) # control breaks of detection counts
+
 ggsave("plots/coyote_map.jpg", width = 6, height = 6)
 
 # let's try this again with three species of your choosing in 2021
@@ -144,72 +157,86 @@ ggsave("plots/carn_map.jpg", width = 6, height = 6)
 
 # we can fix this by changing rhe shapes and add a bit of randomness to their location
 # using the jitter() function
-
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
-                 shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.01,w=0.01)) +
-  scale_shape_manual(values= c(21, 22, 23))  
-ggsave("plots/species_map.jpg", width = 6, height = 6)
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             stroke = 1, data = carnivore_sum, shape = 21)
+ggsave("plots/species_map_basic.jpg", width = 6, height = 6)
 
 # We can also clean up our labels and axes 
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
              position=position_jitter(h=0.01,w=0.01)) +
-  scale_shape_manual(values= c(21, 22, 23))+
-  ggtitle("Chicago, IL USA Detections 2021")+
-  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
-  xlab("Longitude")+
-  ylab("Latitude")+
-  labs(color = "Species")+ # to edit labels on color/shape legend title
-  labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
-ggsave("plots/species_map_final.jpg", width = 6, height = 6)
+  ggtitle("Carnivore detections") +
+  labs(size = "Detection frequency") +
+  labs(color = "Species") +
+  labs(color = "Species") +
+  labs(shape = "Species") +
+  scale_size_continuous(breaks=seq(50, 300, by=50)) +
+  scale_shape_manual(values= c(21, 22, 23))  
+ggsave("plots/species_map_clean.jpg", width = 6, height = 6)
+
+# ggmap::ggmap(chicago) +
+#   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+#                  shape = commonName), stroke = 1, data = carnivore_sum, 
+#              position=position_jitter(h=0.01,w=0.01)) +
+#   scale_shape_manual(values= c(21, 22, 23))+
+#   ggtitle("Chicago, IL USA Detections 2021")+
+#   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+#   xlab("Longitude")+
+#   ylab("Latitude")+
+#   labs(color = "Species")+ # to edit labels on color/shape legend title
+#   labs(shape = "Species")+
+#   labs(size = "Detections") # to edit label on detections legend title
+# ggsave("plots/species_map_final.jpg", width = 6, height = 6)
 
 # If there is a certain area of interest, we can also update our bounding box to focus on a certain 
 # region
 # lincoln_park_sum <- carnivore_sum %>% 
 #   filter(DD_Long >= 41.8 | DD_Long <= 41.5 | DD_Lat >= -87.5 | DD_Lat <= -87.7)
 
-lincoln_park <- get_stamenmap(bbox = c(left = -87.7, bottom = 41.9, 
+lincoln_park <- get_map(c(left = -87.7, bottom = 41.9, 
                                   right = -87.6, top = 42.0), 
                          zoom = 12)
 
 ggmap::ggmap(lincoln_park) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.0025,w=0.0025)) +
+             position=position_jitter(h=0.0025,w=0.0025))+
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue")) + # change colors for each species
   ggtitle("Lincoln Park, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_LP.jpg", width = 6, height = 6)
 
 # or even more detailed
 # Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of 
 # the map image 
 # we also need to decrease the 'jitter' so we can tell what detections are reletive to what sites
-montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
+montrose <- get_map(c(left = -87.652, bottom = 41.950, 
                                        right = -87.620, top = 41.975), 
-                              zoom = 14)
+                              zoom = 15)
 
 ggmap::ggmap(montrose) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
-                 shape = commonName), stroke = 1, data = carnivore_sum, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, # want to change plot size when we zoom in
              position=position_jitter(h=0.001,w=0.001)) +
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue"))+ # change colors for each species
   ggtitle("Montrose, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ggsave("plots/species_map_montrose.jpg", width = 6, height = 6)
 
 # It can be hard to overlap all species of interest so it's best to do this in small groups
@@ -237,17 +264,19 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/alpha_diversity.jpg", width = 6, height = 6)
 
 # We could also bin our data in groups to make this a bit more clear
-median(sp_rich$sp_det)
+
+# check data range and use to inform bins
+range(sp_rich$sp_det)
 
 sp_rich_bin <- sp_rich %>% 
   mutate(det_size = case_when(
-    sp_det >= 10 ~ "large",
-    sp_det <= 6 ~ "small",
-    sp_det > 6 | sp_det < 10 ~ "medium",
+    sp_det >= 10 ~ "10+ detections",
+    sp_det <= 6 ~ "6-9 detections",
+    sp_det > 6 | sp_det < 10 ~ "< 6 detections",
     FALSE ~ as.character(sp_det)))
 
 # sp_rich_bin <- sp_rich %>% 
@@ -260,9 +289,9 @@ sp_rich_bin <- sp_rich %>%
 sp_rich_bin <- sp_rich_bin %>% 
   mutate(det_size = as.factor(det_size))
 
-library(forcats)
+# organize by increasing frequency of detections
 sp_rich_bin <- sp_rich_bin %>% 
-  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+  mutate(det_size = fct_relevel(det_size, c("< 6 detections", "6-9 detections", "10+ detections")))
 
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, size = det_size, color = det_size), 
@@ -274,7 +303,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(color = "Detections") # to edit label on detections legend title
+  labs(color = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/bin_alpha_diversity.jpg", width = 6, height = 6)
 
 # we can also do this for groups of species, like alpha diversity of native carnivores
@@ -300,7 +329,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ggsave("plots/carn_alpha_diversity.jpg", width = 6, height = 6)
 
 # we could use same plotting functions to map seasonal detections or diel detections
@@ -314,7 +343,7 @@ ggsave("plots/carn_alpha_diversity.jpg", width = 6, height = 6)
 
 # Let's do this over a landcover map. For an example, we can use ESA data
 # see: 
-# download libraries
+# Install libraries
 library(sf)
 library(terra)
 library(rgdal)

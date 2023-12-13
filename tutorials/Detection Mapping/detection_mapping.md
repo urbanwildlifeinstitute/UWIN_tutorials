@@ -7,6 +7,7 @@ This tutorial is aimed at folks interested and new to spatial mapping, or as ref
 ### Some helpful references:
 1. [Species occurrence and density maps](https://ourcodingclub.github.io/tutorials/seecc_1/index.html#Flickr) - Coding Club, Gergana, John, Francesca, Sandra and Isla
 2. [Elegant Graphics for Data Analysis](https://ggplot2-book.org/maps.html) -  Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen
+3. [A Guide to using ggmap](https://builtin.com/data-science/ggmap) - Ivo Bernardo
 
 ### Tutorial Aims:
 
@@ -25,10 +26,20 @@ The study of species habitat, or where species are found in space and time, is a
 <a name="formatting"></a>
 
 ## 2. Processing and formatting data
-Some reasons spatial data can be complicated to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from [Stamen maps](http://maps.stamen.com/#watercolor/12/37.7707/-122.3783), accessed via `ggmap()` and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
+Some reasons spatial data can be difficult to work with is that it exists in many data types (shapefiles, geospatial images, etc.) with varying information extents (affiliated metadata, resolution, coordinate systems, etc.). In this tutorial we will work with two different raster datasets from package [`ggmap`](https://cran.r-project.org/web/packages/ggmap/readme/README.html) and GeoTIFF files from [ESA's WorldCover data](https://esa-worldcover.org/en). We will also use sample data from UWIN Chicago.
 
 ```R
-setwd()
+setwd() # set to the directory in which you have data saved 
+
+# install packages
+install.packages("readr")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("maps")
+install.packages("RColorBrewer")
+install.packages("forcats")
+devtools::install_github("dkahle/ggmap", ref = "tidyup") # download source data
 
 # load in libraries
 library(readr)
@@ -37,6 +48,8 @@ library(dplyr)
 library(ggplot2)
 library(maps)
 library(RColorBrewer)
+library(ggmap)
+library(forcats)
 
 # read in example data
 sp_data <- read_csv("CHIL_Detections.csv")
@@ -52,7 +65,6 @@ sp_data <- sp_data %>%
 # we can use this column to subset our data to year 2021
 sp_data_2021 <- sp_data %>% filter(year == 2021)
 ```
-
 We will need to use the `group_by` function to count the number of detections for each species
 
 ```R
@@ -62,13 +74,13 @@ sp_det <- sp_data_2021 %>%
   summarise(detections = n())
 
 # we can see this list matches the number of unique species in 2021
+sp_det
 unique(sp_data_2021$commonName)
 ```
-
-Let's simplify this task by focusing on mapping one species across all of our camera sites
+Let's simplify this task by focusing on mapping one species across all of our camera sites.
 
 ```R
-# subset detections to raccoons
+# subset to just detections of raccoons
 raccoon_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Raccoon")
 
@@ -79,43 +91,66 @@ raccoon_sum <- raccoon_det_2021 %>%
   ungroup() %>% 
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) # allows us to retain site level data
 ```
-
-Great! Now we have all the data we need in one place. We have all the information we need to plot and map raccoon detections. 
+Great! Now we have all the data we need in one place. We also have all the information we need to plot and map raccoon detections. 
 
 <a name="plots"></a>
 
 ## 3. Plotting spatial data
 ### Using ggmap
-There are many packages and base maps we can use to display this data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point data!). 
+There are many packages and base maps we can use to display these data. We will be using a package called `ggmap` which allows us to use public mapping data sources like Google Maps and Stamen Maps to plot our detection data (or any point/segment/polygon data!). 
+
+One limitation on using `ggmap` is we need to setup a project API, or application programming interface. These API's are free to use up to a $200 credit each month (28,500 maploads per month). If you already have a google account, follow [API setup instructions here](https://developers.google.com/maps/documentation/embed/get-api-key).
 
 ```R
-# install libraries
-devtools::install_github("dkahle/ggmap", ref = "tidyup") # this allows us to use Stamen maps
-library(ggmap)
+# setup API key to use `ggmap`
+my_api <- 'AIzaSyBt73bzxdvlS6ioit4OTCaIE6SrZJ9aWnA'
+register_google(key = my_api)
 
-# use package function to extract relevant mapping data using a bounding box
-chicago <- get_stamenmap(bbox = c(left = -88.3, bottom = 41.55, 
-                                  right = -87.4, top = 42.3), 
-                         zoom = 11)
+# use package function `get_map` to extract relevant mapping data using a regions names or bounding box with coordinate information (this allows us to be more specific)
+chicago <- get_map("chicago", source= "google", api_key = my_api)
+ggmap(chicago)
+
+chicago <- get_map(c(left = -88.3, bottom = 41.55, right = -87.4, top = 42.3), 
+                   zoom = 10)
+ggmap(chicago)
 ```
+<p float="left">
+  <img src="./plots/chicago_map_region.jpg" alt="Map of Chicago in using get_map("chicago")" width="500" height="auto" />
+  <img src="./plots/chicago_map_coord.jpg" alt="Map of Chicago in using get_map() with coordinates" width="500" height="auto" />
+</p>
 
 The `ggmap` package allows us to plot over maps using the ggplot format we have learned in previous tutorials. Though we are plotting our data using latitude and longitude, it is really just like plotting any other xy data (x = longitude, y = latitude). To visualize differences in detections across camera trapping locations, we can use the command `size = detections`. 
 
 ```R
+# plot detections using common ggplot functions
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = raccoon_sum)
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections), 
+             data = raccoon_sum) +
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  #labs(color = "Species")  # updates legend related to color (here 'commonName')
+  guides(color = "none") # a way to drop a certain aspect of the legend (here 'commonName')
 
+# plot detections using additional ggplot functions to control other graphics
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = raccoon_sum, color = "dark blue") + # control color of detections
+  ggtitle("Raccoon detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(50, 300, by=50)) # control breaks of detection counts
 ```
 <p float="left">
-  <img src="./plots/raccoon_map.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map1.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/raccoon_map2.jpg" alt="Detections of raccoons across Chicago in 2021" width="500" height="auto" />
 </p>
 
-Try this again for coyote detections. Make this plot using another color. 
+Try this same process again for coyote detections. Make this plot using another color. 
 
 <details closed><summary>Solution</a></summary>
 
 ```R
-# subset detections of coyotes
+# Another species
+# lets run this for ones species
 coyote_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Coyote")
 
@@ -124,13 +159,16 @@ coyote_sum <- coyote_det_2021 %>%
   group_by(locationAbbr) %>% 
   mutate(detections = n()) %>% 
   ungroup() %>% 
-  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat)
+  distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
-# map coyote detections with a different color
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), data = coyote_sum, color = "purple")
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = detections), 
+             data = coyote_sum, color = "purple") + # control color of detections
+  ggtitle("Coyote detections") +
+  labs(size = "Detection frequency") + # updates legend related to size (here 'detections')
+  scale_size_continuous(breaks=seq(10, 100, by=10)) # control breaks of detection counts
 
-# if you want to save your ggplot locally
+# a way to save your ggplot locally
 ggsave("coyote_map.jpg", width = 6, height = 6) # run this function after your desired plot
 ```
  <p float="left">
@@ -144,6 +182,7 @@ We can also map multiple species at once. Since plotting multiple species may be
 Perhaps we are interested in the co-occurrence of domestic dogs with raccoon and coyote. We hypothesize that dogs are more likely to co-occur with raccoons then with coyotes based on previous research. We will certainly want to explore this hypothesis with statical models, such as a multi-species occupancy model, but we may also want to visualize our data to inform our hypotheses or supplement our findings in reports or manuscripts. Let's plot these three species together: raccoon, coyote, and dogs.
 
 ```R
+# let's try this again with three species of your choosing in 2021
 carnivore_det_2021 <- sp_data_2021 %>% 
   filter(commonName == "Raccoon" | commonName == "Coyote" | commonName == "Domestic dog")
 
@@ -154,11 +193,10 @@ carnivore_sum <- carnivore_det_2021 %>%
   ungroup() %>% 
   distinct(commonName, detections, locationAbbr, DD_Long, DD_Lat) 
 
-# map species these together
+# lets map these together
 ggmap::ggmap(chicago) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
              stroke = 1, data = carnivore_sum, shape = 21)
-ggsave("carn_map.jpg", width = 6, height = 6)
 ```
  <p float="left">
   <img src="./plots/carn_map.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
@@ -169,45 +207,50 @@ If we look closely at our map, we can see that all the raccoon detections appear
 We can fix this by changing the plotting shapes and by adding a bit of randomness to their locations using the `jitter()` function. We can also tidy up our map using a few additional ggplot commands.
 
 ```R
+# using the jitter() function
 ggmap::ggmap(chicago) +
-  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
+  geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections), 
+             stroke = 1, data = carnivore_sum, shape = 21)
+
+# We can also clean up our map using more labels and axes 
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, color = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.01,w=0.01)) + # moved points to be slightly off-center
-  scale_shape_manual(values= c(21, 22, 23))+ # assigns each species a unique shape
-  ggtitle("Chicago, IL USA Detections 2021")+
-  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
-  xlab("Longitude")+
-  ylab("Latitude")+
-  labs(color = "Species")+ # to edit labels on color/shape legend title
-  labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
-ggsave("species_map_final.jpg", width = 6, height = 6)
+             position=position_jitter(h=0.01,w=0.01)) +
+  ggtitle("Carnivore detections") +
+  labs(size = "Detection frequency") +
+  labs(color = "Species") +
+  labs(color = "Species") +
+  labs(shape = "Species") +
+  scale_size_continuous(breaks=seq(50, 300, by=50)) +
+  scale_shape_manual(values= c(21, 22, 23))  
 ```
  <p float="left">
-  <img src="./plots/species_map_final.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
+  <img src="./plots/species_map_basic.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
+   <img src="./plots/species_map_clean.jpg" alt="Detections of coyote, dog, and raccoon across Chicago in 2021" width="500" height="auto" />
 </p>
 
 If we want to instead focus our attention on a specific area, we can adjust the bounding box and map level zoom.
 
 ```R
-# set new extend with a new name
-lincoln_park <- get_stamenmap(bbox = c(left = -87.7, bottom = 41.9, 
+lincoln_park <- get_map(c(left = -87.7, bottom = 41.9, 
                                   right = -87.6, top = 42.0), 
                          zoom = 12)
 
-# create map with new extent
 ggmap::ggmap(lincoln_park) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
                  shape = commonName), stroke = 1, data = carnivore_sum, 
-             position=position_jitter(h=0.0025,w=0.0025)) +
+             position=position_jitter(h=0.0025,w=0.0025))+
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue")) + # change colors for each species
   ggtitle("Lincoln Park, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detections")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ```
  <p float="left">
   <img src="./plots/species_map_LP.jpg" alt="Detections of coyote, dog, and raccoon at Lincoln Park, Chicago in 2021" width="500" height="auto" />
@@ -216,22 +259,24 @@ ggmap::ggmap(lincoln_park) +
 We can zoom in even further. Note that we need to adjust the 'zoom' every time we focus on a smaller area to increase clarity of the map image. We also need to decrease the 'jitter' so we can tell what detections are relative to what sites
 
 ```R
-montrose <- get_stamenmap(bbox = c(left = -87.652, bottom = 41.950, 
+montrose <- get_map(c(left = -87.652, bottom = 41.950, 
                                        right = -87.620, top = 41.975), 
-                              zoom = 14)
+                              zoom = 15)
 
 ggmap::ggmap(montrose) +
   geom_point(aes(x = DD_Long, y = DD_Lat, colour = commonName, size = detections, 
-                 shape = commonName), stroke = 1, data = carnivore_sum, 
+                 shape = commonName), stroke = 1, data = carnivore_sum, # want to change plot size when we zoom in
              position=position_jitter(h=0.001,w=0.001)) +
   scale_shape_manual(values= c(21, 22, 23))+
+  scale_color_manual(values= c("chocolate", "brown4", "darkslateblue"))+ # change colors for each species
   ggtitle("Montrose, IL USA Detections 2021")+
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color = "Species")+ # to edit labels on color/shape legend title
   labs(shape = "Species")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detections")+ # to edit label on detections legend title
+  scale_size_continuous(breaks=seq(0, 300, by=50)) 
 ```
 <p float="left">
   <img src="./plots/species_map_montrose.jpg" alt="Detections of coyote, dog, and raccoon at Montrose Beach, Chicago in 2021" width="500" height="auto" />
@@ -245,7 +290,7 @@ sp_rich <- sp_data_2021 %>%
   group_by(locationAbbr) %>% # group by location to summarise all species detections
   mutate(sp_det = length(unique(commonName))) %>% # count the number of species detected at each site
   ungroup() %>% # ungroup data to retain additional information like lat/long
-  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep  
+  distinct(sp_det, locationAbbr, DD_Long, DD_Lat) # define the columns to keep 
 
 # mapping alpha diversity
 ggmap::ggmap(chicago) +
@@ -257,7 +302,7 @@ ggmap::ggmap(chicago) +
   theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
   xlab("Longitude")+
   ylab("Latitude")+
-  labs(size = "Detections") # to edit label on detections legend title
+  labs(size = "Detection frequency") # to edit label on detections legend title
 ```
 <p float="left">
   <img src="./plots/alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
@@ -266,23 +311,36 @@ ggmap::ggmap(chicago) +
  We could also bin our data in groups to make the map a bit more clear
 
  ```R
-median(sp_rich$sp_det)
+# check data range and use to inform bins
+range(sp_rich$sp_det)
 
 sp_rich_bin <- sp_rich %>% 
   mutate(det_size = case_when(
-    sp_det >= 10 ~ "large",
-    sp_det <= 6 ~ "small",
-    sp_det > 6 | sp_det < 10 ~ "medium",
+    sp_det >= 10 ~ "10+ detections",
+    sp_det <= 6 ~ "6-9 detections",
+    sp_det > 6 | sp_det < 10 ~ "< 6 detections",
     FALSE ~ as.character(sp_det)))
 
-# convert der_size to a factor
+# convert det_size to a factor
 sp_rich_bin <- sp_rich_bin %>% 
   mutate(det_size = as.factor(det_size))
 
-# use the forcats library to relevel det_size to correct order
+# using the forcats library, we can relevel det_size to correct order
 library(forcats)
 sp_rich_bin <- sp_rich_bin %>% 
-  mutate(det_size = fct_relevel(det_size, c("small", "medium", "large")))
+  mutate(det_size = fct_relevel(det_size, c("< 6 detections", "6-9 detections", "10+ detections")))
+
+ggmap::ggmap(chicago) +
+  geom_point(aes(x = DD_Long, y = DD_Lat, size = det_size, color = det_size), 
+             stroke = 1, shape = 1, 
+             data = sp_rich_bin) +
+  scale_size_discrete(breaks=c(1,2,3))+
+  scale_shape_manual(values= c(17))+
+  ggtitle("Chicago, IL USA Alpha Diversity 2021")+
+  theme(plot.title = element_text(hjust = 0.5))+ # this will center your title
+  xlab("Longitude")+
+  ylab("Latitude")+
+  labs(color = "Detection frequency") # to edit label on detections legend title
 ```
 <p float="left">
   <img src="./plots/bin_alpha_diversity.jpg" alt="Alpha diversity, Chicago in 2021" width="500" height="auto" />
@@ -325,6 +383,13 @@ ggmap::ggmap(chicago) +
 We can also build these plots with other geospatial layers. We can use the [European Space Agency's global landcover layer](https://worldcover2020.esa.int/) for an example. This is a great mapping layer as it is a free, fine-scale (10m resolution), dataset which covers landcover globally across 10 classes: "Tree cover", "Shrubland", "Grassland", "Cropland", "Built-up", "Bare / sparse vegetation”, “Snow and Ice”, “Permanent water bodies”, “Herbaceous Wetland”, “Mangrove” and “Moss and lichen". See [ESA's product details document](https://blog.vito.be/remotesensing/release-of-the-10-m-worldcover-map) for more information.
 
 ```R
+# install packages 
+install.packages("sf")
+install.packages("terra")
+install.packages("rgdal")
+install.packages("tidyterra")
+install.packages("devtools")
+
 # load in libraries
 library(sf)
 library(terra)

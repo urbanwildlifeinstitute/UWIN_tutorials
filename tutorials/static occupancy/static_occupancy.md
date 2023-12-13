@@ -28,15 +28,16 @@ Often in wildlife ecology, we are interested in unpacking the relationship betwe
 
 Rather then try to count or estimate the abundance of species in a given environment, we can use passive tools such as cameras traps or acoustic detectors, to monitor areas that may or may not host species (specifically 'unmarked species') of interest. The term 'unmarked' means individuals cannot be identified via unique markings or tags (such as ear tags or spot patterns).
 
-However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
-When conducting surveys, the following may occur:
+However, survey tools and our ability to detect species is imperfect. Thankfully, we can use occupancy models to account for these uncertainties, therefore improving our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about our sites, and feeding this information into our model. When conducting surveys, the following may occur:
 
 <p float="center">
-  <img src="./plots/det_states.png" alt="Figure on occupancy states" width="510" height="auto" />
+  <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+
 </p>
 
 <a name="assumptions"></a>
+
 
 
 We can convert surveys into mathematical equations by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. For example:
@@ -57,6 +58,7 @@ Under this model we assume that:
 2. Occupancy probability is constant across sites or visits. or explained by covariates
 3. The occupancy status does not change over our repeated surveys (also known as 'closed' to change)
 4. There are no false detections (detecting a species when it is truly *not* there or misidentifying a species)
+
 
 We comply to these assumptions by carefully developing our study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). 
 
@@ -331,7 +333,9 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
 ```
 
 <p float="center">
+
   <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
+
 </p>
 
 We can also plot this figure using `ggplot` functions.
@@ -358,7 +362,9 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
 
 Nice work! If you are interested in furthering your occupancy journey, try this tutorial again with your own data or check out other UWIN tutorials like ['Autologistic occupancy'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Auto-logistic%20occupancy).
 
+
 <p float="center">
   <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
+
 
