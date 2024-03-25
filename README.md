@@ -1,6 +1,6 @@
 # UWIN_tutorial guide
 
-Thanks for your interest in the Urban Wildlife Information Network R workshops! Below is a guide to exisiting tutorials and how to contribute new tutorials. Feel free to contact krivera@lpzoo.org if you have any questions.
+Thanks for your interest in the Urban Wildlife Information Network R workshops! Below is a guide on contributing new tutorials. For more details on tutorial, examine the tutoral folders and `.md` files. Feel free to contact krivera@lpzoo.org if you have any questions.
 
 # Guide to contributing tutorials
 
