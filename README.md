@@ -119,7 +119,7 @@ If you want to add challenges or require participants to work on a solution, you
 ```
 <details closed><summary>Solution</a></summary>
 
-	HIIDEN CODE AND TEXT
+	HIDDEN CODE AND TEXT
 
 </details>
 ```
