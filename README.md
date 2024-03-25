@@ -11,9 +11,9 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 2. Create a new branch of the 'https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git' repository with a title related to your tutorial/post. Creating new branches, files etc. can done either using the Github web interface or by cloning the repository to your own computer and doing it locally. 
 
 3. Switch to the new branch, and create a `.md` file for your tutorial in the `tutorials/` folder. You can create a `.md` file through the Github web interface (remember you need to specify the file extension, e.g. `filename.md`), or by opening a text editor (see suggestions below) and going to `File/New file`.
-	-  Name the file like this: `krivera-datavis.md`, where: 
+	-  Name the file like this: `krivera.data-vis.md`, where: 
 		-  `krivera` is the lead authors first initial and last name
-		-  `datavis` is a word relating to the content of your tutorial.
+		-  `data-vis` is a word relating to the content of your tutorial.
 
 4. Edit the new file using your faviourite plain text editor (_e.g._ Atom, TextEdit, Notepad, Vim, Sublime). Use the <a href="#style">style guide below</a> based on the [coding club guidelines](Tutorial_publishing_guide.md) and existing tutorials as a guide. Are there any pre-requisites to completing your tutorial? You can add links to previous tutorials, so that people can complete them first, and then come back to your tutorial. It's nice to have in text references to previous tutorials with links to them, as that way more people can find out about them.
 
