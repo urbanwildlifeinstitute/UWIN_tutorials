@@ -1,6 +1,6 @@
 # UWIN_tutorial guide
 
-Thanks for your interest in the Urban Wildlife Information Network R workshops! Below is a guide on contributing new tutorials. For more details on tutorial, examine the tutoral folders and `.md` files. Feel free to contact krivera@lpzoo.org if you have any questions.
+Thanks for your interest in the Urban Wildlife Information Network R workshops! Below is a guide on contributing new tutorials. For more details on each tutorial, examine the tutoral folder's `.md` file. Feel free to contact krivera@lpzoo.org if you have any questions.
 
 # Guide to contributing tutorials
 
@@ -15,7 +15,7 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 		-  `krivera` is the lead authors first initial and last name
 		-  `datavis` is a word relating to the content of your tutorial.
 
-4. Edit the new file using your faviourite plain text editor (_e.g._ Atom, TextEdit, Notepad, Vim, Sublime). Use the <a href="#style">style guide below</a> and existing tutorials as a guide. Are there any pre-requisites to completing your tutorial? You can add links to previous tutorials, so that people can complete them first, and then come back to your tutorial. It's nice to have in text references to previous tutorials with links to them, as that way more people can find out about them.
+4. Edit the new file using your faviourite plain text editor (_e.g._ Atom, TextEdit, Notepad, Vim, Sublime). Use the <a href="#style">style guide below</a> provided by the [coding club](Tutorial_publishing_guide.md) and existing tutorials as a guide. Are there any pre-requisites to completing your tutorial? You can add links to previous tutorials, so that people can complete them first, and then come back to your tutorial. It's nice to have in text references to previous tutorials with links to them, as that way more people can find out about them.
 
 6. Upload any images to a `plots` folder within your tutorial.
 
