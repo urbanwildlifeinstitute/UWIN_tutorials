@@ -116,11 +116,13 @@ To add hyperliks to text enclose your text in brackets `[ ]` followed by parenth
 ### Hidden Solutions
 If you want to add challenges or require participants to work on a solution, you can add the following syntax to hide code chunks or text:
 
+```
 <details closed><summary>Solution</a></summary>
 
 	HIIDEN CODE AND TEXT
 
 </details>
+```
 
 ### General stylistic points
 
