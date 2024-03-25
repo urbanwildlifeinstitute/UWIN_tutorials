@@ -113,8 +113,18 @@ Feel free to use R markdown or add tables to `plots` folder as a .png or other i
 To add hyperliks to text enclose your text in brackets `[ ]` followed by parenthesis containing your link `( )`.
 
 
-### Footer Material
+### Hidden Solutions
+If you want to add challenges or require participants to work on a solution, you can add the following syntax to hide code chunks or text:
 
+<details closed><summary>Solution</a></summary>
+
+	HIIDEN CODE AND TEXT
+ 
+  <p float="left">
+  <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
+</p>
+
+</details>
 
 ### General stylistic points
 
