@@ -15,7 +15,7 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 		-  `krivera` is the lead authors first initial and last name
 		-  `datavis` is a word relating to the content of your tutorial.
 
-4. Edit the new file using your faviourite plain text editor (_e.g._ Atom, TextEdit, Notepad, Vim, Sublime). Use the <a href="#style">style guide below</a> provided by the [coding club](Tutorial_publishing_guide.md) and existing tutorials as a guide. Are there any pre-requisites to completing your tutorial? You can add links to previous tutorials, so that people can complete them first, and then come back to your tutorial. It's nice to have in text references to previous tutorials with links to them, as that way more people can find out about them.
+4. Edit the new file using your faviourite plain text editor (_e.g._ Atom, TextEdit, Notepad, Vim, Sublime). Use the <a href="#style">style guide below</a> based on the [coding club guidelines](Tutorial_publishing_guide.md) and existing tutorials as a guide. Are there any pre-requisites to completing your tutorial? You can add links to previous tutorials, so that people can complete them first, and then come back to your tutorial. It's nice to have in text references to previous tutorials with links to them, as that way more people can find out about them.
 
 6. Upload any images to a `plots` folder within your tutorial.
 
@@ -27,27 +27,16 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 
 ### Header Material
 
-This material should appear at the top of every tutorial `.md` file. It is important to use the same `date:` as the one in the `.md` tutorial filename. For tutorials this date should be approximately 4 days before it is taught in class, so that email recipients can look at the tutorial before it is run in class. The `title:` and `subtitle:` should be identical to that which is written on the header banner image for that tutorial. 
-
-`tags` should be added according to the content of your tutorial. Our current tags are:
-
-- `data_manip` (Data manipulation)
-- `datavis` (Data visualisation)
-- `github` (Related to version control, github, git)
-- `modelling` (Statistical modelling, e.g. general linear models)
-- `intro_to_r` (Basic skills for programming, etiquette, using IDEs etc.)
+This material should appear at the top of every tutorial `.md` file. The `title:` is the full name of your tutorial and `subtitle:` should be the short hand that appears on the github repository
 
 Here is an example header:
 
 ```
 ---
 title: "Title to appear on website"
+subtitle: "Subtitle to appear on website"
 author: "First name of Author"
 date: "2017-04-25 08:00:00"
-meta: Tutorials
-subtitle: "Subtitle to appear on website"
-layout: post
-tags: github datavis
 ---
 <div class="block">
 	<center>
