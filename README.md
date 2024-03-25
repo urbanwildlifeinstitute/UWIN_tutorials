@@ -32,7 +32,7 @@ This material should appear at the top of every tutorial `.md` file. The `title`
 1. Title
 2. Author/s of tutorial and month & year of last update
 3. Who the tutorial is aimed at and where your resources are from (if you used any specific datasets or tutorials)
-4. List of resources use with hyperlinks
+4. List of resources used or helpful resources related to your tutorial with hyperlinks
 
 Here is an example header:
 
