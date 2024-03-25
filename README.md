@@ -119,10 +119,6 @@ If you want to add challenges or require participants to work on a solution, you
 <details closed><summary>Solution</a></summary>
 
 	HIIDEN CODE AND TEXT
- 
-  <p float="left">
-  <img src="./plots/coyote_map.jpg" alt="Detections of coyote across Chicago in 2021" width="500" height="auto" />
-</p>
 
 </details>
 
