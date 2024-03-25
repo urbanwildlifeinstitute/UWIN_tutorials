@@ -106,110 +106,15 @@ print 'Hi, %s.' % name
 
 ### Tables
 
-Please format all tables using html, not markdown, using the following style info. Each `<tr>` block represents one row, with each `<th>` block representing one column. <a href="http://www.tablesgenerator.com/html_tables" target="_blank">http://www.tablesgenerator.com/html_tables</a> is a decent html table generator if you can't be bothered typing this out manually:
-
-```
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg th{font-family:Arial;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;word-break:normal;}
-</style>
-<table class="tg">
-  <tr>
-    <th>Name</th>
-    <th>Code</th>
-    <th>Example</th>
-  </tr>
-  <tr>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-  </tr>
-</table>
-```
-
-### Lists
-
-Bullet point lists should be formatted as headers. This is because our jekyll template doesn't deal well with markdown formatted lists. Lists should look like this:
-
-```
-##### - List item 1
-##### - List item 2
-##### - List item 3
-```
-
-### Shiny apps and other embedded material
-Shiny apps and other similar embeddable material can be placed in an `iframe`, adjusting the height and width as needed to make it look sensible. Avoid making the user scroll through the app if possible by adjusting the height and width:
-
-```
-<iframe src="EMBEDDABLE_URL" style="border:none; width:1000px; height:550px;"></iframe>
-```
+Feel free to use R markdown or add tables to `plots` folder as a .png or other image file type (.tiff). 
 
 ### Web Links
 
-Please format all hyperlinks using html, not markdown, in the following format. `target="_blank"` forces web browsers to open the link in a new tab:
+To add hyperliks to text enclose your text in brackets `[ ]` followed by parenthesis containing your link `( )`.
 
-```
-<a href="FULL_LINK" target="_blank">DESCRIPTION OF LINK TO APPEAR AS TEXT</a>
-
-```
-
-### Image Links
-
-Please format all image links using html, not markdown, in the following format. Adjust the `width:` argument so the image is sensibly sized. Normally nothing over 1000 pixels:
-
-```
-<center> <img src="{{ site.baseurl }}/img/IMAGE_NAME.png" alt="Img" style="width: 800px;"/> </center>
-```
 
 ### Footer Material
 
-This material should be added to the end of every tutorial. Replace `INSERT_SURVEY_LINK` with the actual URL to a Survey Monkey survey created using the Coding Club account (you can get in touch with Gergana for the password). The top lines of this section can be used to list acknowledgements and important links.
-
-
-```
-<hr>
-<hr>
-
-<h3><a href="SURVEY_MONKEY_LINK" target="_blank">&nbsp; We would love to hear your feedback, please fill out our survey!</a></h3>
-<br>
-<h3>&nbsp; You can contact us with any questions on <a href="mailto:ourcodingclub@gmail.com?Subject=Tutorial%20question" target = "_top">ourcodingclub@gmail.com</a></h3>
-<br>
-<h3>&nbsp; Related tutorials:</h3>
-{% for post in site.posts %}
-	{% if post.url != page.url %}
-  		{% for tag in post.tags %}
-    			{% if page.tags contains tag %}
-<h4><a style="margin:0 padding:0" href="{{ post.url }}">&nbsp; - {{ post.title }}</a></h4>
-  			{% endif %}
-		{% endfor %}
-	{% endif %}
-{% endfor %}
-<br>
-<h3>&nbsp; Subscribe to our mailing list:</h3>
-<div class="container">
-	<div class="block">
-        <!-- subscribe form start -->
-		<div class="form-group">
-			<form action="https://getsimpleform.com/messages?form_api_token=de1ba2f2f947822946fb6e835437ec78" method="post">
-			<div class="form-group">
-				<input type='text' class="form-control" name='Email' placeholder="Email" required/>
-			</div>
-			<div>
-                        	<button class="btn btn-default" type='submit'>Subscribe</button>
-                    	</div>
-                	</form>
-		</div>
-	</div>
-</div>
-
-<ul class="social-icons">
-	<li>
-		<h3>
-			<a href="https://twitter.com/our_codingclub" target="_blank">&nbsp;Follow our coding adventures on Twitter! <i class="fa fa-twitter"></i></a>
-		</h3>
-	</li>
-</ul>
-```
 
 ### General stylistic points
 
@@ -221,59 +126,9 @@ __Copy and paste the code below into your script:__
 
 <a name="work_html"></a>
 
-## Adding a tutorial to `work.html`
 
-In `work.html` you should find a series of repeated blocks of code, each denoting a tutorial listed on the website. Add your own tutorial by first looking for this sequence of html tags:
+## Creating a `tutorial.md` for your tutorial resources repository on github
 
-```html
-			</div>
-		</div>
-	</a>
-</li>
-```
-
-then add the code below after that set of html tags: 
-
-```html
-<li class="mix Rbasics Markdown">  
-     <a href="https://ourcodingclub.github.io/2017/01/16/piping.html">
-           <img src="{{ site.baseurl }}/img/portfolio/work1.jpg" alt="">
-                 <div class="overly">
-                      <div class="position-center">
-                            <h2>Your tutorial title</h2>
-                            <p>Your tutorial subtitle</p>
-                       </div>
-                  </div>
-       </a>
-</li>
-```
-
-Change `<li class="mix Rbasics Markdown">` to reflect the categories you want the tutorial to be featured in. Categories include `Rbasics`, `Github`, `Dataform` (Data formatting), `Datavis` (Data visualisation), `Modelling`, `Markdown`, and Shiny. Remember not to add any commas between categories and keep `mix` in the code.
-
-Change `<a href="https://ourcodingclub.github.io/2017/01/16/piping.html">` to reflect the name of your own tutorial, changing the date and tutorial name to match that of your `.md` file.
-
-Change the thumbnail image for your tutorial (`<img src="{{ site.baseurl }}/img/portfolio/work1.jpg" alt="">`). You can choose one of the already uploaded ones (navigate to the img/portfolio folder to view them and change the file name according to the one you want), or you can also upload your own in the portfolio folder.
-
-Change `<h2>Your tutorial title</h2>` to mirror the title of your tutorial.
- 
-Change `<p>Your tutorial subtitle</p>` to mirror the subtitle of your tutorial.
-
-<a name="readme"></a>
-
-## Creating a `README.md` for your tutorial resources repository on github
-
-Below is an example `README.md` that you can use to make your own.
+The .md file is where participants will follow the tutoial. This should have all code chunks to follow a tutorial completely (e.g. the code should run uninterrupted if copied and pasted locally).  
 
 ```
-Using R to produce map figures and display spatial data
-
-This repository contains the files necessary to complete the Coding Club Maps tutorial - you can check it out at:
-https://ourcodingclub.github.io/2016/11/25/maps_tutorial.html
-
-The bird data (`Gyps_rueppellii_GBIF.csv`) were downloaded from the Global Biodiversity Information Facility (GBIF) https://gbif.org
-
-`ggmap_Cheatsheet.pdf` was downloaded from the National Centre for Ecological Analysis and Synthesis (NCEAS)
-https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/
-
-For more Coding Club tutorials and resources, please see 
-https://ourcodingclub.github.io/
