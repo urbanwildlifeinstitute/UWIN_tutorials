@@ -10,7 +10,7 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 
 2. Create a new branch of the 'https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git' repository with a title related to your tutorial/post. Creating new branches, files etc. can done either using the Github web interface or by cloning the repository to your own computer and doing it locally. 
 
-3. Switch to the new branch, and create a `.md` file for your tutorial in the `tutorials/` folder. You can create a `.md` file through the Github web interface (remember you need to specify the file extension, e.g. `filename.md`), or by opening a text editor (see suggestions below) and going to `File/New file`.
+3. Switch to the new branch, and create a new folder with a tutorial shorthand name. Use the same name for the `.md` file for your tutorial in the `tutorials/` folder. You can create a `.md` file through the Github web interface (remember you need to specify the file extension, e.g. `filename.md`), or by opening a text editor (see suggestions below) and going to `File/New file`.
 	-  Name the file like this: `krivera.data-vis.md`, where: 
 		-  `krivera` is the lead authors first initial and last name
 		-  `data-vis` is a word relating to the content of your tutorial.
@@ -27,17 +27,24 @@ Thanks for your interest in the Urban Wildlife Information Network R workshops! 
 
 ### Header Material
 
-This material should appear at the top of every tutorial `.md` file. The `title:` is the full name of your tutorial and `subtitle:` should be the short hand that appears on the github repository
+This material should appear at the top of every tutorial `.md` file. The `title` should be the full name of your tutorial which is related to the short hand folder and `.md` file.
+
+1. Title
+2. Author/s of tutorial and month & year of last update
+3. who the tutorial is aimed at and where your resources are from (if you used any specific datasets or tutorials)
+4. List of resources use wiht hyperlinks
 
 Here is an example header:
 
 ```
----
-title: "Title to appear on website"
-subtitle: "Subtitle to appear on website"
-author: "First name of Author"
-date: "2017-04-25 08:00:00"
----
+# UWIN Tutorial: Autologistic Occupancy
+*Created by Kimberly Rivera - last updated May 2023 by Kimberly Rivera*
+
+This tutorial is aimed at folks interested and new to occupancy modeling, or as refresher for those already familiar. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
+
+### Some helpful references:
+1. [An introduction to auto-logistic occupancy models](https://masonfidino.com/autologistic_occupancy_model/) - Mason Fidino
+2. [Occupancy models for citizen-science data](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13090) - Res Altwegg & James D. Nichols
 ```
 
 ### Introduction Material
