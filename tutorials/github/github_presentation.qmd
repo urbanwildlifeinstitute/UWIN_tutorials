@@ -1,9 +1,21 @@
 ---
 title: "UWIN GitHub workshop"
+title-slide-attributes:
+  data-background-image: ./images/github-mark.png
+  data-background-size: contain
+  data-background-opacity: "0.5"
+  
 author: "Nathan Byer and Mason Fidino"
 format: revealjs
-editor: visual
+output: 
+  revealjs::revealjs_presentation:
+    transition: none
 ---
+
+# GitHub and Data Reproducibility
+
+-   some things
+-   more things
 
 ## Quarto
 
@@ -21,5 +33,5 @@ When you click the **Render** button a document will be generated that includes:
 When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
 
 ```{r}
-1 + 1
+getwd()
 ```
