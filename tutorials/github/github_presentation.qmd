@@ -1,27 +1,30 @@
 ---
-title: "UWIN GitHub workshop"
-title-slide-attributes:
-  data-background-image: ./images/github-mark.png
-  data-background-size: contain
-  data-background-opacity: "0.5"
-  
-author: "Nathan Byer and Mason Fidino"
-format: revealjs
 output: 
   revealjs::revealjs_presentation:
     transition: none
+    theme: moon
 ---
 
-# GitHub and Data Reproducibility
+# UWIN workshop: GitHub and Data Reproducibility
 
--   some things
--   more things
+Nathan Byer and Mason Fidino
 
-## Quarto
+![](./images/github-mark.png){width=30%}
+
+# How do researchers typically store files?
+
+- `paper_draft.docx`
+- `paper_draft2.docx`
+- `paper_draft2_MF.docx`
+- `paper_final.docx`
+- `paper_final2.docx`
+- `paper_final_revision.docx`
+
+# Quarto
 
 Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
 
-## Bullets
+# Bullets
 
 When you click the **Render** button a document will be generated that includes:
 
