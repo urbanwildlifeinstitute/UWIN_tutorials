@@ -7,7 +7,7 @@ authors:
 - family-names: "Fidino"
   given-names: "Mason"
   orcid: "https://orcid.org/0000-0002-8583-0307"
-title: "Static Occupancy with UWIN"
+title: "UWIN Workshop Tutorials"
 version: 1.0.0
 date-released: 2023-12-01
-url: "https://github.com/urbanwildlifeinstitute/UWIN_tutorials/new/main/tutorials/static%20occupancy"
+url: "https://github.com/urbanwildlifeinstitute/UWIN_tutorials"
