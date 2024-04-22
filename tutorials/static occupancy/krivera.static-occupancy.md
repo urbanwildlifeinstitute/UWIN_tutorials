@@ -84,6 +84,8 @@ Hopefully, you can meet these assumptions by carefully developing your study des
 [Back to table of contents ⤒](#tutorial-aims)
 ## 3. Getting your data
 
+There are two easy ways to download data from this github repository to your local drive so it is easily accessible for this tutorial. We can clone the repository using the (UWIN_tutorials)[https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git] link to our local GitHub Desktop or download the files manually and organize the filed in an accessible folder.
+
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Formatting data
 
