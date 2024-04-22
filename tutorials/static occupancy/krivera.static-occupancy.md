@@ -37,12 +37,14 @@ package_load(
  [1. What is occupancy?](#1-what-is-occupancy)
 
  [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
+ 
+ [3. Getting your data](#3-get_data)
+ 
+ [4. Formatting data](#4-formatting-data)
 
- [3. Formatting data](#3-formatting-data)
+ [5. Fitting models](#5-fitting-models)
 
- [4. Fitting models](#4-fitting-models)
-
- [5. Predicting and plotting model outputs](#5-predicting-and-plotting-model-outputs)
+ [6. Predicting and plotting model outputs](#6-predicting-and-plotting-model-outputs)
 
 ## 1. What is occupancy?
 
@@ -79,9 +81,11 @@ Like any type of statistical model, occupancy models make a number of assumption
 
 Hopefully, you can meet these assumptions by carefully developing your study design (based on our research questions) and by incorporating relevant and measurable covariates (e.g. environmental variability). Closure is perhaps the most likely assumption that is violated, especially as it is quite difficult to account for, but you can try to meet this assumption by having smaller sampling windows (e.g., a month of sampling vs a year of sampling).
 
+[Back to table of contents ⤒](#tutorial-aims)
+## 3. Getting your data
 
 [Back to table of contents ⤒](#tutorial-aims)
-## 3. Formatting data
+## 4. Formatting data
 
 Let's learn more about occupancy modeling with an example. We will use raccoon data collected from UWIN Chicago in the summer of 2021. For those who use the Urban Wildlife Information Network's online database, you are welcome to work through your own data. Simply navigate to the [UWIN Database](https://www.urbanwildlifenetwork.org/)> Reports> Occupancy Report. Here you can select one species of interest over a specific date/time range. We would recommend starting with one sampling season (as species may change their occupancy season to season--another type of occupancy model!).  
 
@@ -223,7 +227,7 @@ summary(raccoon_occ)
 ```
 
 [Back to table of contents ⤒](#tutorial-aims)
-## 4. Fitting models
+## 5. Fitting models
 
 Let's fit two models, one for a null hypothesis and one which considers the habitat metrics mentioned above: <br />
 **null** - raccoon occupancy is constant across sites <br />
@@ -286,7 +290,7 @@ mean(siteValue)
 
 
 [Back to table of contents ⤒](#tutorial-aims)
-## 5. Predicting and plotting model outputs
+## 6. Predicting and plotting model outputs
 
 Though our null hypothesis was most supported (e.g. a lower AIC), we can use the `habitat_model` to demonstrate how to predict occupancy across covariates, or in this example, proportion of forest or water. Let's plot how occupancy changes across varying proportions of forest cover.
 
