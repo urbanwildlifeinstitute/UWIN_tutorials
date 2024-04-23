@@ -19,6 +19,25 @@ Nathan Byer and Mason Fidino
 
 ![](./images/github-mark.png){width=30%}
 
+## Who we are
+
+::: {.nonincremental}
+- Nathan Byer
+  + NATHAN ADDS COOL STUFF ABOUT HIMSELF HERE
+
+:::
+
+
+
+## Who we are
+
+::: {.nonincremental}
+- Mason Fidino
+  + Senior Quantitative Ecologist at the Urban Wildlife Institute, Lincoln Park Zoo
+  + Analytics advisor for UWIN, helps steer database management and development
+  + contact: mfidino@lpzoo.org
+
+:::
 ## How do researchers typically store files?
 
 - `paper_draft.docx`
@@ -83,6 +102,10 @@ Nathan Byer and Mason Fidino
   + Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository.
 ![](./images/git_branch_merge.png){width=100% align=center}
 
+## Branch (example)
+
+Nathan has some code for a project that works, but he wants to improve the code to make it run faster. To do so Nathan creates a branch titled `performance-tests` off of the main branch so he can try out different ways to improve the speed of his code without affecting the code in the `main` branch.
+
 ## Commit
 - **Definition**: a summary of changes made to files within a repository on a given branch.
 - typically capture the following:
@@ -111,8 +134,25 @@ Nathan Byer and Mason Fidino
   + Not to be confused with pull requests, which are a different thing!
 
 
-## fork 
-
 ## Pull Request
 
--
+- **Definition**: A pull request (PR) is a way to tell collaborators (or yourself)
+that the changes you pushed to a branch are ready for review. Think of a pull request as a staging area that you use before you merge one branch back into another.
+  + To set up a pull request, you have to select the branch with the code you changed and the branch you want to merge those changes into. 
+  + When working collaboratively, someone else reviews the pull request, discussion happens, and based on that some followup commits may be needed.
+  + Once approved, you can merge the feature branch into the other branch you selected.
+  
+## Pull Request (example)
+
+Example: Mason want's to make a new function for his `autoOcc` R package. To do so, Mason created a new branch, pushed commits to that branch, and when the function was ready made a pull request to merge the feature branch into the main branch.
+  
+  ![](./images/git_branch_merge.png){width=100% align=center}
+
+## fork 
+
+- **Definition**: A fork is a way to create a new repository based on a different repository you are (most often) not the owner of. 
+  + You can think of forks it as a branch off a repository you do not own. You can make changes to your forked repository and then submit a pull request to the
+  original project owner.
+  + As such, forks are used a lot when working on open source projects.
+  + Creating a fork is the easiest way to copy everything in someone else's repository.
+  + However, if you are working on a research project with a few *trusted* people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.
