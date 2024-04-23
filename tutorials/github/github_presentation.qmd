@@ -73,30 +73,43 @@ Nathan Byer and Mason Fidino
 ## Clone
 
 - **Definition**: the creation of a *local* copy of a *remote* repository.
+  + In other words, you are copying the *remote* repository stored in the cloud on GitHub to a folder of your choice on your computer (i.e., creating a *local* copy).
+  
+## Branch
+
+- **Definition**: Branches are used to isolate the development of code without affecting other parts of the code base.
+  + When you create a repository you have one branch
+  + New branches are created off an existing branch.
+  + Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository.
+![](./images/git_branch_merge.png){width=100% align=center}
 
 ## Commit
-- **Definition**: a summary of changes made to files within a repository.
+- **Definition**: a summary of changes made to files within a repository on a given branch.
 - typically capture the following:
   + a commit log, explaining the commit and its contributor(s)
-  + a unique hash ID 
+  + a unique hash ID (GitHub handles this for you).
   + the **parent** commit - basically, where your commit came from!
   + a summary of files that have changed
+  + In essence, a commit is the changes you made to your *local* copy of a repository, which you want to save and eventually send up to the *remote* repository.
+  + commit early, commit often!
   
 ## Push
 
-- **Definition**: when *local* commits are pushed to the *remote* repository.
+- **Definition**: when *local* commits are pushed to a branch on a *remote* repository.
 - What do we mean by this?
   + you will likely be creating a commit on a local machine.
   + after you create that commit, it will **not** be reflected in the remote repository until those changes are pushed.
+  + Commits records changes to the *local* repository.
+  + Pushes update the *remote* repository with commits you've made.
 
 ## Pull
 
--**Definition**: when *remote* changes are applied to your *local*, cloned repository.
+-**Definition**: when *remote* changes on a branch are applied to your *local*, cloned repository.
 - What do we mean by this?
-  + if you are working on a repository collaboratively, others may make edits that are **not** initially reflected in your local repository. 
+  + if you are working on a repository collaboratively, others may make edits that are **not** initially reflected in your *local* repository. 
   + when you pull from the remote repository, these remote changes are synced with your local directory.
+  + Not to be confused with pull requests, which are a different thing!
 
-# branch
 
 ## fork 
 

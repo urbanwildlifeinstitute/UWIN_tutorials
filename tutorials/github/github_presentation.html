@@ -398,7 +398,21 @@
 <section id="clone" class="slide level2">
 <h2>Clone</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: the creation of a <em>local</em> copy of a <em>remote</em> repository.</li>
+<li class="fragment"><strong>Definition</strong>: the creation of a <em>local</em> copy of a <em>remote</em> repository.
+<ul>
+<li class="fragment">In other words, you are copying the <em>remote</em> repository stored in the cloud on GitHub to a folder of your choice on your computer (i.e., creating a <em>local</em> copy).</li>
+</ul></li>
+</ul>
+</section>
+<section id="branch" class="slide level2">
+<h2>Branch</h2>
+<ul>
+<li class="fragment"><strong>Definition</strong>: Branches are used to isolate the development of code without affecting other parts of the code base.
+<ul>
+<li class="fragment">When you create a repository you have one branch</li>
+<li class="fragment">New branches are created off an existing branch.</li>
+<li class="fragment">Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository. <img data-src="./images/git_branch_merge.png" style="width:100.0%" data-align="center"></li>
+</ul></li>
 </ul>
 </section>
 <section id="commit" class="slide level2">
@@ -408,31 +422,33 @@
 <li class="fragment">typically capture the following:
 <ul>
 <li class="fragment">a commit log, explaining the commit and its contributor(s)</li>
-<li class="fragment">a unique hash ID</li>
+<li class="fragment">a unique hash ID (GitHub handles this for you).</li>
 <li class="fragment">the <strong>parent</strong> commit - basically, where your commit came from!</li>
 <li class="fragment">a summary of files that have changed</li>
+<li class="fragment">In essence, a commit is the changes you made to your <em>local</em> copy of a repository, which you want to save and eventually send up to the <em>remote</em> repository.</li>
+<li class="fragment">commit early, commit often!</li>
 </ul></li>
 </ul>
 </section>
 <section id="push" class="slide level2">
 <h2>Push</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: when <em>local</em> commits are pushed to the <em>remote</em> repository.</li>
+<li class="fragment"><strong>Definition</strong>: when <em>local</em> commits are pushed to a <em>remote</em> repository.</li>
 <li class="fragment">What do we mean by this?
 <ul>
 <li class="fragment">you will likely be creating a commit on a local machine.</li>
 <li class="fragment">after you create that commit, it will <strong>not</strong> be reflected in the remote repository until those changes are pushed.</li>
+<li class="fragment">Commits records changes to the <em>local</em> repository.</li>
+<li class="fragment">Pushes update the <em>remote</em> repository with commits you’ve made.</li>
 </ul></li>
 </ul>
 </section>
 <section id="pull" class="slide level2">
 <h2>Pull</h2>
-<p>-<strong>Definition</strong>: when <em>remote</em> changes are applied to your <em>local</em>, cloned repository. - What do we mean by this? + if you are working on a repository collaboratively, others may make edits that are <strong>not</strong> initially reflected in your local repository. + when you pull from the remote repository, these remote changes are synced with your local directory.</p>
-</section></section>
-<section>
-<section id="branch" class="title-slide slide level1 center">
-<h1>branch</h1>
-
+<p>-<strong>Definition</strong>: when <em>remote</em> changes are applied to your <em>local</em>, cloned repository. - What do we mean by this? + if you are working on a repository collaboratively, others may make edits that are <strong>not</strong> initially reflected in your <em>local</em> repository. + when you pull from the remote repository, these remote changes are synced with your local directory. + Pull requests can be confusing because they don’t just get used to apply changes to your <em>local</em> repository</p>
+<ul>
+<li class="fragment"></li>
+</ul>
 </section>
 <section id="fork" class="slide level2">
 <h2>fork</h2>
