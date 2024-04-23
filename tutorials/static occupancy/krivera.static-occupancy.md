@@ -55,7 +55,7 @@ Estimating the abundance of species in a local area can be difficult and time-in
 However, survey tools and our ability to detect species is imperfect. Thankfully, occupancy models account for these uncertainties, which can improve our estimate of a species 'true' occupancy (the true presence of a species) state from our 'observed' occupancy state (data we collect on species presence). We do this by repeatedly visiting sampling sites, collecting information about these sites, and feeding this information into our model. Here, we will focus on the most simple occupancy model, a single-species, single-season model. 
 
 <p float="center">
-  <img src="./plots/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
+  <img src="./figures/det_states.jpg" alt="Figure on occupancy states" width="500" height="auto" />
 
 </p>
 
