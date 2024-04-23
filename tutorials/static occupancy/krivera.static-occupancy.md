@@ -1,5 +1,5 @@
 # UWIN Tutorial: Static Occupancy
-*Created by Kimberly Rivera and Mason Fidino - last updated December 2023*
+*Created by Kimberly Rivera and Mason Fidino - last updated April 2024*
 
 This tutorial is aimed at people who are either interested in and new to occupancy modeling, or as a refresher for those already familiar with occupancy modeling. This tutorial was designed with the support of outside resources listed below and via workshops developed by Mason Fidino.
 
@@ -62,7 +62,7 @@ However, survey tools and our ability to detect species is imperfect. Thankfully
 We can convert surveys into data that can be used within occupancy models by creating 'detection histories'. These typically are formed as tables of '0's (no species was detected) and '1's (a species was detected) where rows indicate sites and columns indicate repeat visits. If there is uneven sampling across sites you can also have `NA` values for when sampling did not occur. From there, you can calculate the probability of that detection history with some mixture of $\Psi$ (the probability a site is occupied) and $\rho$ (the probability a species is detected given their presence). For example, the probability of the two detection histories below are:
 
 <p float="center">
-  <img src="./plots/det_hist.png" alt="Figure of two detection histories of a species along with their mathematical counterparts" width="700" height="auto" />
+  <img src="./figures/det_hist.png" alt="Figure of two detection histories of a species along with their mathematical counterparts" width="700" height="auto" />
 </p>
 
 Written plainly, for the first detection history, we know that the species is present because it was detected at least once. The species was not detected on survey 1 and 3 and was detected on survey 2 and 4. Thus, we can calculate the probability of this specific detection history by taking the product of $\psi$ and the individual detection probabilities of each survey (or 1 minus that probability if the species was not detected). For the second detection history we have a full vector of 0's. This means one of two things, either the species was present and not detected on each survey or the species was not there. Because these two events are independent of one another, you can calculate the probability of each and just add them together. 
@@ -98,6 +98,12 @@ To fork a repository:
 6. Under 'Clone a repository' click **URL** and paste the **HTTPS Code**
 
 This process will create a local clone of the online GitHub repository fork. From here you can add your own files, update scripts as you like, and **push** files within your own repository copy (fork). To get updates made to the original repository online, you can also make **pull** requests to update your fork. 
+
+<p float="left">
+  <img src="./figures/git-fork-clone-flow.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
+  <img src="./figures/forest_hist.png" alt="A plot summarizing proportion of forest at each site" width="300" height="auto" /> 
+</p>
+
 
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Formatting data
@@ -218,8 +224,8 @@ ggplot(raccoon_wk, aes(x = forest)) +
 ```
 
 <p float="left">
-  <img src="./plots/water_hist.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
-  <img src="./plots/forest_hist.png" alt="A plot summarizing proportion of forest at each site" width="300" height="auto" /> 
+  <img src="./figures/water_hist.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
+  <img src="./figures/forest_hist.png" alt="A plot summarizing proportion of forest at each site" width="300" height="auto" /> 
 </p>
 
 In this example, we have two covariates which share the same scale/units and fall within a small range of values. This will make it easier for our model to converge (i.e., reach a solution). However, it is common in most regression based analyses to incorporate covariates of various scales and ranges, thus scaling would be necessary. In addition, we also need to consider the biological meaning of each covariate within the framework of our model and system. For occupancy, it is generally helpful to have the intercept of the model represent occupancy at an average site. This can help us interpret whether species occurrence falls below or above average values. 
@@ -363,7 +369,7 @@ lines(pred_forest$upper ~ dat_plot$forest_scale, # y-axis ~ x-axis
 
 <p float="center">
 
-  <img src="./plots/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
+  <img src="./figures/occ_forest_basic_corrected.png" alt="Occupancy plot of raccoons using plot()" width="500" height="auto" />
 
 </p>
 
@@ -385,7 +391,7 @@ ggplot(all_dat, aes(x = forest_scale, y = Predicted)) +
         text = element_text(size = 18))
   ```
 <p float="center">
-  <img src="./plots/occ_forest_ggplot_corrected.png" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
+  <img src="./figures/occ_forest_ggplot_corrected.png" alt="Occupancy plot of raccoons using ggplot" width="500" height="auto" />
 </p>
 
 
@@ -395,7 +401,7 @@ Nice work! If you are interested in furthering your occupancy journey, try this 
 
 
 <p float="center">
-  <img src="./plots/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
+  <img src="./figures/raccoon.png" alt="Image of raccoon" width="500" height="auto" />
 </p>
 
 
