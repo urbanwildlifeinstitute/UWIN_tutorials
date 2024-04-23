@@ -84,7 +84,7 @@ Hopefully, you can meet these assumptions by carefully developing your study des
 [Back to table of contents ⤒](#tutorial-aims)
 ## 3. Getting your data
 
-There are two easy ways to download data from this github repository to your local drive. We can fork the repository using the [UWIN_tutorials](https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git) link to GitHub Desktop or download the files manually and organize the files in an accessible folder.
+There are two easy ways to download data from this GitHub repository to your local drive. We can fork the repository using the [UWIN_tutorials](https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git) link to GitHub Desktop or download the files manually and organize the files in an accessible folder.
 
 ### Forking
 A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
@@ -103,6 +103,8 @@ This process will create a local clone of the online GitHub repository fork. Fro
   <img src="./figures/git-fork-clone-flow.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
 </p>
 
+### Download
+Alternatively, if you are new to GitHub, repsoitory files can also be downloaded and saved manually. The entire repository can be downloaded by navigating to the repository, clicking **<> Code**, followed by **Download ZIP**. Individual files can also be downloaded by navigating to a specific folder and file. Once a you click on the file, there is a **Download raw file** option. 
 
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Formatting data
