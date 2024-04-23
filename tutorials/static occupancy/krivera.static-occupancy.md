@@ -103,7 +103,7 @@ This process will create a local clone of the online GitHub repository fork. Fro
   <img src="./figures/git-fork-clone-flow.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
 </p>
 
-### Download
+### Downloading
 Alternatively, if you are new to GitHub, repsoitory files can also be downloaded and saved manually. The entire repository can be downloaded by navigating to the repository, clicking **<> Code**, followed by **Download ZIP**. Individual files can also be downloaded by navigating to a specific folder and file. Once a you click on the file, there is a **Download raw file** option. 
 
 [Back to table of contents ⤒](#tutorial-aims)
