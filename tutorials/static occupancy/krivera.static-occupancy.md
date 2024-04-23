@@ -38,7 +38,7 @@ package_load(
 
  [2. Occupancy model assumptions](#2-occupancy-model-assumptions)
  
- [3. Getting your data](#3-get_data)
+ [3. Getting your data](#3-getting-your-data)
  
  [4. Formatting data](#4-formatting-data)
 
