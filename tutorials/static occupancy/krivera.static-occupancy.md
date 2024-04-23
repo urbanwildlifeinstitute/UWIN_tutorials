@@ -84,7 +84,20 @@ Hopefully, you can meet these assumptions by carefully developing your study des
 [Back to table of contents ⤒](#tutorial-aims)
 ## 3. Getting your data
 
-There are two easy ways to download data from this github repository to your local drive. We can clone the repository using the [UWIN_tutorials](https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git) link to GitHub Desktop or download the files manually and organize the files in an accessible folder.
+There are two easy ways to download data from this github repository to your local drive. We can fork the repository using the [UWIN_tutorials](https://github.com/urbanwildlifeinstitute/UWIN_tutorials.git) link to GitHub Desktop or download the files manually and organize the files in an accessible folder.
+
+### Forking
+A fork is a copy of a repository. Forking a repository allows you to freely experiment with changes without affecting the original project.
+
+To fork a repository:
+1. Navigate to the main page of the repository you wish to fork
+2. Click the **Fork** button and **+ Create a new fork**
+3. Navigate to your **Fork** and click **<> Code**
+4. Copy the **HTTPS**
+5. Navigate to local GitHub Desktop > file > Clone a repository
+6. Under 'Clone a repository' click **URL** and paste the **HTTPS Code**
+
+This process will create a local clone of the online GitHub repository fork. From here you can add your own files, update scripts as you like, and **push** files within your own repository copy (fork). To get updates made to the original repository online, you can also make **pull** requests to update your fork. 
 
 [Back to table of contents ⤒](#tutorial-aims)
 ## 4. Formatting data
