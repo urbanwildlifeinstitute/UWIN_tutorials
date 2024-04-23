@@ -101,7 +101,6 @@ This process will create a local clone of the online GitHub repository fork. Fro
 
 <p float="left">
   <img src="./figures/git-fork-clone-flow.png" alt="A plot summarizing proportion of water at each site" width="300" height="auto" />
-  <img src="./figures/forest_hist.png" alt="A plot summarizing proportion of forest at each site" width="300" height="auto" /> 
 </p>
 
 
