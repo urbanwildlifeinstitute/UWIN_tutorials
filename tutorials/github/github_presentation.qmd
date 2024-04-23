@@ -1,17 +1,25 @@
 ---
-output: 
-  revealjs::revealjs_presentation:
-    transition: none
-    theme: moon
+format: 
+  revealjs:
+    slide-number: c/t
+    width: 1200
+    height: 800
+    footer: "Git and GitHub"
+    theme: solarized
+    transition: fade
+    transition-speed: fast
+    incremental: true
+    echo: true
+
 ---
 
-# UWIN workshop: GitHub and Data Reproducibility
+## UWIN workshop: GitHub and Data Reproducibility
 
 Nathan Byer and Mason Fidino
 
 ![](./images/github-mark.png){width=30%}
 
-# How do researchers typically store files?
+## How do researchers typically store files?
 
 - `paper_draft.docx`
 - `paper_draft2.docx`
@@ -20,21 +28,53 @@ Nathan Byer and Mason Fidino
 - `paper_final2.docx`
 - `paper_final_revision.docx`
 
-# Quarto
+## Why is this a problem?
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+- How do you keep track of edits?
+- How do we handle "accidents"?
+- fundamentally, an issue with *data reproducibility*.
 
-# Bullets
+## Why worry about data reproducibility?
 
-When you click the **Render** button a document will be generated that includes:
+- We are currently experiencing a crisis of reproducibility in science!
+- In response to this, code review is now a required component of peer review for many journals.
+- Better, more reproducible code also makes it easier to standardize methodology.
 
--   Content authored with markdown
--   Output from executable code
+## Git and GitHub
 
-## Code
+![](./images/git.png){width=30%}
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+![](./images/github-mark.png){width=30%}
 
-```{r}
-getwd()
-```
+
+## What is Git? 
+
+![](./images/git.png){width=10%}
+
+- Started in 2005 - version control system for Linux developers
+- Now, one of the most commonly used **distributed version control systems**
+
+![https://git-scm.com/book/en/v2/images/areas.png](./images/git-scm-git-diagram.png){width=50%}
+
+## What is GitHub?
+
+![](./images/github-mark.png){width=30%}
+
+- GitHub is **an easier, user-friendly way to use Git online**
+- integrates with a number of other software platforms - including RStudio
+
+# A brief overview of GitHub terminology
+
+## Repository
+
+- **Definition**: essentially, a project directory - where code, documents, and everything associated with a project will live.
+- often hosted initially on the cloud, but can be *cloned* to create a local copy
+- By default, typically contains a **README.md** file that describes the repository. 
+
+## Commit
+- **Definition**: a summary of changes made to files within a repository.
+- typically capture the following:
+  + a commit log, explaining the commit and its contributor(s)
+  + a unique hash ID 
+  + the **parent** commit - basically, where your commit came from!
+  + a summary of files that have changed
