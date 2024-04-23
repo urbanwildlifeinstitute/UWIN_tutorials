@@ -68,8 +68,11 @@ Nathan Byer and Mason Fidino
 ## Repository
 
 - **Definition**: essentially, a project directory - where code, documents, and everything associated with a project will live.
-- often hosted initially on the cloud, but can be *cloned* to create a local copy
 - By default, typically contains a **README.md** file that describes the repository. 
+
+## Clone
+
+- **Definition**: the creation of a *local* copy of a *remote* repository.
 
 ## Commit
 - **Definition**: a summary of changes made to files within a repository.
@@ -78,3 +81,25 @@ Nathan Byer and Mason Fidino
   + a unique hash ID 
   + the **parent** commit - basically, where your commit came from!
   + a summary of files that have changed
+  
+## Push
+
+- **Definition**: when *local* commits are pushed to the *remote* repository.
+- What do we mean by this?
+  + you will likely be creating a commit on a local machine.
+  + after you create that commit, it will **not** be reflected in the remote repository until those changes are pushed.
+
+## Pull
+
+-**Definition**: when *remote* changes are applied to your *local*, cloned repository.
+- What do we mean by this?
+  + if you are working on a repository collaboratively, others may make edits that are **not** initially reflected in your local repository. 
+  + when you pull from the remote repository, these remote changes are synced with your local directory.
+
+# branch
+
+## fork 
+
+## Pull Request
+
+-
