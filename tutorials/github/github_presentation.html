@@ -526,6 +526,74 @@
 <li>However, if you are working on a research project with a few <em>trusted</em> people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.</li>
 </ul></li>
 </ul>
+</section></section>
+<section>
+<section id="how-to-use-github-in-your-projects-from-most-to-least-user-friendly" class="title-slide slide level1 center">
+<h1>How to use GitHub in your projects (from most to least user friendly)</h1>
+
+</section>
+<section id="use-github-desktop" class="slide level2">
+<h2>Use GitHub Desktop!</h2>
+<div>
+<ul>
+<li class="fragment">Found at https://desktop.github.com.</li>
+<li class="fragment">Provides a graphical user interface (GUI) to do pretty much everything you would need to do.</li>
+<li class="fragment">Can’t handle complex Git commands, but 99.9% of researchers will not need them anyways.</li>
+<li class="fragment">There are a few other things that are a bit easier to do from your internet browser instead of the desktop GUI.
+<ul>
+<li class="fragment">Pull requests (i.e., merging branches)</li>
+<li class="fragment">Changing settings</li>
+<li class="fragment">Inviting collaborators to a repository</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="link-rstudio-with-github" class="slide level2">
+<h2>Link Rstudio with GitHub</h2>
+<div>
+<ul>
+<li class="fragment">Rstudio does provide a way to use GitHub within it’s interactive developer environment (IDE)</li>
+<li class="fragment">Can be a little finicky</li>
+<li class="fragment">Not as general as GitHub desktop, so we suggest the GitHub Desktop GUI instead.</li>
+</ul>
+</div>
+</section>
+<section id="git-from-the-command-line-github-cli" class="slide level2">
+<h2>Git from the command line (GitHub CLI)</h2>
+<div>
+<ul>
+<li class="fragment">Bringing this up for completeness</li>
+<li class="fragment">Used to be the primary way you could use Git via GitHub</li>
+<li class="fragment">Do not suggest doing this when learning.</li>
+<li class="fragment">Sometimes needs to be used to resolve certain issues, but those are quite rare (and the GitHub Desktop GUI provides you with the command line code to run if needed).</li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="other-things-to-know-about-github" class="title-slide slide level1 center">
+<h1>Other things to know about GitHub</h1>
+
+</section>
+<section id="privacy-settings" class="slide level2">
+<h2>Privacy settings</h2>
+<ul>
+<li>Repositories can be public or private!
+<ul>
+<li>Public repositories are viewable by everyone</li>
+<li>Private repositories are only viewable by yourself and collaborators you add to the repository</li>
+<li>For most research projects, start your repository as private. You can change them to public when you submit the paper for publication.</li>
+</ul></li>
+</ul>
+</section>
+<section id="merge-conflicts" class="slide level2">
+<h2>MERGE CONFLICTS!!!</h2>
+<ul>
+<li>The most annoying part of version control.</li>
+<li>Happens when you try to merge branches and they have conflicting commits.
+<ul>
+<li>Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.</li>
+</ul></li>
+</ul>
 <div class="footer footer-default">
 <p>Git and GitHub</p>
 </div>

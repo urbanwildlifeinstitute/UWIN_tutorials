@@ -192,3 +192,50 @@ Example: Mason want's to make a new function for his `autoOcc` R package. To do 
   + As such, forks are used a lot when working on open source projects.
   + Creating a fork is the easiest way to copy everything in someone else's repository.
   + However, if you are working on a research project with a few *trusted* people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.
+  
+  
+# How to use GitHub in your projects (from most to least user friendly)
+
+## Use GitHub Desktop!
+
+::: {.incremental}
+- Found at https://desktop.github.com.
+- Provides a graphical user interface (GUI) to do pretty much everything you would need to do.
+- Can't handle complex Git commands, but 99.9% of researchers will not need them anyways.
+- There are a few other things that are a bit easier to do from your internet browser instead of the desktop GUI.
+  + Pull requests (i.e., merging branches)
+  + Changing settings
+  + Inviting collaborators to a repository
+:::
+
+## Link Rstudio with GitHub
+
+::: {.incremental}
+- Rstudio does provide a way to use GitHub within it's interactive developer environment (IDE)
+- Can be a little finicky
+- Not as general as GitHub desktop, so we suggest the GitHub Desktop GUI instead.
+:::
+
+## Git from the command line (GitHub CLI)
+
+::: {.incremental}
+- Bringing this up for completeness
+- Used to be the primary way you could use Git via GitHub
+- Do not suggest doing this when learning.
+- Sometimes needs to be used to resolve certain issues, but those are quite rare (and the GitHub Desktop GUI provides you with the command line code to run if needed).
+:::
+# Other things to know about GitHub
+
+## Privacy settings
+
+- Repositories can be public or private!
+  + Public repositories are viewable by everyone
+  + Private repositories are only viewable by yourself and collaborators you add to the repository
+  + For most research projects, start your repository as private. You can change them to public when you submit the paper for publication.
+
+## MERGE CONFLICTS!!!
+
+- The most annoying part of version control.
+- Happens when you try to merge branches and they have conflicting commits.
+  + Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.
+  
