@@ -373,12 +373,12 @@
 <div class="column" style="width:50%;">
 <div>
 <ul>
-<li><code>paper_draft.docx</code></li>
-<li><code>paper_draft2.docx</code></li>
-<li><code>paper_draft2_MF.docx</code></li>
-<li><code>paper_final.docx</code></li>
-<li><code>paper_final2.docx</code></li>
-<li><code>paper_final_revision.docx</code></li>
+<li class="fragment"><code>paper_draft.docx</code></li>
+<li class="fragment"><code>paper_draft2.docx</code></li>
+<li class="fragment"><code>paper_draft2_MF.docx</code></li>
+<li class="fragment"><code>paper_final.docx</code></li>
+<li class="fragment"><code>paper_final2.docx</code></li>
+<li class="fragment"><code>paper_final_revision.docx</code></li>
 </ul>
 </div>
 </div><div class="column" style="width:50%;">
@@ -391,17 +391,17 @@
 <section id="why-is-this-a-problem" class="slide level2">
 <h2>Why is this a problem?</h2>
 <ul>
-<li class="fragment">How do you keep track of edits?</li>
-<li class="fragment">How do we handle “accidents”?</li>
-<li class="fragment">fundamentally, an issue with <em>data reproducibility</em>.</li>
+<li>How do you keep track of edits?</li>
+<li>How do we handle “accidents”?</li>
+<li>fundamentally, an issue with <em>data reproducibility</em>.</li>
 </ul>
 </section>
 <section id="why-worry-about-data-reproducibility" class="slide level2">
 <h2>Why worry about data reproducibility?</h2>
 <ul>
-<li class="fragment">We are currently experiencing a crisis of reproducibility in science!</li>
-<li class="fragment">In response to this, code review is now a required component of peer review for many journals.</li>
-<li class="fragment">Better, more reproducible code also makes it easier to standardize methodology.</li>
+<li>We are currently experiencing a crisis of reproducibility in science!</li>
+<li>In response to this, code review is now a required component of peer review for many journals.</li>
+<li>Better, more reproducible code also makes it easier to standardize methodology.</li>
 </ul>
 </section>
 <section id="git-and-github" class="slide level2">
@@ -413,8 +413,8 @@
 <h2>What is Git?</h2>
 <p><img data-src="./images/git.png" style="width:10.0%"></p>
 <ul>
-<li class="fragment">Started in 2005 - version control system for Linux developers</li>
-<li class="fragment">Now, one of the most commonly used <strong>distributed version control systems</strong></li>
+<li>Started in 2005 - version control system for Linux developers</li>
+<li>Now, one of the most commonly used <strong>distributed version control systems</strong></li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -427,8 +427,8 @@
 <h2>What is GitHub?</h2>
 
 <img data-src="./images/github-mark.png" style="width:30.0%" class="r-stretch"><ul>
-<li class="fragment">GitHub is <strong>an easier, user-friendly way to use Git online</strong></li>
-<li class="fragment">integrates with a number of other software platforms - including RStudio</li>
+<li>GitHub is <strong>an easier, user-friendly way to use Git online</strong></li>
+<li>integrates with a number of other software platforms - including RStudio</li>
 </ul>
 </section>
 <section>
@@ -439,27 +439,27 @@
 <section id="repository" class="slide level2">
 <h2>Repository</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: essentially, a project directory - where code, documents, and everything associated with a project will live.</li>
-<li class="fragment">By default, typically contains a <strong>README.md</strong> file that describes the repository.</li>
+<li><strong>Definition</strong>: essentially, a project directory - where code, documents, and everything associated with a project will live.</li>
+<li>By default, typically contains a <strong>README.md</strong> file that describes the repository.</li>
 </ul>
 </section>
 <section id="clone" class="slide level2">
 <h2>Clone</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: the creation of a <em>local</em> copy of a <em>remote</em> repository.
+<li><strong>Definition</strong>: the creation of a <em>local</em> copy of a <em>remote</em> repository.
 <ul>
-<li class="fragment">In other words, you are copying the <em>remote</em> repository stored in the cloud on GitHub to a folder of your choice on your computer (i.e., creating a <em>local</em> copy).</li>
+<li>In other words, you are copying the <em>remote</em> repository stored in the cloud on GitHub to a folder of your choice on your computer (i.e., creating a <em>local</em> copy).</li>
 </ul></li>
 </ul>
 </section>
 <section id="branch" class="slide level2">
 <h2>Branch</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: Branches are used to isolate the development of code without affecting other parts of the code base.
+<li><strong>Definition</strong>: Branches are used to isolate the development of code without affecting other parts of the code base.
 <ul>
-<li class="fragment">When you create a repository you have one branch</li>
-<li class="fragment">New branches are created off an existing branch.</li>
-<li class="fragment">Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository. <img data-src="./images/git_branch_merge.png" style="width:100.0%" data-align="center"></li>
+<li>When you create a repository you have one branch</li>
+<li>New branches are created off an existing branch.</li>
+<li>Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository. <img data-src="./images/git_branch_merge.png" style="width:100.0%" data-align="center"></li>
 </ul></li>
 </ul>
 </section>
@@ -470,28 +470,28 @@
 <section id="commit" class="slide level2">
 <h2>Commit</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: a summary of changes made to files within a repository on a given branch.</li>
-<li class="fragment">typically capture the following:
+<li><strong>Definition</strong>: a summary of changes made to files within a repository on a given branch.</li>
+<li>typically capture the following:
 <ul>
-<li class="fragment">a commit log, explaining the commit and its contributor(s)</li>
-<li class="fragment">a unique hash ID (GitHub handles this for you).</li>
-<li class="fragment">the <strong>parent</strong> commit - basically, where your commit came from!</li>
-<li class="fragment">a summary of files that have changed</li>
-<li class="fragment">In essence, a commit is the changes you made to your <em>local</em> copy of a repository, which you want to save and eventually send up to the <em>remote</em> repository.</li>
-<li class="fragment">commit early, commit often!</li>
+<li>a commit log, explaining the commit and its contributor(s)</li>
+<li>a unique hash ID (GitHub handles this for you).</li>
+<li>the <strong>parent</strong> commit - basically, where your commit came from!</li>
+<li>a summary of files that have changed</li>
+<li>In essence, a commit is the changes you made to your <em>local</em> copy of a repository, which you want to save and eventually send up to the <em>remote</em> repository.</li>
+<li>commit early, commit often!</li>
 </ul></li>
 </ul>
 </section>
 <section id="push" class="slide level2">
 <h2>Push</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: when <em>local</em> commits are pushed to a branch on a <em>remote</em> repository.</li>
-<li class="fragment">What do we mean by this?
+<li><strong>Definition</strong>: when <em>local</em> commits are pushed to a branch on a <em>remote</em> repository.</li>
+<li>What do we mean by this?
 <ul>
-<li class="fragment">you will likely be creating a commit on a local machine.</li>
-<li class="fragment">after you create that commit, it will <strong>not</strong> be reflected in the remote repository until those changes are pushed.</li>
-<li class="fragment">Commits records changes to the <em>local</em> repository.</li>
-<li class="fragment">Pushes update the <em>remote</em> repository with commits you’ve made.</li>
+<li>you will likely be creating a commit on a local machine.</li>
+<li>after you create that commit, it will <strong>not</strong> be reflected in the remote repository until those changes are pushed.</li>
+<li>Commits records changes to the <em>local</em> repository.</li>
+<li>Pushes update the <em>remote</em> repository with commits you’ve made.</li>
 </ul></li>
 </ul>
 </section>
@@ -502,11 +502,11 @@
 <section id="pull-request" class="slide level2">
 <h2>Pull Request</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: A pull request (PR) is a way to tell collaborators (or yourself) that the changes you pushed to a branch are ready for review. Think of a pull request as a staging area that you use before you merge one branch back into another.
+<li><strong>Definition</strong>: A pull request (PR) is a way to tell collaborators (or yourself) that the changes you pushed to a branch are ready for review. Think of a pull request as a staging area that you use before you merge one branch back into another.
 <ul>
-<li class="fragment">To set up a pull request, you have to select the branch with the code you changed and the branch you want to merge those changes into.</li>
-<li class="fragment">When working collaboratively, someone else reviews the pull request, discussion happens, and based on that some followup commits may be needed.</li>
-<li class="fragment">Once approved, you can merge the feature branch into the other branch you selected.</li>
+<li>To set up a pull request, you have to select the branch with the code you changed and the branch you want to merge those changes into.</li>
+<li>When working collaboratively, someone else reviews the pull request, discussion happens, and based on that some followup commits may be needed.</li>
+<li>Once approved, you can merge the feature branch into the other branch you selected.</li>
 </ul></li>
 </ul>
 </section>
@@ -518,65 +518,14 @@
 <section id="fork" class="slide level2">
 <h2>fork</h2>
 <ul>
-<li class="fragment"><strong>Definition</strong>: A fork is a way to create a new repository based on a different repository you are (most often) not the owner of.
+<li><strong>Definition</strong>: A fork is a way to create a new repository based on a different repository you are (most often) not the owner of.
 <ul>
-<li class="fragment">You can think of forks it as a branch off a repository you do not own. You can make changes to your forked repository and then submit a pull request to the original project owner.</li>
-<li class="fragment">As such, forks are used a lot when working on open source projects.</li>
-<li class="fragment">Creating a fork is the easiest way to copy everything in someone else’s repository.</li>
-<li class="fragment">However, if you are working on a research project with a few <em>trusted</em> people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.</li>
+<li>You can think of forks it as a branch off a repository you do not own. You can make changes to your forked repository and then submit a pull request to the original project owner.</li>
+<li>As such, forks are used a lot when working on open source projects.</li>
+<li>Creating a fork is the easiest way to copy everything in someone else’s repository.</li>
+<li>However, if you are working on a research project with a few <em>trusted</em> people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.</li>
 </ul></li>
 </ul>
-</section></section>
-<section>
-<section id="how-to-use-github-in-your-projects-from-most-to-least-user-friendly" class="title-slide slide level1 center">
-<h1>How to use GitHub in your projects (from most to least user friendly)</h1>
-
-</section>
-<section id="use-github-desktop" class="slide level2">
-<h2>Use GitHub Desktop!</h2>
-<ul>
-<li class="fragment">Found at https://desktop.github.com/.</li>
-<li class="fragment">Provides a graphical user interface (GUI) to do pretty much everything you would need to do</li>
-</ul>
-</section></section>
-<section>
-<section id="other-things-to-know-about-github" class="title-slide slide level1 center">
-<h1>Other things to know about GitHub</h1>
-
-</section>
-<section id="privacy-settings" class="slide level2">
-<h2>Privacy settings</h2>
-<ul>
-<li class="fragment">Repositories can be public or private!
-<ul>
-<li class="fragment">Public repositories are viewable by everyone</li>
-<li class="fragment">Private repositories are only viewable by yourself and collaborators you add to the repository</li>
-<li class="fragment">For most research projects, start your repository as private. You can change them to public when you submit the paper for publication.</li>
-</ul></li>
-</ul>
-</section>
-<section id="merge-conflicts" class="slide level2">
-<h2>MERGE CONFLICTS!!!</h2>
-<ul>
-<li class="fragment">The most annoying part of version control.</li>
-<li class="fragment">Happens when you try to merge branches and they have conflicting commits.
-<ul>
-<li class="fragment">Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.</li>
-</ul></li>
-</ul>
-</section>
-<section id="this-is-a-test" class="slide level2">
-<h2>This is a test</h2>
-<div class="fragment" data-fragment-index="2">
-<div>
-<ul>
-<li class="fragment">test -stuff</li>
-</ul>
-</div>
-</div>
-<div class="fragment" data-fragment-index="1">
-<p><img data-src="./images/mason_headshot.jpg"></p>
-</div>
 <div class="footer footer-default">
 <p>Git and GitHub</p>
 </div>
@@ -738,7 +687,7 @@
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'fade',
+        transition: 'none',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'fast',

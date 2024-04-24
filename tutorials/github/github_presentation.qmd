@@ -6,7 +6,9 @@ format:
     height: 800
     footer: "Git and GitHub"
     theme: solarized
-    incremental: true
+    transition: none
+    transition-speed: fast
+    incremental: false
     echo: true
 
 ---
@@ -75,7 +77,7 @@ Nathan Byer and Mason Fidino
 :::
 :::
 ::: {.column width="50%"}
-::: {.nonincremental}
+::: {.incremental}
 ![](./images/malcontent-worker.png)
 :::
 :::
@@ -115,7 +117,6 @@ Nathan Byer and Mason Fidino
 
 - GitHub is **an easier, user-friendly way to use Git online**
 - integrates with a number of other software platforms - including RStudio
-- Has LOADS of great documentation (we got lots of the information we are sharing here from `https://docs.github.com`)
 
 # A brief overview of GitHub terminology
 
@@ -191,30 +192,3 @@ Example: Mason want's to make a new function for his `autoOcc` R package. To do 
   + As such, forks are used a lot when working on open source projects.
   + Creating a fork is the easiest way to copy everything in someone else's repository.
   + However, if you are working on a research project with a few *trusted* people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.
-  
-# How to use GitHub in your projects (from most to least user friendly)
-
-## Use GitHub Desktop!
-
-- Found at https://desktop.github.com/.
-- Provides a graphical user interface (GUI) to do pretty much everything you would need to do
-
-
-# Other things to know about GitHub
-
-## Privacy settings
-
-- Repositories can be public or private!
-  + Public repositories are viewable by everyone
-  + Private repositories are only viewable by yourself and collaborators you add to the repository
-  + For most research projects, start your repository as private. You can change them to public when you submit the paper for publication.
-
-## MERGE CONFLICTS!!!
-
-- The most annoying part of version control.
-- Happens when you try to merge branches and they have conflicting commits.
-  + Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.
-  
-
-
-
