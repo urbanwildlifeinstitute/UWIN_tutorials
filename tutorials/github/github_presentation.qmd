@@ -34,9 +34,10 @@ Nathan Byer and Mason Fidino
 :::
 ::: {.column width="30%"}
 
-#![](./images/nathan_photo.jpg) 
+![](./images/nathan_photo.jpg) 
 
-
+:::
+:::
 
 ## Who we are
 
@@ -49,7 +50,6 @@ Nathan Byer and Mason Fidino
   + Senior Quantitative Ecologist at the Urban Wildlife Institute, Lincoln Park Zoo
   + Analytics advisor for UWIN, helps steer database management and development
   + contact: mfidino@lpzoo.org
-
 :::
 
 :::
