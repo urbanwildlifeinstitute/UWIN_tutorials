@@ -105,6 +105,7 @@ Nathan Byer and Mason Fidino
 
 - GitHub is **an easier, user-friendly way to use Git online**
 - integrates with a number of other software platforms - including RStudio
+- Has LOADS of great documentation (we got lots of the information we are sharing here from `https://docs.github.com`)
 
 # A brief overview of GitHub terminology
 
