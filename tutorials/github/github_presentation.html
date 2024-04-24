@@ -342,6 +342,8 @@
 </section>
 <section id="who-we-are-1" class="slide level2">
 <h2>Who we are</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
 <div>
 <ul>
 <li>Mason Fidino
@@ -351,6 +353,10 @@
 <li>contact: mfidino@lpzoo.org</li>
 </ul></li>
 </ul>
+</div>
+</div><div class="column" style="width:30%;">
+<p><img data-src="./images/mason_headshot.jpg"></p>
+</div>
 </div>
 </section>
 <section id="how-do-researchers-typically-store-files" class="slide level2">
@@ -442,8 +448,7 @@
 <section id="branch-example" class="slide level2">
 <h2>Branch (example)</h2>
 <p>Nathan has some code for a project that works, but he wants to improve the code to make it run faster. To do so Nathan creates a branch titled <code>performance-tests</code> off of the main branch so he can try out different ways to improve the speed of his code without affecting the code in the <code>main</code> branch.</p>
-
-<img data-src="./images/git_branch_merge.png" style="width:100.0%" data-align="center" class="r-stretch"></section>
+</section>
 <section id="commit" class="slide level2">
 <h2>Commit</h2>
 <ul>
@@ -493,7 +498,16 @@
 
 <img data-src="./images/git_branch_merge.png" style="width:100.0%" data-align="center" class="r-stretch"></section>
 <section id="fork" class="slide level2">
-<h2>## fork</h2>
+<h2>fork</h2>
+<ul>
+<li class="fragment"><strong>Definition</strong>: A fork is a way to create a new repository based on a different repository you are (most often) not the owner of.
+<ul>
+<li class="fragment">You can think of forks it as a branch off a repository you do not own. You can make changes to your forked repository and then submit a pull request to the original project owner.</li>
+<li class="fragment">As such, forks are used a lot when working on open source projects.</li>
+<li class="fragment">Creating a fork is the easiest way to copy everything in someone else’s repository.</li>
+<li class="fragment">However, if you are working on a research project with a few <em>trusted</em> people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.</li>
+</ul></li>
+</ul>
 <div class="footer footer-default">
 <p>Git and GitHub</p>
 </div>

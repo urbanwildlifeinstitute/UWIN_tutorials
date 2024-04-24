@@ -21,15 +21,28 @@ Nathan Byer and Mason Fidino
 
 ## Who we are
 
+::: columns
+::: {.column width="70%"}
+
 ::: {.nonincremental}
 - Nathan Byer
   + NATHAN ADDS COOL STUFF ABOUT HIMSELF HERE
+  + contact: 
 
 :::
+
+:::
+::: {.column width="30%"}
+
+#![](./images/nathan_photo.jpg) 
 
 
 
 ## Who we are
+
+
+::: columns
+::: {.column width="70%"}
 
 ::: {.nonincremental}
 - Mason Fidino
@@ -38,6 +51,17 @@ Nathan Byer and Mason Fidino
   + contact: mfidino@lpzoo.org
 
 :::
+
+:::
+::: {.column width="30%"}
+
+![](./images/mason_headshot.jpg)
+
+:::
+:::
+
+
+
 ## How do researchers typically store files?
 
 - `paper_draft.docx`
