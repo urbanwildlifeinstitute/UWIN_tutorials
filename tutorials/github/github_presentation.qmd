@@ -6,8 +6,6 @@ format:
     height: 800
     footer: "Git and GitHub"
     theme: solarized
-    transition: fade
-    transition-speed: fast
     incremental: true
     echo: true
 
@@ -26,15 +24,16 @@ Nathan Byer and Mason Fidino
 
 ::: {.nonincremental}
 - Nathan Byer
-  + NATHAN ADDS COOL STUFF ABOUT HIMSELF HERE
-  + contact: 
+  + Research & Database Manager at Cleveland Metroparks (CMP)
+  + Research committee member with UWIN; manages CMP wildlife and ecological data
+  + contact: nwb@clevelandmetroparks.com
 
 :::
 
 :::
 ::: {.column width="30%"}
 
-![](./images/nathan_photo.jpg) 
+![](./images/nathan_headshot.jpg) 
 
 :::
 :::
@@ -64,12 +63,23 @@ Nathan Byer and Mason Fidino
 
 ## How do researchers typically store files?
 
+::: columns
+::: {.column width="50%"}
+:::{.incremental}
 - `paper_draft.docx`
 - `paper_draft2.docx`
 - `paper_draft2_MF.docx`
 - `paper_final.docx`
 - `paper_final2.docx`
 - `paper_final_revision.docx`
+:::
+:::
+::: {.column width="50%"}
+::: {.nonincremental}
+![](./images/malcontent-worker.png)
+:::
+:::
+:::
 
 ## Why is this a problem?
 
