@@ -4,7 +4,6 @@ format:
     slide-number: c/t
     width: 1200
     height: 800
-    footer: "Git and GitHub"
     theme: solarized
     transition: none
     transition-speed: fast
@@ -97,19 +96,19 @@ Nathan Byer and Mason Fidino
 
 ## Git and GitHub
 
-![](./images/git.png){width=30%}
+![](./images/git.png){width=20%}
 
-![](./images/github-mark.png){width=30%}
+![](./images/github-mark.png){width=20%}
 
 
 ## What is Git? 
 
-![](./images/git.png){width=10%}
+![](./images/git.png){width=20%}
 
 - Started in 2005 - version control system for Linux developers
 - Now, one of the most commonly used **distributed version control systems**
 
-![https://git-scm.com/book/en/v2/images/areas.png](./images/git-scm-git-diagram.png){width=50%}
+![https://git-scm.com/book/en/v2/images/areas.png](./images/git-scm-git-diagram.png){width=40%}
 
 ## What is GitHub?
 
