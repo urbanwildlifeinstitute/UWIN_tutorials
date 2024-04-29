@@ -31,13 +31,13 @@ In the previous image, you likely noticed the little green button that says"New"
 
 You should see something that looks like this:
 
-![](./images/github-newrepo-1.png){width=70%}
+![](./images/github-new-repo-1.png){width=70%}
 
 As you can see in this image, fill in a name (I suggested one related to this tutorial, but it doesn't really matter!). Then, go ahead and click "add read me" - we will describe that a bit further below.
 
 Towards the bottom of this page, you should see a few other options:
 
-![](./images/github-newrepo-2.png){width=70%}
+![](./images/github-new-repo-2.png){width=70%}
 
 The .gitignore allows you to tell github *not* to track certain files in local repository folders, which can be useful. 
 
