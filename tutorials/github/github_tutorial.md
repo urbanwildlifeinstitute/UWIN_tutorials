@@ -56,13 +56,67 @@ Note that you can also set a license for your repository! These outline usage ri
 
 You can safely ignore those for now, but just be aware of these for future repositories. For now, go ahead and click the green "create repository" button at the bottom to proceed.
 
-#### Don't forget the Read Me!
+#### Your first and second commit - and the read me
+
+After clicking "create repository", you should now see a landing page for your repository. Basically, you have done it! You just created your first repository. Let's break down this landing page a bit further.
+
+<div align="center">
+<img src="./images/github-repo-landing-annotated.png" width=90%/>
+</div>
+
+At the top (in the green box), you should now see a number of tabs, all relevant to repository management. These are all *specific to your current repository* - and provide a number of features for managing, documenting, and supporting your new repository. We will not go over these in depth, but would encourage you to review these tabs. 
+
+Instead, let's focus on the highlighted section in the red box. You should see your own profile name next to "initial commit."  As reviewed in the quarto presentation, **a commit is a summary of changes made to a repository**. By telling GitHub to add a "read me" file to this repository (designated by the white star in the image above), GitHub automatically created this file for you - and created a **commit** to add this file to the repository. So congratulations - you have made your first GitHub commit without even meaning to do so!
+
+Do you see how the "read me" file has a .md file extension? That means it is a **markdown** file. **Markdown** is essentially a convenient way of translating plain text into formatted text - which can then be easily displayed in a variety of rendered formats, such as PDFs or HTML. As a matter of fact, the tutorial you are currently reading has been rendered in markdown format! 
+
+Do you see the "read me" panel at the bottom of the page? Ideally, this would provide relevant documentation about the repository itself. Instead, we just have a title - so let's change that! Click on the pencil icon at the top of the this panel to begin editing. You should now see the following:
+
+<div align="center">
+<img src="./images/github-read-me.png" width=90%/>
+</div>
+
+Let's add a bit of further text to this read me - and see what this does. Add text to your "read me" markdown to look like this: 
+
+<div align="center">
+<img src="./images/github-read-me-filled.png" width=90%/>
+</div>
+
+Here is a code block with that text, in case the above is a bit tricky to see:
+
+```
+# uwin_github_tutorial
+
+This is a sample repository for use with the Urban Wildlife Information Network's "Github and Data Reproducibility" workshop. We can use this to play around with a bit of basic markdown formatting.
+
+## This is how we make a sub-header
+
+In this section, we will have some **bold text**.
+
+### This is how we make a sub-sub-header
+
+In this section, we will have some *italicized* text. 
+
+I will also bold this to make it stand out: **see https://www.markdownguide.org/cheat-sheet/ for more markdown tips and tricks!**
+```
+
+
+Then click the "commit changes..." button at the top. GitHub should ask if you want to make a commit called "Update README.md". Go ahead and click "commit changes" again.
+
+Here is what you should see:
+
+
+
+<div align="center">
+<img src="./images/github-read-me-committed.png" width=90%/>
+</div>
+
 
 
 
 ### Cloning a repository
 
-### Your first commit!
+### Your third commit - adding files
 
 ### Tracking file edits
 
