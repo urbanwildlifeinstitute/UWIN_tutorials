@@ -137,6 +137,11 @@ left corner.
 4. Imputing the username and repository name separated by a slash (e.g., `mfidino/my-cool-repo`).
 5. Telling the GUI where you want the local copy of the repo stored.
 
+
+<div align="center">
+<img src="./images/clone-repo.png" width=90%/>
+</div>
+
 When you try to clone a repository in this way, and you do not have write access
 to the repository (i.e., you did not create the repository and you do not have
 collaborator status), then a fork of the repository will be made.
