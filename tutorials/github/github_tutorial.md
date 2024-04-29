@@ -127,6 +127,22 @@ Managing a repository can range from simple to complex, and typically depends on
 In our experience, GitHub management for ecologists is often quite simple as most
 research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as it is easier. In the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
 
+#### The `.gitignore` file
+
+Sometimes you have sensitive data that you do not want to put up into the cloud,
+or perhaps some files are too large and cannot be stored on GitHub. To tell GitHub to ignore entire folders, types of files, or specific files, you need to add them
+to the repositories `.gitignore` file. R already has a default `.gitignore` 
+template that you can opt to use when spinning up a repository, and we suggest
+you use that. Imagine you have sensitive data (e.g., the location of an endangered species) in a file titled `my_species_data.csv`. You can add that file to the .gitignore in two ways.
+
+1. Open up the `.gitignore` file in Rstudio and add `my_species_data.csv` to a
+new line and save it.
+2. When you put `my_species_data.csv` into your repository, before you commit it, 
+right click on the file name in the GitHub GUI and select `ignore file`. This will
+add the file to the `.gitignore` as well.
+
+It is important to note that `.gitignore` files use regular expressions if
+that is something you know how to use. If not, look it up later, regular expressions are a great way to search through text!
 
 #### Creating and using branches
 
@@ -254,7 +270,8 @@ the R sub-folder that we can use to create some fake data and plot it.
 file.edit("./R/simulate_data.R")
 ```
 
-and then copy and paste this code into the script and run it.
+Briefly, the dot notation here represents 'from my current working directory.' So,
+in this case, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `simulate_data.R`'. Copy and paste this code into the script, save it, and run it.
 
 ```R
 # Simulate data for a linear regression
@@ -305,11 +322,47 @@ plot(
 dev.off()
 ```
 
-Furthermore, let's save some fake data and a small figure in their associated sub-folders. 
+We are ALMOST ready to make a pull request. Commit all of these changes to your `tidy-up-repo` branch. In this case, all the folders we created should have gotten
+pushed up to this branch. In the future, you may notice that some files or folders may not be transferred. This is either because the folder is empty (and empty folders and not sent up to GitHub) or they've been added to the `.gitignore` file associated to your browser. 
 
-Briefly, the dot notation here represents 'from my current working directory.' So,
-in this case, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `run_models.R`'. Add a single comment to this script and save it. Finally, commit all of these changes to your `tidy-up-repo` branch. You should notice that the `data` and `plots` folders are not included on these commits. This is because the folders are currently empty, and 
+After pushing your commits to the `tidy-up-repo` branch, head over to your
+repository via your internet browser. In my case, I would head to www.github.com/mfidino/uwin-example-repo. You can start a pull request in two ways.
+
+1. If you just recently pushed some changes to a branch, then there may be a 
+notification on the main page of your repository asking if you would like to `Compare & Pull Request`. If it is the correct branch, then you could just select that.
+2. Click the `Pull requests` tab and select `New pull request`.
+
+If you do the latter, then you must also select what branch you are merging (i.e., `tidy-up-repo`) and where you are merging it into (i.e., `main`). Continue clicking on the `create pull request` buttons until it has been made.
+
+
+So long as you followed these instructions, the screen you are looking on your
+Internet browser should look something like this:
+
+<div align="center">
+<img src="./images/merge-branch.png" width=90%/>
+</div>
+
+This page contains a bunch of summary information, but you can also select other 
+tabs to see what commits were made, whether any automated checks were 
+made (which can be done if you set them up via GitHub Actions), and all the changes made to files in the pull request. This would be where a code review
+occurs. For example, another collaborator could look over your suggested changes, comment on them, and ask for further changes before the pull request is merged. Personally, I've never done a code review for an ecological analysis project, but have done them before when collaborating with others in tech. 
+
+After creating a pull request, GitHub will also check to determine if the pull request can be automatically merged. So long as you followed the insturctions, 
+there should be no conflicts with the base branch and you can go ahead and merge
+this pull request (do so now). Afterwards, you will have the option to delete the 
+`tidy-up-repo` branch. It is helpful to keep your repositories tidy, and so in
+this case it would be a great idea to delete this branch.
+
+
+
 
 #### What are conflicts?
 
-Conflicts occur when Git cannot resolve code differences between multiple commits. You are typically alerted to this issue 
+Conflicts occur when Git cannot resolve code differences between multiple commits. You are typically alerted to this issue when making a pull request. These issues
+can occur when:
+
+1. You create a new branch to edit a script (e.g., `my_script.R`), but somewhere along the line you pushed some commits to `my_script.R` to the main branch. 
+2. You modify the same script multiple times across branches made off the main branch.
+
+Conflicts are always a pain to address and can take considerable time to fix.
+So, let's create an example of one to show how you can debug them in Rstudio.
