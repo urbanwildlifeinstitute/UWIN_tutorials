@@ -31,7 +31,7 @@ In the previous image, you likely noticed the little green button that says"New"
 
 You should see something that looks like this:
 
-![](./images/github-new-repo-1.png){width=70%}
+![](./images/github-new-repo-1.png){: width=70%}
 
 As you can see in this image, fill in a name (I suggested one related to this tutorial, but it doesn't really matter!). Then, go ahead and click "add read me" - we will describe that a bit further below.
 
