@@ -116,7 +116,7 @@ MASON NOTE: I talk about cloning repositories you do not have write access to
 (i.e., forking) below. Just know that the clone button on the GitHub GUI will
 clone a repo differently whether or not you have write access (i.e., no write access = forking). 
 
-### Your first commit!
+### Your third commit - adding files to a local repository
 
 ### Tracking file edits
 
