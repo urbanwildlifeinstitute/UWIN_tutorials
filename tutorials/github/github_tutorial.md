@@ -56,67 +56,17 @@ Note that you can also set a license for your repository! These outline usage ri
 
 You can safely ignore those for now, but just be aware of these for future repositories. For now, go ahead and click the green "create repository" button at the bottom to proceed.
 
-#### Your first and second commit - and the read me
-
-After clicking "create repository", you should now see a landing page for your repository. Basically, you have done it! You just created your first repository. Let's break down this landing page a bit further.
-
-<div align="center">
-<img src="./images/github-repo-landing-annotated.png" width=90%/>
-</div>
-
-At the top (in the green box), you should now see a number of tabs, all relevant to repository management. These are all *specific to your current repository* - and provide a number of features for managing, documenting, and supporting your new repository. We will not go over these in depth, but would encourage you to review these tabs. 
-
-Instead, let's focus on the highlighted section in the red box. You should see your own profile name next to "initial commit."  As reviewed in the quarto presentation, **a commit is a summary of changes made to a repository**. By telling GitHub to add a "read me" file to this repository (designated by the white star in the image above), GitHub automatically created this file for you - and created a **commit** to add this file to the repository. So congratulations - you have made your first GitHub commit without even meaning to do so!
-
-Do you see how the "read me" file has a .md file extension? That means it is a **markdown** file. **Markdown** is essentially a convenient way of translating plain text into formatted text - which can then be easily displayed in a variety of rendered formats, such as PDFs or HTML. As a matter of fact, the tutorial you are currently reading has been rendered in markdown format! 
-
-Do you see the "read me" panel at the bottom of the page? Ideally, this would provide relevant documentation about the repository itself. Instead, we just have a title - so let's change that! Click on the pencil icon at the top of the this panel to begin editing. You should now see the following:
-
-<div align="center">
-<img src="./images/github-read-me.png" width=90%/>
-</div>
-
-Let's add a bit of further text to this read me - and see what this does. Add text to your "read me" markdown to look like this: 
-
-<div align="center">
-<img src="./images/github-read-me-filled.png" width=90%/>
-</div>
-
-Here is a code block with that text, in case the above is a bit tricky to see:
-
-```
-# uwin_github_tutorial
-
-This is a sample repository for use with the Urban Wildlife Information Network's "Github and Data Reproducibility" workshop. We can use this to play around with a bit of basic markdown formatting.
-
-## This is how we make a sub-header
-
-In this section, we will have some **bold text**.
-
-### This is how we make a sub-sub-header
-
-In this section, we will have some *italicized* text. 
-
-I will also bold this to make it stand out: **see https://www.markdownguide.org/cheat-sheet/ for more markdown tips and tricks!**
-```
-
-
-Then click the "commit changes..." button at the top. GitHub should ask if you want to make a commit called "Update README.md". Go ahead and click "commit changes" again.
-
-Here is what you should see:
-
-
-
-<div align="center">
-<img src="./images/github-read-me-committed.png" width=90%/>
-</div>
-
+#### Don't forget the Read Me!
 
 
 
 ### Cloning a repository
 
-### Your third commit - adding files
+MASON NOTE: I talk about cloning repositories you do not have write access to
+(i.e., forking) below. Just know that the clone button on the GitHub GUI will
+clone a repo differently whether or not you have write access (i.e., no write access = forking). 
+
+### Your first commit!
 
 ### Tracking file edits
 
@@ -172,9 +122,54 @@ times when you may not want to delete a branch. For example, lots of repositorie
 
 #### Forking repositories
 
+Forking a repository is typically done for one of two reasons:
+
+1. You want to contribute to an open source project. Forking serves as a way to test out changes to the code of a project without affecting the upstream repository in any way. In this case, the original maintainer of a project could evaluate whether proposed changes from your forked repository are acceptable, and if so, merge them into the open source project. As such, forking makes it so people can collaborate on projects without having to share 'collaborator' status on projects, which may is especially helpful for open source projects.
+2. You want to use the code in a repository as the foundation for a project you
+are building. For example, you may want to fork a repository that contains 
+the foundation for a personal website.
+
+So, what is the difference between forking and branching? As their names suggest, forking and branching are VERY similar to one another. Forking, however, creates an independent copy of a repository, while branching means you develop in parallel within the same repository. 
+
+In practice, you will most often using branching instead of forking. But if you 
+did want to fork a repository, you can do that through the GitHub GUI by:
+
+1. Selecting the dropdown associated to your 'Current repository' in the top
+left corner.
+2. Clicking the 'Add' dropdown button and select 'Clone repository'
+3. Selecting the 'URL' option.
+4. Imputing the username and repository name separated by a slash (e.g., `mfidino/my-cool-repo`).
+5. Telling the GUI where you want the local copy of the repo stored.
+
+
+<div align="center">
+<img src="./images/clone-repo.png" width=90%/>
+</div>
+
+When you try to clone a repository in this way, and you do not have write access
+to the repository (i.e., you did not create the repository and you do not have
+collaborator status), then a fork of the repository will be made.
+
+So, following the instructions above, fork a copy of the `urbanwildlifeinstitute/UWIN_tutorials` repository. You will want a forked
+copy of this repository anyways so that you have access to all the data and code
+for these workshops.
 
 
 #### Pull requests
+
+Pull requests are how you merge code from another branch or forked repository into another.
+
+As such, a pull request requires two key components.
+
+1. The name of the branch that has the code changes you want to merge.
+2. The name of the branch where you want the changed code to get merged into.
+
+While you can make pull requests through the GitHub GUI, in practice I've found
+it far easier to create them via the Internet browser. So, to make our pull
+request, let's modify the repository you created at the start of this tutorial
+so that we can follow some best practices for a GitHub project. Briefly, we
+are going to create an R project file and a set of sub-folders to store different
+components of an analysis (e.g., code, data, etc.)
 
 #### What are conflicts?
 
