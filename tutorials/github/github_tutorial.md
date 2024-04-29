@@ -151,7 +151,7 @@ Creating a new branch with the GitHub GUI is easy. After clicking on the dropdow
 and so the GitHub GUI will replace all spaces with hyphens. 
 2. You need to decide what to branch off of if you already have multiple branches. In the event that you have no other branches, then you will branch from the `main` branch. If you have more than one branch, you will need to select which branch you are branching from. 
 
-Confirm the creation of your branch by clicking on the `Create branch` pop-up.
+Confirm the creation of your branch by clicking on the `Create branch` pop-up. Finally, at this moment the branch does not exist in the cloud. To send it up, simply click the `Publish branch` button at the top of the screen (you can do this either before or after making some commits to this branch). 
 
 Creating branches is easiest when you have already pushed all your commits to your
 repository and your local copy is caught up with your repository. However, when working on a project you may have some non-committed changes to the code and you realize you are either not on the correct
@@ -219,7 +219,96 @@ it far easier to create them via the Internet browser. So, to make our pull
 request, let's modify the repository you created at the start of this tutorial
 so that we can follow some best practices for a GitHub project. Briefly, we
 are going to create an R project file and a set of sub-folders to store different
-components of an analysis (e.g., code, data, etc.)
+components of an analysis (e.g., code, data, etc.). Thus, before we even make a pull request, let's create a new branch off of this repo called `tidy-up-repo` (see above for a refresher for how to switch among repositories and creating a branch off of a repository). 
+
+After you have made a branch off the repository and have ensured your local copy is working off of it (i.e., `tidy-up-repo` is selected as your current branch on the GitHub GUI), let's go over to Rstudio and spin up an R project for this repository. If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
+
+After opening up Rstudio, follow these instructions to create your R project.
+
+1. Select the File dropdown and click on 'New project'.
+2. From the pop-up, select 'Existing Directory' as we already have the folder
+spun up for GitHub.
+3. Click 'Browse' option and select the folder that houses your repository.
+4. Select 'Create project'
+
+If you would like, you could commit this newly created `<repository-name>.Rproj` file to the `tidy-up-repo` branch.
+
+In Rstudio it is very easy to switch between projects, just click the project icon
+in the top right corner, select `Open project` and then locate and click on the R project file you want to open. However, as you just made the project file, you likely already have RStudio opened up with the project activated. From here,
+we are going to create a few sub-folders in this project. Go to your R console (i.e., the pane in Rstudio where code gets ran) and run the following lines of code:
+
+```R
+dir.create("R")
+dir.create("data")
+dir.create("plots")
+
+```
+
+The names of these sub-folders should be pretty self-explanatory. You put your
+R code in the R folder, data in the data folder, and any plots you produce goes into the plots folder. I always make these folders when starting a new analysis project. If you end up using other programming languages you may also want to create sub-folders for them. For example, if you wrote up some models in either `NIMBLE` or `JAGS`, then you may want a nimble of jags folder in your project.
+
+Finally, just to show how relative pathing works, let's create an R script within
+the R sub-folder that we can use to create some fake data and plot it.
+
+```R
+file.edit("./R/simulate_data.R")
+```
+
+and then copy and paste this code into the script and run it.
+
+```R
+# Simulate data for a linear regression
+
+# Model parameters
+intercept <- 3
+slope <- -1
+
+# Sample size
+n <- 100
+
+# covariate
+set.seed(145)
+x <- rnorm(n)
+
+
+y_deterministic <- intercept + slope * x
+
+# add noise
+y <- rnorm(
+  n,
+  mean = y_deterministic,
+  sd = 2.5
+)
+
+# package up data and save it
+to_save <- data.frame(
+  y = y,
+  x = x
+)
+
+write.csv(
+  to_save,
+  "./data/simulated_data.csv",
+  row.names = FALSE
+)
+
+# plot it out and save it
+jpeg("./plots/example.jpg")
+plot(
+  y ~ x,
+  xlab = "x",
+  ylab = "y",
+  type = "p",
+  bty = "l",
+  las = 1
+)
+dev.off()
+```
+
+Furthermore, let's save some fake data and a small figure in their associated sub-folders. 
+
+Briefly, the dot notation here represents 'from my current working directory.' So,
+in this case, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `run_models.R`'. Add a single comment to this script and save it. Finally, commit all of these changes to your `tidy-up-repo` branch. You should notice that the `data` and `plots` folders are not included on these commits. This is because the folders are currently empty, and 
 
 #### What are conflicts?
 
