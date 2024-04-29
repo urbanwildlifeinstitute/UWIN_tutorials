@@ -62,6 +62,10 @@ You can safely ignore those for now, but just be aware of these for future repos
 
 ### Cloning a repository
 
+MASON NOTE: I talk about cloning repositories you do not have write access to
+(i.e., forking) below. Just know that the clone button on the GitHub GUI will
+clone a repo differently whether or not you have write access (i.e., no write access = forking). 
+
 ### Your first commit!
 
 ### Tracking file edits
@@ -152,6 +156,20 @@ for these workshops.
 
 
 #### Pull requests
+
+Pull requests are how you merge code from another branch or forked repository into another.
+
+As such, a pull request requires two key components.
+
+1. The name of the branch that has the code changes you want to merge.
+2. The name of the branch where you want the changed code to get merged into.
+
+While you can make pull requests through the GitHub GUI, in practice I've found
+it far easier to create them via the Internet browser. So, to make our pull
+request, let's modify the repository you created at the start of this tutorial
+so that we can follow some best practices for a GitHub project. Briefly, we
+are going to create an R project file and a set of sub-folders to store different
+components of an analysis (e.g., code, data, etc.)
 
 #### What are conflicts?
 
