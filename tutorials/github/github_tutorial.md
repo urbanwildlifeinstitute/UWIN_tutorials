@@ -74,12 +74,15 @@ In our experience, GitHub management for ecologists is often quite simple as mos
 research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as it is easier. In the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
 
 
-#### Creating branches
+#### Creating and using branches
 
 As a reminder, branches are contained copies of your repository where you can 
 safely create new features, fix bugs, or even try out new ideas for a project.
 There are no limits to how many branches you can make, and branches can be made
-off of any other branch (e.g., a branch off a branch off a branch). To view your branches on the GitHub GUI you simply need
+off of any other branch (e.g., a branch off a branch off a branch). For a small
+team of collaborators, branches will be by far the easiest way to collaborate on a project. You can add people as collaborators to a repository on it's settings page, which can be accessed via an Internet browser. 
+
+To view your branches on the GitHub GUI you simply need
 to select the correct repository and then click the current branch dropdown. For
 example, while working on this tutorial Nate and I generated a `github-workshop`
 branch off of the main branch of the `UWIN_tutorials` repository.
@@ -88,12 +91,30 @@ branch off of the main branch of the `UWIN_tutorials` repository.
 <img src="./images/branch-selection.png" width=90%/>
 </div>
 
-Creating a new branch with the GitHub GUI is easy. After clicking on the dropdown, type the name of the new branch in the associated text field and click on the "Create new branch" button. Let's do that now, create a new branch titled `my first branch`. When you click on that button you will notice two things:
+Creating a new branch with the GitHub GUI is easy. After clicking on the dropdown, type the name of the new branch in the associated text field and click on the "Create new branch" button. Let's do that now. Create a new branch titled `my first branch`. After clicking this button a pop-up will appear and you may notice two things:
 
 1. That the created branch is hyphen-separated. GitHub branches cannot have spaces
 and so the GitHub GUI will replace all spaces with hyphens. 
 2. You need to decide what to branch off of if you already have multiple branches. In the event that you have no other branches, then you will branch from the `main` branch. If you have more than one branch, you will need to select which branch you are branching from. 
 
+Confirm the creation of your branch by clicking on the `Create branch` pop-up.
+
+Creating branches is easiest when you have already pushed all your commits to your
+repository and your local copy is caught up with your repository. However, when working on a project you may have some non-committed changes to the code and you realize you are either not on the correct
+branch or you should make a new branch to store these edits. You will notice if you have edits that are not committed in the GitHub GUI as it shows changes
+you have made to a script by highlighting them in either green or red. Green highlights are new code and red highlights are code that has been removed. So, what do you do in these situations?
+
+Fortunately, if you either try to switch branches or create a new branch with uncommitted code the GitHub GUI will ask you whether you want to either:
+
+1. Leave those changes on the current branch.
+2. Bring those changes over to either the new branch you may be creating.
+3. Bring those changes over to the another branch that already exists.
+
+
+If needed, branches can be renamed. Likewise, branches can be deleted. Typically,
+we delete branches after merging them into the main branch. For example, if your branch was made to create a new R function for your analysis, then you won't need
+that branch anymore after the function is available in the main branch. There are
+times when you may not want to delete a branch. For example, lots of repositories will have a `dev` branch that must be merged into first. After testing, changes made to the `dev` branch can then be pushed into the `main` branch with a pull request. You will not likely encounter this often when using GitHub for your analysis, but we bring it up here for completeness.
 
 #### Forking repositories
 
