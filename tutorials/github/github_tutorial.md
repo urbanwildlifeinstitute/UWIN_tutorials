@@ -118,6 +118,32 @@ times when you may not want to delete a branch. For example, lots of repositorie
 
 #### Forking repositories
 
+Forking a repository is typically done for one of two reasons:
+
+1. You want to contribute to an open source project. Forking serves as a way to test out changes to the code of a project without affecting the upstream repository in any way. In this case, the original maintainer of a project could evaluate whether proposed changes from your forked repository are acceptable, and if so, merge them into the open source project. As such, forking makes it so people can collaborate on projects without having to share 'collaborator' status on projects, which may is especially helpful for open source projects.
+2. You want to use the code in a repository as the foundation for a project you
+are building. For example, you may want to fork a repository that contains 
+the foundation for a personal website.
+
+So, what is the difference between forking and branching? As their names suggest, forking and branching are VERY similar to one another. Forking, however, creates an independent copy of a repository, while branching means you develop in parallel within the same repository. 
+
+In practice, you will most often using branching instead of forking. But if you 
+did want to fork a repository, you can do that through the GitHub GUI by:
+
+1. Selecting the dropdown associated to your 'Current repository' in the top
+left corner.
+2. Clicking the 'Add' dropdown button and select 'Clone repository'
+3. Selecting the 'URL' option.
+4. Imputing the username and repository name separated by a slash (e.g., `mfidino/my-cool-repo`).
+5. Telling the GUI where you want the local copy of the repo stored.
+
+When you try to clone a repository in this way, and you do not have write access
+to the repository (i.e., you did not create the repository and you do not have
+collaborator status), then a fork of the repository will be made.
+
+So, following the instructions above, fork a copy of the `urbanwildlifeinstitute/UWIN_tutorials` repository. You will want a forked
+copy of this repository anyways so that you have access to all the data and code
+for these workshops.
 
 
 #### Pull requests
