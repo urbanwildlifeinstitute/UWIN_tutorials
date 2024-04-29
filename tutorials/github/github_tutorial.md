@@ -2,7 +2,7 @@
 
 By: Nathan Byer and Mason Fidino
 
-In this tutorial, we will go over some basics of how to use GitHub. Throughout, we will focus on the use of GitHub Desktop for repository management, but just remember - **this is just one of a few approaches you can use!** Here are a few notes on this before we proceed:
+In this tutorial, we will go over some basics of how to use GitHub. Throughout, we will focus on the use of GitHub Desktop Graphical User Interface (GUI) for repository management, but just remember - **this is just one of a few approaches you can use!** Here are a few notes on this before we proceed:
 
 1. RStudio has native GitHub integration. It can be a bit limited in functionality, but can be useful for R-based repository management. 
 2. Git has robust command-line utilities, some of which may be needed for more advanced repository management. It is also exhaustively documented elsewhere.
@@ -68,10 +68,20 @@ You can safely ignore those for now, but just be aware of these for future repos
 
 ### Managing repositories
 
-#### Forking repositories
+Managing a repository can range from simple to complex, and typically depends on two things. First, the number of users contributing to a project can increase complexity. In the simplest case, a single user may be making commits to the main branch of a private repository. When this happens, you may not need to put many rules in place to avoid issues using GitHub. With multiple users, however, it is helpful to put some rules in place so that everyone is aware of how to contribute. This could include using branches to develop parts of the code base, conducting code reviews for pull requests, and taking some time to provide documentation on how to contribute. Second, the 'product' you are working on can influence how you manage your repository. If your repository is meant to house some data and code for an analysis, then you may not worry as much about best practices so long as the code runs. If your repository is meant to house a website, a shiny app, or something else people may use without running code, then you may want to ensure you have protections in place to decrease the chances of breaking your 'product.'
+
+In our experience, GitHub management for ecologists is often quite simple as most
+research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as we have found it easier. As such, in the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
+
 
 #### Creating branches
 
+#### Forking repositories
+
+
+
 #### Pull requests
 
-#### What are conflicts? 
+#### What are conflicts?
+
+Conflicts occur when Git cannot resolve code differences between multiple commits. You are typically alerted to this issue 
