@@ -23,7 +23,10 @@ Go ahead and enter your email in the box we have outlined in red, and proceed wi
 
 Now that you have an account, when you navigate to github.com, you should see the following:
 
-![](./images/github-dashboard.png){width=70%}
+<div align="center">
+<img src="./images/github-dashboard.png" width=70%/>
+</div>
+
 
 This is your *dashboard*. We won't go into a ton of detail about this, but your recently used repositories should be displayed on the left (outlined in a green box), whereas a feed of repository-related activity for your collaborators will be displayed in the center (outlined in a blue box). 
 
@@ -33,13 +36,19 @@ In the previous image, you likely noticed the little green button that says"New"
 
 You should see something that looks like this:
 
-![](./images/github-new-repo-1.png){: width=70%}
+<div align="center">
+<img src="./images/github-new-repo-1.png" width=70%/>
+</div>
+
 
 As you can see in this image, fill in a name (I suggested one related to this tutorial, but it doesn't really matter!). Then, go ahead and click "add read me" - we will describe that a bit further below.
 
 Towards the bottom of this page, you should see a few other options:
 
-![](./images/github-new-repo-2.png){width=70%}
+<div align="center">
+<img src="./images/github-new-repo-2.png" width=70%/>
+</div>
+
 
 The .gitignore allows you to tell github *not* to track certain files in local repository folders, which can be useful. 
 
