@@ -16,7 +16,7 @@ Before using GitHub, there's a pretty important initial step: **you need to sign
 First, navigate to github.com. You should see the following:
 
 <div align="center">
-<img src="./images/github-signup.png" width=70%/>
+<img src="./images/github-signup.png" width=90%/>
 </div>
 
 Go ahead and enter your email in the box we have outlined in red, and proceed with any instructions necessary. You will be prompted to create a username and password, so make sure you remember what those are!
@@ -24,7 +24,7 @@ Go ahead and enter your email in the box we have outlined in red, and proceed wi
 Now that you have an account, when you navigate to github.com, you should see the following:
 
 <div align="center">
-<img src="./images/github-dashboard.png" width=70%/>
+<img src="./images/github-dashboard.png" width=90%/>
 </div>
 
 
@@ -37,7 +37,7 @@ In the previous image, you likely noticed the little green button that says"New"
 You should see something that looks like this:
 
 <div align="center">
-<img src="./images/github-new-repo-1.png" width=70%/>
+<img src="./images/github-new-repo-1.png" width=90%/>
 </div>
 
 
@@ -46,7 +46,7 @@ As you can see in this image, fill in a name (I suggested one related to this tu
 Towards the bottom of this page, you should see a few other options:
 
 <div align="center">
-<img src="./images/github-new-repo-2.png" width=70%/>
+<img src="./images/github-new-repo-2.png" width=90%/>
 </div>
 
 
