@@ -15,7 +15,9 @@ Before using GitHub, there's a pretty important initial step: **you need to sign
 
 First, navigate to github.com. You should see the following:
 
-<img src="./images/github-signup.png" class="center" width=70%>
+<div align="center">
+<img src="./images/github-signup.png" width=70%/>
+</div>
 
 Go ahead and enter your email in the box we have outlined in red, and proceed with any instructions necessary. You will be prompted to create a username and password, so make sure you remember what those are!
 
