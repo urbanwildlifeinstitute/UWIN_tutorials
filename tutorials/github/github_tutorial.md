@@ -68,13 +68,32 @@ You can safely ignore those for now, but just be aware of these for future repos
 
 ### Managing repositories
 
-Managing a repository can range from simple to complex, and typically depends on two things. First, the number of users contributing to a project can increase complexity. In the simplest case, a single user may be making commits to the main branch of a private repository. When this happens, you may not need to put many rules in place to avoid issues using GitHub. With multiple users, however, it is helpful to put some rules in place so that everyone is aware of how to contribute. This could include using branches to develop parts of the code base, conducting code reviews for pull requests, and taking some time to provide documentation on how to contribute. Second, the 'product' you are working on can influence how you manage your repository. If your repository is meant to house some data and code for an analysis, then you may not worry as much about best practices so long as the code runs. If your repository is meant to house a website, a shiny app, or something else people may use without running code, then you may want to ensure you have protections in place to decrease the chances of breaking your 'product.'
+Managing a repository can range from simple to complex, and typically depends on two things. First, the number of users contributing to a project can increase complexity. In the simplest case, a single user may be pushing commits to the main branch of a private repository. When this happens, you may not need to put many rules in place to avoid issues using GitHub. With multiple users, however, it is helpful to put some rules in place so that everyone is aware of how to contribute. This could include using branches to develop parts of the code base, conducting code reviews for pull requests, and taking some time to provide documentation on how to contribute. Second, the 'product' you are working on can influence how you manage your repository. If your repository is meant to house some data and code for an analysis, then you may not worry as much about best practices so long as the code runs. If your repository is meant to house a website, a shiny app, or something else people may use without running code, then you may want to ensure you have protections in place to decrease the chances of breaking your 'product.'
 
 In our experience, GitHub management for ecologists is often quite simple as most
-research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as we have found it easier. As such, in the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
+research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as it is easier. In the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
 
 
 #### Creating branches
+
+As a reminder, branches are contained copies of your repository where you can 
+safely create new features, fix bugs, or even try out new ideas for a project.
+There are no limits to how many branches you can make, and branches can be made
+off of any other branch (e.g., a branch off a branch off a branch). To view your branches on the GitHub GUI you simply need
+to select the correct repository and then click the current branch dropdown. For
+example, while working on this tutorial Nate and I generated a `github-workshop`
+branch off of the main branch of the `UWIN_tutorials` repository.
+
+<div align="center">
+<img src="./images/branch-selection.png" width=90%/>
+</div>
+
+Creating a new branch with the GitHub GUI is easy. After clicking on the dropdown, type the name of the new branch in the associated text field and click on the "Create new branch" button. Let's do that now, create a new branch titled `my first branch`. When you click on that button you will notice two things:
+
+1. That the created branch is hyphen-separated. GitHub branches cannot have spaces
+and so the GitHub GUI will replace all spaces with hyphens. 
+2. You need to decide what to branch off of if you already have multiple branches. In the event that you have no other branches, then you will branch from the `main` branch. If you have more than one branch, you will need to select which branch you are branching from. 
+
 
 #### Forking repositories
 
