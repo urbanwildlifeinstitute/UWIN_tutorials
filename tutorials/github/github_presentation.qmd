@@ -162,7 +162,7 @@ Nathan has some code for a project that works, but he wants to improve the code 
 
 ## Pull
 
--**Definition**: when *remote* changes on a branch are applied to your *local*, cloned repository.
+- **Definition**: when *remote* changes on a branch are applied to your *local*, cloned repository.
 - What do we mean by this?
   + if you are working on a repository collaboratively, others may make edits that are **not** initially reflected in your *local* repository. 
   + when you pull from the remote repository, these remote changes are synced with your local directory.
