@@ -109,14 +109,23 @@ Here is what you should see:
 <img src="./images/github-read-me-committed.png" width=100%/>
 </div>
 
-
 ### Cloning a repository
 
-MASON NOTE: I talk about cloning repositories you do not have write access to
-(i.e., forking) below. Just know that the clone button on the GitHub GUI will
-clone a repo differently whether or not you have write access (i.e., no write access = forking). 
+Up until now, all of our repository management has been handled through our web browser. In practice, it is often easiest to create the initial repositories this way, you are likely creating that repository to help out with *version control* for locally-hosted files. In this section, we will take your remotely-stored repository and create a local copy - in a process called *cloning*. 
 
-### Your third commit - adding files to a local repository
+In order to do so, however, you will need to 
+
+### Your third commit - adding files to a local repository with an R project
+
+If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
+
+After opening up Rstudio, follow these instructions to create your R project.
+
+1. Select the File dropdown and click on 'New project'.
+2. From the pop-up, select 'Existing Directory' as we already have the folder
+spun up for GitHub.
+3. Click 'Browse' option and select the folder that houses your repository.
+4. Select 'Create project'
 
 ### Tracking file edits
 
@@ -237,15 +246,7 @@ so that we can follow some best practices for a GitHub project. Briefly, we
 are going to create an R project file and a set of sub-folders to store different
 components of an analysis (e.g., code, data, etc.). Thus, before we even make a pull request, let's create a new branch off of this repo called `tidy-up-repo` (see above for a refresher for how to switch among repositories and creating a branch off of a repository). 
 
-After you have made a branch off the repository and have ensured your local copy is working off of it (i.e., `tidy-up-repo` is selected as your current branch on the GitHub GUI), let's go over to Rstudio and spin up an R project for this repository. If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
-
-After opening up Rstudio, follow these instructions to create your R project.
-
-1. Select the File dropdown and click on 'New project'.
-2. From the pop-up, select 'Existing Directory' as we already have the folder
-spun up for GitHub.
-3. Click 'Browse' option and select the folder that houses your repository.
-4. Select 'Create project'
+After you have made a branch off the repository and have ensured your local copy is working off of it (i.e., `tidy-up-repo` is selected as your current branch on the GitHub GUI), let's go over to Rstudio and spin up an R project for this repository - using the same procedure we outlined earlier in the tutorial. 
 
 If you would like, you could commit this newly created `<repository-name>.Rproj` file to the `tidy-up-repo` branch.
 
