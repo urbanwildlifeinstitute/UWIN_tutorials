@@ -168,7 +168,6 @@ Nathan has some code for a project that works, but he wants to improve the code 
   + when you pull from the remote repository, these remote changes are synced with your local directory.
   + Not to be confused with pull requests, which are a different thing!
 
-
 ## Pull Request
 
 - **Definition**: A pull request (PR) is a way to tell collaborators (or yourself)
