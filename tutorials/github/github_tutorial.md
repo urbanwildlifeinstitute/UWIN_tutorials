@@ -122,7 +122,19 @@ You can *clone* your first repository in one of two ways:
 
 Regardless of the approach taken, you should see this:
 
+<div align="center">
+<img src="./images/github-clone-local.png" width=90%/>
+</div>
 
+As you can see, I have already selected my uwin_github_tutorial repository created above. Click your own repository name, and see how this changes the Local path below. By default, GitHub Desktop will use the  C:/Users/{username}/Documents/GitHub directory for all local repositories, but you can point this wherever you would like. 
+
+After you have pointed GitHub Desktop to the correct remote repository and desired local directory, click the **Clone** button. After a few progress bars, you should then see the following:
+
+<div align="center">
+<img src="./images/github-local-repo.png" width=90%/>
+</div>
+
+If you are  not sure if this repository is actually available locally, click the "Show in Explorer" button. You should see a folder with a single file - the README.md you edited before!
 
 ### Your third commit - adding files to a local repository with an R project
 
