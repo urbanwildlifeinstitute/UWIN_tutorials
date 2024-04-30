@@ -113,7 +113,7 @@ Here is what you should see:
 
 Up until now, all of our repository management has been handled through our web browser. In practice, it is often easiest to create the initial repositories this way, you are likely creating that repository to help out with *version control* for locally-hosted files. In this section, we will take your remotely-stored repository and create a local copy - in a process called *cloning*. 
 
-In order to do so, however, you will need to 
+In order to do so, however, we recommend that you use GitHub Desktop. If you have not done so already, navigate to https://desktop.github.com/ to download the GitHub Desktop installer appropriate for your operating system. 
 
 ### Your third commit - adding files to a local repository with an R project
 
