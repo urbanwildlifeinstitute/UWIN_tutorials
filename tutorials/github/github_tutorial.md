@@ -56,7 +56,7 @@ Note that you can also set a license for your repository! These outline usage ri
 
 You can safely ignore those for now, but just be aware of these for future repositories. For now, go ahead and click the green "create repository" button at the bottom to proceed.
 
-### Your first and second commit - and the read me
+### Initial commits - and the read me
 
 After clicking “create repository”, you should now see a landing page for your repository. Basically, you have done it! You just created your first repository. Let’s break down this landing page a bit further.
 
@@ -77,7 +77,7 @@ Do you see the “read me” panel at the bottom of the page? Ideally, this woul
 </div>
 
 
-Let’s add a bit of further text to this read me - and see what this does. Add text to your “read me” markdown to look like this:
+Let’s add a bit of further text to this read me - and see what this does. Add text to your `README.md` to look like this:
 
 <div align="center">
 <img src="./images/github-read-me-filled.png" width=100%/>
@@ -136,11 +136,9 @@ After you have pointed GitHub Desktop to the correct remote repository and desir
 
 If you are  not sure if this repository is actually available locally, click the "Show in Explorer" button. You should see a folder with a single file - the README.md you edited before! If so, **congratulations - you have cloned your first repository**!
 
-### Your third commit - adding files to a local repository with an R project
+### Adding files to a local repository with an R project
 
-Now that we have a local copy of our repository, we can work on adding some files to this repository. 
-
-If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
+Now that we have a local copy of our repository, we can work on adding some files to this repository. We will do so by creating an **R project** in this local repository. If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
 
 After opening up Rstudio, follow these instructions to create your R project.
 
@@ -150,7 +148,35 @@ spun up for GitHub.
 3. Click 'Browse' option and select the folder that houses your repository.
 4. Select 'Create project'
 
-### Tracking file edits
+This is what you should now see in RStudio:
+
+<div align="center">
+<img src="./images/rstudio-new-project.png" width=90%/>
+</div>
+
+Notice the bottom right corner? That displays contents in your current project directory. You should see your `README.md`, but two new, additional files: `uwin_github_tutorial.Rproj` and `.gitignore`. We won't go into much detail on these files yet; for now, open up GitHub Desktop to take a look at your repository now! You should see something like this:
+
+<div align="center">
+<img src="./images/github-r-project-commit.png" width=90%/>
+</div>
+
+Basically, GitHub Desktop has detected these new files. Most of the page is taken up by a panel that tracks changes to each file; `+` signs indicate added lines. Since every line in both the `.gitignore` and `uwin_github_tutorial.Rproj` is new, you should see `+` signs by every line.
+
+On the bottom right, you will notice a blue button that says **Commit to main**. We will get into what `main` means here, but for now, you will notice that you can't actually select that button yet! This is because GitHub Desktop needs you to provide some narrative description for this commit under "Summary (required)". Go ahead and add some descriptive text there - for instance, you could say "Created R Project for repository" as the commit message. Go ahead and click **Commit to main** after this. You should now see this:
+
+<div align="center">
+<img src="./images/github-push.png" width=90%/>
+</div>
+
+Basically, your commit has not yet been *pushed* to the remote repository - and is not reflected in the remote repository yet. Go ahead and click the **Push origin** button when you are ready! 
+
+To prove to ourselves that we have successfully pushed these changes, go back to your web browser - and take a look at the remote repository. 
+
+<div align="center">
+<img src="./images/github-remote-push.png" width=90%/>
+</div>
+
+You should see all of the files created during the course of creation of the R project. If that is the case, **congratulations - you have successfully pushed local changes to a remote repository**!
 
 ### Managing repositories
 
