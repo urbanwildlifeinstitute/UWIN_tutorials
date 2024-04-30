@@ -134,9 +134,11 @@ After you have pointed GitHub Desktop to the correct remote repository and desir
 <img src="./images/github-local-repo.png" width=90%/>
 </div>
 
-If you are  not sure if this repository is actually available locally, click the "Show in Explorer" button. You should see a folder with a single file - the README.md you edited before!
+If you are  not sure if this repository is actually available locally, click the "Show in Explorer" button. You should see a folder with a single file - the README.md you edited before! If so, **congratulations - you have cloned your first repository**!
 
 ### Your third commit - adding files to a local repository with an R project
+
+Now that we have a local copy of our repository, we can work on adding some files to this repository. 
 
 If you've never used R projects, they are a reproducible way to keep all the files associated to a coding project together (e.g., data, code, and figures). I like R projects specifically as it provides a way to automate where your working directory is for a project, and as such, makes it far easier to write your code in a reproducible way by using relative file paths. 
 
