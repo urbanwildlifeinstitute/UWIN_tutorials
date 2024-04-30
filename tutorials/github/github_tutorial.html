@@ -483,13 +483,46 @@ click “commit changes” again.</p>
 </div>
 <div id="cloning-a-repository" class="section level3">
 <h3>Cloning a repository</h3>
-<p>MASON NOTE: I talk about cloning repositories you do not have write
-access to (i.e., forking) below. Just know that the clone button on the
-GitHub GUI will clone a repo differently whether or not you have write
-access (i.e., no write access = forking).</p>
+<p>Up until now, all of our repository management has been handled
+through our web browser. In practice, it is often easiest to create the
+initial repositories this way, you are likely creating that repository
+to help out with <em>version control</em> for locally-hosted files. In
+this section, we will take your remotely-stored repository and create a
+local copy - in a process called <em>cloning</em>.</p>
+<p>In order to do so, however, we recommend that you use GitHub Desktop.
+If you have not done so already, navigate to <a href="https://desktop.github.com/" class="uri">https://desktop.github.com/</a> to download the GitHub
+Desktop installer appropriate for your operating system. Once you have
+GitHub Desktop installed, you will need to associate your GitHub account
+with the Desktop client; see <a href="https://docs.github.com/en/desktop/overview/getting-started-with-github-desktop" class="uri">https://docs.github.com/en/desktop/overview/getting-started-with-github-desktop</a>
+for details on how to do this.</p>
+<p>You can <em>clone</em> your first repository in one of two ways:</p>
+<ol style="list-style-type: decimal">
+<li>go to File… –&gt; clone repository (or simply use the keyboard
+shortcut ctrl + shift + O).</li>
+<li>Click the arrow in the “Current Repositories” panel, in the top
+left. Then, click “add”, and select “clone repository”.</li>
+</ol>
+<p>Regardless of the approach taken, you should see this:</p>
 </div>
-<div id="your-third-commit---adding-files-to-a-local-repository" class="section level3">
-<h3>Your third commit - adding files to a local repository</h3>
+<div id="your-third-commit---adding-files-to-a-local-repository-with-an-r-project" class="section level3">
+<h3>Your third commit - adding files to a local repository with an R
+project</h3>
+<p>If you’ve never used R projects, they are a reproducible way to keep
+all the files associated to a coding project together (e.g., data, code,
+and figures). I like R projects specifically as it provides a way to
+automate where your working directory is for a project, and as such,
+makes it far easier to write your code in a reproducible way by using
+relative file paths.</p>
+<p>After opening up Rstudio, follow these instructions to create your R
+project.</p>
+<ol style="list-style-type: decimal">
+<li>Select the File dropdown and click on ‘New project’.</li>
+<li>From the pop-up, select ‘Existing Directory’ as we already have the
+folder spun up for GitHub.</li>
+<li>Click ‘Browse’ option and select the folder that houses your
+repository.</li>
+<li>Select ‘Create project’</li>
+</ol>
 </div>
 <div id="tracking-file-edits" class="section level3">
 <h3>Tracking file edits</h3>
@@ -684,23 +717,8 @@ creating a branch off of a repository).</p>
 <p>After you have made a branch off the repository and have ensured your
 local copy is working off of it (i.e., <code>tidy-up-repo</code> is
 selected as your current branch on the GitHub GUI), let’s go over to
-Rstudio and spin up an R project for this repository. If you’ve never
-used R projects, they are a reproducible way to keep all the files
-associated to a coding project together (e.g., data, code, and figures).
-I like R projects specifically as it provides a way to automate where
-your working directory is for a project, and as such, makes it far
-easier to write your code in a reproducible way by using relative file
-paths.</p>
-<p>After opening up Rstudio, follow these instructions to create your R
-project.</p>
-<ol style="list-style-type: decimal">
-<li>Select the File dropdown and click on ‘New project’.</li>
-<li>From the pop-up, select ‘Existing Directory’ as we already have the
-folder spun up for GitHub.</li>
-<li>Click ‘Browse’ option and select the folder that houses your
-repository.</li>
-<li>Select ‘Create project’</li>
-</ol>
+Rstudio and spin up an R project for this repository - using the same
+procedure we outlined earlier in the tutorial.</p>
 <p>If you would like, you could commit this newly created
 <code>&lt;repository-name&gt;.Rproj</code> file to the
 <code>tidy-up-repo</code> branch.</p>
