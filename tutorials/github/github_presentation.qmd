@@ -237,3 +237,18 @@ Example: Mason want's to make a new function for his `autoOcc` R package. To do 
 - Happens when you try to merge branches and they have conflicting commits.
   + Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.
   
+## Don't store everything on GitHub
+::: {.incremental}
+- Can't store files > 100 Mb on GitHub (so if you have big datasets you may need a workaround).
+- Don't store files on the cloud that already live there (e.g., large spatial data files), but provide documentation on how to find those files!
+- Don't store sensitive information in public repositories (e.g., API keys, passwords, etc.). GitHub has a way to use those safely.
+:::
+
+## It is really easy and free to archive your code and create a DOI
+- GitHub interfaces with Zenodo, which is an open repository operated by CERN.
+- After connecting the two, you can archive and generate a DOI for a given
+repository in minutes.
+- Archiving code and data is becoming increasingly common when papers get 
+published, so you may as well start getting familiar with this process.
+
+  
