@@ -328,7 +328,7 @@ file.edit("./R/simulate_data.R")
 
 If you already know about relative pathing (i.e., the `.` in the filepath above), feel free to skip past the next couple of paragraphs enclosed in some header lines. Otherwise, read on!
 
-=====
+---
 
 The dot notation in the filepath above  represents 'from my current working directory.' What does that mean? In R, your working directory represents the location on your computer that R
 uses to read and write files. If you want to check what your working
@@ -342,7 +342,7 @@ only time I encourage absolute paths is when using data that you know will not
 be stored in your repository (e.g., a spatial data layer). In that case, you
 simply want to make sure you provide sufficient metadata (e.g., in your readme file, in comments in your code, etc.) that the user will need to download the given data layer and modify specific parts of the code base to ensure the code can be ran.
 
-===
+---
 
 So, back to our example, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `simulate_data.R`'.  
 
