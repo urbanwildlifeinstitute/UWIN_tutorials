@@ -326,9 +326,11 @@ a file in the R sub-folder using the R console you can use the `file.edit()` fun
 file.edit("./R/simulate_data.R")
 ```
 
-If you already know about relative pathing (i.e., the `.` in the filepath above), feel free to skip past the next couple of paragraphs enclosed in some header lines. Otherwise, read on!
+If you already know about relative pathing (i.e., the `.` in the filepath above), feel free to skip past the next two paragraphs enclosed in some header lines. Otherwise, read on!
 
 ---
+
+*A brief note on relative file paths and reproducible workflows*
 
 The dot notation in the filepath above  represents 'from my current working directory.' What does that mean? In R, your working directory represents the location on your computer that R
 uses to read and write files. If you want to check what your working
