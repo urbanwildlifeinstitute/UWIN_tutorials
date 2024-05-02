@@ -338,17 +338,21 @@ directory is, you can use the `getwd()` function in R.
 
 How does R figure out what your working directory should be when you open up Rstudio? If you do not have an R project opened, Rstudio has a default working directory it will use (this can be checked and changed under Tools > Global options > General). If you do have an R project opened (and you should), then Rstudio will use the location of
 the `.Rproj` file you selected as the working directory. As your `.Rproj` file is located in the main folder of your repository, that means that so long as you
-code filepaths relative to this location your code can easily run across multiple computers. Essentially, to make your code more reproducible (i.e., able to run on multiple computers) you should avoid using absolute file paths (e.g., `C:/Users/mfidino/Documents/GitHub/my-cool-repo/R/simulate_data.R`) when you could 
+code filepaths relative to this location your code can easily run across multiple computers. Essentially, to make your code more reproducible (i.e., able to run on multiple computers) you should avoid using absolute file paths (e.g., `C:/Users/mfidino/Documents/GitHub/uwin-example-repo/R/simulate_data.R`) when you could 
 instead use a relative path instead (e.g., `./R/simulate_data.R`). Personally, the
 only time I encourage absolute paths is when using data that you know will not
 be stored in your repository (e.g., a spatial data layer). In that case, you
-simply want to make sure you provide sufficient metadata (e.g., in your readme file, in comments in your code, etc.) that the user will need to download the given data layer and modify specific parts of the code base to ensure the code can be ran.
+simply want to make sure you provide sufficient metadata (e.g., in your readme file, in comments in your code, etc.) that the user will need to download the given data layer and modify specific the file paths to ensure the code can be ran.
 
 ---
 
-So, back to our example, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `simulate_data.R`'.  
+So, now that you created your R script. 
 
-Copy and paste this code into the script, save it, and run it.
+Copy and paste this code into the script, save it, and run it. If you have never 
+ran code in an R script before, simply move your cursor to the line of code you
+want to run in the script and use run command, which is CTRL+Enter for Windows/Linux or Cmd+Enter for Mac OS X. Rstudio will advance the cursor to the next chunk of code and you can keep using the run command to send that code to your console. Conversely, you can run the entire script
+by either sourcing it (i.e., `source("./R/simulate_data.R")`) or selecting all 
+the code and using the run command.
 
 ```R
 # Simulate data for a linear regression
@@ -364,7 +368,7 @@ n <- 100
 set.seed(145)
 x <- rnorm(n)
 
-
+# The linear predictor
 y_deterministic <- intercept + slope * x
 
 # add noise
