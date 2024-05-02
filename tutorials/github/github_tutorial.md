@@ -446,4 +446,68 @@ can occur when:
 2. You modify the same script multiple times across branches made off the main branch.
 
 Conflicts are always a pain to address and can take considerable time to fix.
-So, let's create an example of one to show how you can debug them in Rstudio.
+So, let's create an example of one to show how you can debug them in Rstudio. 
+Follow these steps in order:
+
+1. Create a new branch in your example repository titled `my-first-git-conflict.` and publish that branch to the remote repository.
+2. While in the `my-first-git-conflict` branch, open up `./R/simulate_data.R`.
+3. At the top of the script add the following comment:
+
+```R
+# I added this comment on the my-first-git-conflict branch
+```
+
+and then save your script.
+4. Using the GitHub Desktop GUI, commit and push this code change to the `my-first-git-conflict` branch.
+5. Switch over to the main branch. After selecting the main branch, you need to
+make sure your local copy of the repository is caught up with this branch. To do
+so, you can either make a pull on the GitHub Desktop GUI (i.e., Repository > Pull) 
+or click on the tab that says 'Fetch Origin` to the right of the branch dropdown.
+6. Go back to Rstudio. If you still have `./R/simulate_data.R` open you will see
+that the comment you made on step 3 is gone. If not, open up the script again. At the top of the script add the following comment:
+
+```R
+# I added this comment on the main branch
+```
+
+and then save your script.
+7. Using the GitHub Desktop GUI, commit and push this code change to the `main` 
+branch.
+8. Visit the remote repository on your Internet browser and generate a pull request
+to merge `my-first-git-conflict` into the `main` branch. When you create the
+pull request you should already see the page say <span style="color:red">X Can't automatically merge </span>, but make the pull request anyways.
+9. The merge conflict that we made is very minimal, as such, we can handle
+this via GitHub's web editor. To do so, click on the resolve conflicts button,
+which will pull up the associated scripts that have merge conflicts. In this
+case, that will look something like:
+
+```R
+<<<<<<< my-first-git-conflict
+# I added this comment on the my-first-git-conflict branch
+=======
+# I added this comment on the main branch
+>>>>>>> main
+
+# Simulate data for a linear regression
+```
+
+When looking at Git conflicts, Git will use what they call 'conflict markers'
+to denote the conflicts. The arrow conflict markers often contain information on which branch a piece
+of code came from. So in our case, above the `======` is code from `my-first-git-conflict` and below is code from `main`. Also note thata script can have multiple conflicts, and if you
+can use the web editor, GitHub will tell you how many conflicts you need to fix in each script.
+10. Resolve the conflicts. This means manually deleting the code that should not
+be there and keeping the rest. This also means removing the conflict markers as 
+well! It does not matter here which piece of code you keep, and for this example,
+you could just delete that entire code chunk from both branches.
+11. Once you are done resolving the conflicts, click the 'resolve conflicts' button and then click 'commit merge.' This will return you back to your pull request, which you can now successfully merge!
+12. After merging your pull request, delete the `my-first-git-conflict` branch.
+
+If your git conflicts are too complex to be fixed via the web editor, then you 
+usually have to use the git console (GitHub will provide the code you need
+to run). We are not going to provide an example of this, as it involves more advanced GitHub techniques, but if you want additional information on this you can
+[read about it here](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts). 
+
+And with that, you have completed the UWIN GitHub and reproducibility workshop!
+If you have any questions, comments, or suggestions to improve this workshop, please
+create an issue on GitHub [here](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/issues). Conversely,
+feel free to fork the repository and make a pull request with suggested edits!
