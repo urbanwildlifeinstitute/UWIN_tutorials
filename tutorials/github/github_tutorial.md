@@ -11,7 +11,7 @@ With these caveats in mind, let's get started with GitHub!
 
 ### Creating a GitHub account
 
-Before using GitHub, there's a pretty important initial step: **you need to sign up for a GitHub account!** If you have already done this, feel free to proceed to the next section.
+Before using GitHub, there's a pretty important initial step: **you need to sign up for a GitHub account!** If you have already done this, feel free to proceed to the next section. If not, please follow the instructions below.
 
 First, navigate to github.com. You should see the following:
 
@@ -32,7 +32,7 @@ This is your *dashboard*. We won't go into a ton of detail about this, but your 
 
 ### Creating a GitHub Repository
 
-In the previous image, you likely noticed the little green button that says"New". Go ahead and click on that - to create your first github repository!
+In the previous image, you likely noticed the little green button that says "New". Go ahead and click on that - to create your first github repository!
 
 You should see something that looks like this:
 
@@ -41,7 +41,7 @@ You should see something that looks like this:
 </div>
 
 
-As you can see in this image, fill in a name (I suggested one related to this tutorial, but it doesn't really matter!). Then, go ahead and click "add read me" - we will describe that a bit further below.
+As you can see in this image, fill in a name (I suggested one related to this tutorial, but it doesn't really matter as long as the name is not offensive!). Then, go ahead and click "add read me" - we will describe that a bit further below.
 
 Towards the bottom of this page, you should see a few other options:
 
@@ -50,7 +50,9 @@ Towards the bottom of this page, you should see a few other options:
 </div>
 
 
-The .gitignore allows you to tell github *not* to track certain files in local repository folders, which can be useful. 
+The `.gitignore` file allows you to tell github *not* to track certain files in local repository folders, which can be useful (more on this later). There are programming
+language specific `.gitignore` template files that we suggest using (there even
+one for `R`).
 
 Note that you can also set a license for your repository! These outline usage rights, limitations, and terms for your repository.
 
@@ -180,7 +182,8 @@ You should see all of the files created during the course of creation of the R p
 
 ### Managing repositories
 
-Managing a repository can range from simple to complex, and typically depends on two things. First, the number of users contributing to a project can increase complexity. In the simplest case, a single user may be pushing commits to the main branch of a private repository. When this happens, you may not need to put many rules in place to avoid issues using GitHub. With multiple users, however, it is helpful to put some rules in place so that everyone is aware of how to contribute. This could include using branches to develop parts of the code base, conducting code reviews for pull requests, and taking some time to provide documentation on how to contribute. Second, the 'product' you are working on can influence how you manage your repository. If your repository is meant to house some data and code for an analysis, then you may not worry as much about best practices so long as the code runs. If your repository is meant to house a website, a shiny app, or something else people may use without running code, then you may want to ensure you have protections in place to decrease the chances of breaking your 'product.'
+Managing a repository can range from simple to complex, and typically depends on two things. First, the number of users contributing to a project can increase complexity. In the simplest case, a single user may be pushing commits to the main branch of a private repository. When this happens, you may not need to put many rules in place to avoid issues using GitHub. With multiple users, however, it is helpful to put some rules in place so that everyone is aware of how to contribute. This could include using branches to develop parts of the code base, conducting code reviews for pull requests, and taking some time to provide documentation on how to contribute. Second, the 'product' you are working on can influence how you manage your repository. If your repository is meant to house some data and code for an analysis, then you may not worry as much about best practices so long as the code runs. If your repository is meant to house a website, a shiny app, or something else people may use without running code, then you may want to ensure you have protections in place to ensure you always have a working version of the 'product' 
+running while you work on the code base.
 
 In our experience, GitHub management for ecologists is often quite simple as most
 research projects typically revolve around either one or a small number of people doing the data analysis. Regardless, even when working on our own projects we often still use a lot of GitHub's features as it is easier. In the section below we'll cover how to use a number of GitHub's features via the GitHub Desktop GUI.
@@ -205,14 +208,14 @@ that is something you know how to use. If not, look it up later, regular express
 #### Creating and using branches
 
 As a reminder, branches are contained copies of your repository where you can 
-safely create new features, fix bugs, or even try out new ideas for a project.
+safely create new features, fix bugs, or try out new ideas for a project.
 There are no limits to how many branches you can make, and branches can be made
 off of any other branch (e.g., a branch off a branch off a branch). For a small
 team of collaborators, branches will be by far the easiest way to collaborate on a project. You can add people as collaborators to a repository on it's settings page, which can be accessed via an Internet browser. 
 
-To view your branches on the GitHub GUI you simply need
+To view your branches on the GitHub GUI you just need
 to select the correct repository and then click the current branch dropdown. For
-example, while working on this tutorial Nate and I generated a `github-workshop`
+example, while working on this tutorial we generated a `github-workshop`
 branch off of the main branch of the `UWIN_tutorials` repository.
 
 <div align="center">
@@ -240,9 +243,9 @@ Fortunately, if you either try to switch branches or create a new branch with un
 
 
 If needed, branches can be renamed. Likewise, branches can be deleted. Typically,
-we delete branches after merging them into the main branch. For example, if your branch was made to create a new R function for your analysis, then you won't need
+we delete branches after merging them into another branch. For example, if your branch was made to create a new R function for your analysis, then you won't need
 that branch anymore after the function is available in the main branch. There are
-times when you may not want to delete a branch. For example, lots of repositories will have a `dev` branch that must be merged into first. After testing, changes made to the `dev` branch can then be pushed into the `main` branch with a pull request. You will not likely encounter this often when using GitHub for your analysis, but we bring it up here for completeness.
+times when you may not want to delete a branch. For example, lots of repositories will have a `dev` branch that must be merged into before the `main` branch. After testing, changes made to the `dev` branch can then be pushed into the `main` branch with a pull request. This is often done so developers can test out the functionality of new code in a production-like environment. As such, in this case the `dev` branch would never get deleted after merging with the `main` branch.
 
 #### Forking repositories
 
@@ -251,9 +254,11 @@ Forking a repository is typically done for one of two reasons:
 1. You want to contribute to an open source project. Forking serves as a way to test out changes to the code of a project without affecting the upstream repository in any way. In this case, the original maintainer of a project could evaluate whether proposed changes from your forked repository are acceptable, and if so, merge them into the open source project. As such, forking makes it so people can collaborate on projects without having to share 'collaborator' status on projects, which may is especially helpful for open source projects.
 2. You want to use the code in a repository as the foundation for a project you
 are building. For example, you may want to fork a repository that contains 
-the foundation for a personal website.
+the foundation for a personal website. In that case, you could fork the initial repository, make changes to your fork, and use your forked repository to create
+your website. In this example, you are likely forking a repository with no intent on trying to suggest code changes to the original upstream repository. That is totally
+okay and encouraged for stuff like this!
 
-So, what is the difference between forking and branching? As their names suggest, forking and branching are VERY similar to one another. Forking, however, creates an independent copy of a repository, while branching means you develop in parallel within the same repository. 
+So, what is the difference between forking and branching? As their names suggest, forking and branching are VERY similar to one another. Forking, however, creates an independent copy of a repository, while branching means you can develop in parallel within the same repository. 
 
 In practice, you will most often using branching instead of forking. But if you 
 did want to fork a repository, you can do that through the GitHub GUI by:
@@ -281,26 +286,24 @@ for these workshops.
 
 #### Pull requests
 
-Pull requests are how you merge code from another branch or forked repository into another.
+Pull requests are how you merge code from one branch or forked repository into another.
 
 As such, a pull request requires two key components.
 
 1. The name of the branch that has the code changes you want to merge.
 2. The name of the branch where you want the changed code to get merged into.
 
-While you can make pull requests through the GitHub GUI, in practice I've found
+While you can make pull requests through the GitHub GUI, in practice we've found
 it far easier to create them via the Internet browser. So, to make our pull
 request, let's modify the repository you created at the start of this tutorial
-so that we can follow some best practices for a GitHub project. Briefly, we
-are going to create an R project file and a set of sub-folders to store different
-components of an analysis (e.g., code, data, etc.). Thus, before we even make a pull request, let's create a new branch off of this repo called `tidy-up-repo` (see above for a refresher for how to switch among repositories and creating a branch off of a repository). 
+so that we can follow some best practices for a GitHub project. As you have already set up an R project for this repo, our next steps are going to be to create a set of sub-folders to store different
+components of an analysis (e.g., code, data, etc.) and then populate them with some code and data. Thus, before we even make a pull request, let's create a new branch off of your repository called `tidy-up-repo` (see above for a refresher for how to switch among repositories and creating a branch off of a repository). 
 
-After you have made a branch off the repository and have ensured your local copy is working off of it (i.e., `tidy-up-repo` is selected as your current branch on the GitHub GUI), let's go over to Rstudio and spin up an R project for this repository - using the same procedure we outlined earlier in the tutorial. 
+After you have made a branch off the repository and have ensured your local copy is working off of it (i.e., `tidy-up-repo` is selected as your current branch on the GitHub GUI), go ahead and open up Rstudio.
 
-If you would like, you could commit this newly created `<repository-name>.Rproj` file to the `tidy-up-repo` branch.
 
 In Rstudio it is very easy to switch between projects, just click the project icon
-in the top right corner, select `Open project` and then locate and click on the R project file you want to open. However, as you just made the project file, you likely already have RStudio opened up with the project activated. From here,
+in the top right corner, select `Open project` and then locate and click on the R project file you want to open. However, as you just made the project file earlier, you likely already have RStudio opened up with the project activated (Rstudio defaults to using the last opened project when opened). From here,
 we are going to create a few sub-folders in this project. Go to your R console (i.e., the pane in Rstudio where code gets ran) and run the following lines of code:
 
 ```R
@@ -310,18 +313,40 @@ dir.create("plots")
 
 ```
 
-The names of these sub-folders should be pretty self-explanatory. You put your
-R code in the R folder, data in the data folder, and any plots you produce goes into the plots folder. I always make these folders when starting a new analysis project. If you end up using other programming languages you may also want to create sub-folders for them. For example, if you wrote up some models in either `NIMBLE` or `JAGS`, then you may want a nimble of jags folder in your project.
+The `dir.create()` function can be used to create a directory (i.e., a folder), and requires you input the number of the folder you want to make as a character object. The names of these sub-folders should be pretty self-explanatory. You put your
+R code in the R folder, data in the data folder, and any plots you produce goes into the plots folder. I always make these folders when starting a new analysis project. If you end up using other programming languages you may also want to create sub-folders for them. For example, if you wrote up some models in either `NIMBLE` or `JAGS`, then you may want a nimble of jags folder in your project. Likewise,
+if you did some of your data processing in python, then it would make sense to
+have a `python` sub-folder.
 
 Finally, just to show how relative pathing works, let's create an R script within
-the R sub-folder that we can use to create some fake data and plot it.
+the R sub-folder that we can use to create some fake data and plot it. To create
+a file in the R sub-folder using the R console you can use the `file.edit()` function. 
 
 ```R
 file.edit("./R/simulate_data.R")
 ```
 
-Briefly, the dot notation here represents 'from my current working directory.' So,
-in this case, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `simulate_data.R`'. Copy and paste this code into the script, save it, and run it.
+If you already know about relative pathing (i.e., the `.` in the filepath above), feel free to skip past the next couple of paragraphs enclosed in some header lines. Otherwise, read on!
+
+=====
+
+The dot notation in the filepath above  represents 'from my current working directory.' What does that mean? In R, your working directory represents the location on your computer that R
+uses to read and write files. If you want to check what your working
+directory is, you can use the `getwd()` function in R. 
+
+How does R figure out what your working directory should be when you open up Rstudio? If you do not have an R project opened, Rstudio has a default working directory it will use (this can be checked and changed under Tools > Global options > General). If you do have an R project opened (and you should), then Rstudio will use the location of
+the `.Rproj` file you selected as the working directory. As your `.Rproj` file is located in the main folder of your repository, that means that so long as you
+code filepaths relative to this location your code can easily run across multiple computers. Essentially, to make your code more reproducible (i.e., able to run on multiple computers) you should avoid using absolute file paths (e.g., `C:/Users/mfidino/Documents/GitHub/my-cool-repo/R/simulate_data.R`) when you could 
+instead use a relative path instead (e.g., `./R/simulate_data.R`). Personally, the
+only time I encourage absolute paths is when using data that you know will not
+be stored in your repository (e.g., a spatial data layer). In that case, you
+simply want to make sure you provide sufficient metadata (e.g., in your readme file, in comments in your code, etc.) that the user will need to download the given data layer and modify specific parts of the code base to ensure the code can be ran.
+
+===
+
+So, back to our example, we are telling R 'from my current working directory, make an R script within the `R` sub-folder titled `simulate_data.R`'.  
+
+Copy and paste this code into the script, save it, and run it.
 
 ```R
 # Simulate data for a linear regression
