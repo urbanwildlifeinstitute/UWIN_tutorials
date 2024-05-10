@@ -30,7 +30,10 @@ We are going to start by creating a Project in RStudio. A Project is essentially
 
 Go to RStudio and click on File \> New Project.
 
-![](images/new_project.png){width="3.81in"}
+<p float="center">
+  <img src="./images/new_project.png" width="500" height="auto" />
+
+</p>
 
 Now you see three options:
 
@@ -44,7 +47,11 @@ For our own project, let's go ahead and choose 'New Directory' and let's name ou
 
 You will have a series of directories inside your project, depending on the type of work that you'll be working on. Some people recommend following the same structure that you would use if creating an r package. However, I think that at a minimum, you could have the following structure:
 
-![](./images/dir_str.png){width="2in"}
+<p float="center">
+  <img src="./images/dir_str.png" width="500" height="auto" />
+
+</p>
+
 
 -   **Data** is a directory that has all your original .csv files with the data that you will use in your analysis.
 -   **Functions** is a directory that houses all the functions you create and that you will be using throughout your analysis. Some people include this directory as a subdirectory of R.
@@ -92,8 +99,10 @@ It's important to note that `fig-01.png` is not the same as `fig-1.png` because 
 ```{r, echo=TRUE, eval = FALSE}
 df %>% select(col1)
 ```
+<p float="center">
+  <img src="./images/magrittr_pipe.png" width="500" height="auto" />
 
-![](./images/magrittr_pipe.png){height="2.5in" fig-align="center"}
+</p>
 
 ## Native pipe in base R
 
@@ -101,7 +110,10 @@ df %>% select(col1)
 
 -   You can activate this native pipe by going to Tools \> Global options \> Code and selecting that option.
 
-![](./images/pipe.png){height="3in" fig-align="center"}
+<p float="center">
+  <img src="./images/pipe.png" width="500" height="auto" />
+
+</p>
 
 -   You can read more about the differences between both pipes [here](https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/).
 
@@ -142,7 +154,10 @@ First things first, let's see the data that we are going to be working with. To 
 
 However, there is something we need to be aware of before we read in the file. The report that the UWIN database generates has this information at the top of the document on the first 3 rows. We will need this information later but not for the main data set, so we are going to create two data frames, one with the information on the top rows and one with the info starting on row 4:
 
-![](./images/top_csv.png)
+<p float="center">
+  <img src="./images/top_csv.png" width="500" height="auto" />
+
+</p>
 
 ```{r}
 occ.data <- readr::read_csv(file = './data/OccupancyReport.csv', 
@@ -172,7 +187,10 @@ glimpse(occ.info)
 
 Let's look at the column names. They start with a capital letter and are separated by an underscore `_`. Let's review the current name conventions:
 
-![](./images/case_con.png){width="3in"}
+<p float="center">
+  <img src="./images/case_con.png" width="500" height="auto" />
+
+</p>
 
 This is important to remember so that you (and your team) can always stick to a name convention to make things easier for everyone. Whichever you use, DO NOT USE A SPACE TO SEPARATE WORDS.
 
