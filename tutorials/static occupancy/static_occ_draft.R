@@ -5,6 +5,7 @@ library(ggplot2)
 # Helpful references
 # https://doi90.github.io/lodestar/fitting-occupancy-models-with-unmarked.html
 # file:///E:/LPZ%20Coordinator/uwin_R/Lesson_6_Occupancy%20modeling.pdf
+# https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions
 
 # Tutorial guide
 # https://github.com/ourcodingclub/tutorials-in-progress/blob/master/Tutorial_publishing_guide.md
