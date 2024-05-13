@@ -6,7 +6,7 @@
 
 -   After today's lecture, you'll be able to:
 
-    -   Understand the structure of tidy data\
+    -   Understand the structure of tidy data
     -   Understand the main tidy verbs in dplyr to help tidy data
     -   Organize and clean data downloaded from UWIN to run a single species single season occupancy analysis
 
