@@ -2,6 +2,10 @@
 
 *Authors: Gabriela Palomo & Hannah Griebling*
 
+## link to the presentation
+
+[You can find the presentation following this link](https://gabspalomo.github.io/slides/data_manipulation/ppt/ppt_data_manipulation.html#/title-slide)
+
 ## Learning objectives
 
 -   After today's lecture, you'll be able to:
