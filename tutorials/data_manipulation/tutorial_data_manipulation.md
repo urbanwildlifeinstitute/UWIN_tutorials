@@ -19,7 +19,7 @@ library(dplyr) # grammar of data manipulation using set of verbs; tidyverse
 library(tidyr) # tidy data; tidyverse
 library(readr) # reads csv files; tidyverse
 library(magrittr) # has the original pipe operator %>%
-library(janitor)
+library(janitor) # to clean names of variables 
 ```
 
 ## Organize the project and directory
@@ -177,6 +177,7 @@ Now let's extract the Start and End dates, we may need them later on.
 ```{r}
 occ.info <- read_csv(file = './data/OccupancyReport.csv', 
                         n_max = 1) |> 
+  # Selecting the columns we want
   select('Start Date', 'End Date')
   
 glimpse(occ.info)
@@ -200,6 +201,12 @@ This is important to remember so that you (and your team) can always stick to a 
 You can leave the column names as is, but I want to show you a super handy function in package `janitor` that can help us rename all the columns to fit one naming convention. The options for `case` are 'snake', 'lower_camel', 'title', 'upper_camel'.
 
 ```{r}
+# clean_names has the following cases: 
+# "snake"
+# "lower_camel"
+# "upper_camel"
+# "title" 
+# detect abbreviations with abbreviations = c()
 occ.data <- janitor::clean_names(dat = occ.data, 
                                  case = 'snake')
 glimpse(occ.data)
@@ -208,7 +215,11 @@ glimpse(occ.data)
 Have you noticed that we have two species in our data?
 
 ```{r}
-unique(occ.data$species)
+# distinct keeps only unique rows from a data frame 
+# .keep_all = TRUE let's us keep all the columns in the data frame 
+# .keep_all = FALSE to only keep the column we specified in distinct. Deletes the rest. 
+occ.data |> 
+  dplyr::distinct(species)
 ```
 
 ## Dividing data into occasions
@@ -220,8 +231,10 @@ We begin by dividing our data into occasions. In this case we have 36 days of sa
 ```{r}
 # Separate only the days 
 days_oc <- occ.data |> 
-  filter(species == 'Coyote')|> 
-  select(contains('day_')) 
+  # filter only the rows that contain Coyote
+  dplyr::filter(species == 'Coyote')|> 
+  # select variables that contain the string 'day_'
+  dplyr::select(contains('day_')) 
   
 # Calculate number of weeks or occasions based on 7 day groups 
 n_weeks <- ceiling(ncol(days_oc)/7)
@@ -254,14 +267,21 @@ data.weeks <- t( # this transposes our matrix
 
 # Rename columns to match number of week 
 data.wk <- data.weeks |> 
+  # coerce to data frame because data.weeks is a matrix 
   as.data.frame() |> 
-  rename_with(~paste0('week_', 1:n_weeks))
+  # dplyr::rename() let's us rename any column in a ata frame 
+  # syntax: new_name = old_name
+  # rename_with() renames columns using a function 
+  dplyr::rename_with(~paste0('week_', 1:n_weeks))
 
 # Now we can combine the species, season, site, latitude, longitude from coyote.data to our occasions.
 data.occ <- occ.data |> 
-  filter(species == 'Coyote')|> 
-  select(species, season, site, latitude, longitude) |> 
-  cbind(data.wk)
+  # we filter the rows that only include Coyote
+  dplyr::filter(species == 'Coyote')|> 
+  # we select these columns to be in the final data frame 
+  dplyr::select(species, season, site, latitude, longitude) |> 
+  # bind dataframes by column making a wider result 
+  dplyr::bind_cols(data.wk)
 
 ```
 
@@ -339,7 +359,7 @@ covariates.sc <- covariates |>
   # rename the columns you selected and add _scaled at the end of each one
   rename_with(~paste0(.x, '_scaled')) |> 
   # combine all the columns here and with the file covariates
-  cbind(covariates) |> 
+  dplyr::bind_cols(covariates) |> 
   # reorganize the columns in the order you want
   relocate(site, latitude, longitude, forest, ag, dist_water, forest_scaled, ag_scaled, dist_water_scaled)
 
@@ -377,19 +397,23 @@ library(unmarked)
 
 # Detection data must only include the columns with the occasions
 y <- data.occ |> 
+  # select the columns with detection only 
   select(week_1:week_6)
 
 # Site covariates must only be the columns with the scaled covariates   
 siteCovs <- covariates.sc |> 
+  # select the columns with scaled values of covariates only 
   select(forest_scaled:dist_water_scaled)
 
 # You need a list of matrices for the observation covariates, 
 # And each matrix must be named 
 obsCovs <- list(temp_avg=temp_avg)
 
-occu.df <- unmarkedFrameOccu(y = y, 
-                             siteCovs = siteCovs, 
-                             obsCovs = obsCovs)
+# Put your detection, spatial covariates, and observational covariates into 
+# an unmarkedFrameOccu 
+occu.df <- unmarked::unmarkedFrameOccu(y = y, # detection
+                                       siteCovs = siteCovs, # spatial covariates 
+                                       obsCovs = obsCovs) # observational covariates 
 ```
 
 ## END
