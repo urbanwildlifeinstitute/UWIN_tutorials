@@ -195,7 +195,7 @@ raccoon_wk <- left_join(raccoon_wk, landcover, by = 'Site') %>%
 ```
 Be mindful that it is OK to have missing or NA observation data (i.e., detection histories) BUT for each observation, there must be a covariate value otherwise this data will not be considered in the model and we won't be able to compare models using AIC. We only have landcover data for 119/170 sites, so these sites we do not have covariate data for are dropped using `na.omit()`.
 
-We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. The help file for this fucntion provides all the necessary details about how to format our data for analysis.
+We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. The help file for this function provides all the necessary details about how to format our data for analysis.
 
 ```R
 vignette("unmarked")
