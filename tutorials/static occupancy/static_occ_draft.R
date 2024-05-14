@@ -275,3 +275,7 @@ urban_model <- occu(~1 # detection
                     ~ urban_scale, # occupancy
                     data = raccoon_occ_urban)
 urban_model
+
+
+## Testing online .md tutorial
+
