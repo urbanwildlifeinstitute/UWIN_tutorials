@@ -198,6 +198,7 @@ Be mindful that it is OK to have missing or NA observation data (i.e., detection
 We will be using the `unmarked` R package to model our data. Therefore, our data has to be formatted to `occu()` model fitting function within the package using a `unmarkedFrameOccu()` dataframe. The help file for this fucntion provides all the necessary details about how to format our data for analysis.
 
 ```R
+vignette("unmarked")
 ?unmarkedFrameOccu()
 ```
 We see there is one necessary argument and two optional arguments we can specify to run the `occu()` function: `y`, `siteCovs`, and `obsCovs`. Looking at the help file we need to supply our detection histories (`y`) and can supply site covariates to estimate occupancy (`siteCovs`) and detection covariates to estimate detection probability (`siteCovs`). Remember assumptions 1 & 2 from above? Occupancy and detection probability are constant across sites or visits, unless they are explained by covariates. For our study, we believe that our detection probability is constant, but raccoon occupancy will be explained by tree cover and water. Let's continue formatting our data to model an occupancy model based on this hypothesis.
