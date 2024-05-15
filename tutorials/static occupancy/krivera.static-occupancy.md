@@ -128,15 +128,16 @@ By glancing at our environment, we see that this data contains information from 
 # Let's confirm that there are no repeated sites (note there are 170 observations)
 length(unique(raccoon$Site))
 
-# Great, no repeats! Now let's collapse our data into 6-day sampling occasions. Let's grab all the columns that start with day...
+# Great, no repeats! Now let's collapse our data into 6-day sampling occasions.
+# Let's grab all the columns that start with day...
 day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
 
 # split them into six day groups...
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
 
-# and write a function that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
-
+# and write a function that keeps each occasion with all NA's as such and those
+# with all 0's as 0, and those with at least 1 detection, as 1
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
   for(i in 1:length(groups)){
@@ -163,13 +164,13 @@ week_summary <- t( # this transposes our matrix
 # Now update names
 colnames(week_summary) <- paste0("Week_",1:n_weeks)
 
-# drop visits
+# drop visits from data.frame
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 
 # and add occasions
 raccoon_wk <- cbind(raccoon_wk, week_summary)
 ```
-Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We can either combine the remainder day into the fifth occasion or simply drop that day. For now, we will drop the last sampling day.
+Now, one issue that may arise from grouping occasions on a specific number of days is that when occasion lengths don't evenly break down into our total sampling days, we may have uneven occasions lengths as seen above (6 occasions in 31 days). We could combine the remainder day into the fifth occasion or simply drop that day. When making these types of decisions, it's important to consider the biological significance and how it may impact the outcome of your analysis. For now, we will drop the last sampling day. 
 
 ```R
 raccoon_wk <- raccoon_wk %>% 
@@ -186,7 +187,7 @@ head(landcover)
 colnames(raccoon_wk)
 colnames(landcover)
 
-# we'll go ahead and rename 'sites' to 'Site' in the 'landcover' dataset
+# we'll go ahead and rename 'sites' to 'Site' in the 'landcover' dataset so these data.frame can communicate
 landcover <- rename(landcover, Site = sites)
 
 # Now we can join our datasets and drop NA's. 
@@ -209,7 +210,6 @@ y <- raccoon_wk %>%
 
 siteCovs <- raccoon_wk %>% 
   select(c(water, forest))
-
 ```
 We should also examine our covariates and note their structure, scale, and distribution.
 ```R
@@ -301,7 +301,7 @@ This occupancy model is fit with a logit-link function, thus our estimates are g
 plogis(occ_error)
 plogis(det_error)
 ```
-How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy. 
+How about **naive occupancy**? You may have heard of this term before and it simply means the raw estimate without accounting for imperfect detection. This is calculated by counting the number of sites where the species was observed and dividing that number by the total number of sites. Note that this value should always be smaller than the estimated occupancy because it is not accounting for imperfect detection. 
 
 ```R
 # Our naive occupancy
@@ -331,7 +331,7 @@ Since we want to make a 'clean' or pretty plot, we will want to use the real ran
 # recreate 'clean' data for plotting later
 forest_real <- c(0, 0.5)
 
-# Create a prediction dataframe and make sure to use the same covariate names as included in the occupancy model
+# Create a prediction data.frame and make sure to use the same covariate names as included in the occupancy model
 dat_plot <- data.frame(
   forest_scale = seq(forest_real[1], forest_real[2], length.out = 400),
   water_scale = 0 # zero because water has been scaled/centered
