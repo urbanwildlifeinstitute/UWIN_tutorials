@@ -116,7 +116,7 @@ As a reminder, you should have loaded the packages you needed at the very start 
 Start by loading in necessary libraries and `chicago_raccoon.csv`.  Assuming that `chicago_raccoon.csv` is within your working directory, then you can read in the data like so (for UWIN occupancy reports you have to skip the first three rows, this is not something you would have to do for every occupancy analysis).
 
 ```R
-setwd(".../tutorials/static occupancy") # update to your local folder containing project files
+setwd("./tutorials/static occupancy") # update to your local folder containing project files or create an R project which will navigate you to this folder
 raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3) 
 
 # Check out what data we're working with.
