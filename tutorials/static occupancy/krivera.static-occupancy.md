@@ -125,7 +125,7 @@ head(raccoon)
 By glancing at our environment, we see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
 
 ```R
-# Let's confirm that there are no repeated sites
+# Let's confirm that there are no repeated sites (note there are 170 observations)
 length(unique(raccoon$Site))
 
 # Great, no repeats! Now let's collapse our data into 6-day sampling occasions. Let's grab all the columns that start with day...
