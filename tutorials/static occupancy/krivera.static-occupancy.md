@@ -136,7 +136,7 @@ And split them into six day groups.
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
 ```
-Now we are ready to write a function (see [Data Manipulation Tutorial](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/data_manipulation) for more details) that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
+To group these occasions more efficiently, we can write a function (see [Data Manipulation Tutorial](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/data_manipulation) for more details) that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
 ```R
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
@@ -150,7 +150,9 @@ combine_days <- function(y, groups){
   }
   return(ans)
 }
-
+```
+Now that we made our function, we can apply it to our data.
+```R
 # Apply this function across rows (in groups of 6)
 week_summary <- t( # this transposes our matrix
   apply(
@@ -161,10 +163,10 @@ week_summary <- t( # this transposes our matrix
   )
 )
 
-# Now update names
+# update column names
 colnames(week_summary) <- paste0("Week_",1:n_weeks)
 
-# drop visits from data.frame
+# drop visits (days) from data.frame
 raccoon_wk <- raccoon[,-grep("^Day_", colnames(raccoon))]
 
 # and add occasions
