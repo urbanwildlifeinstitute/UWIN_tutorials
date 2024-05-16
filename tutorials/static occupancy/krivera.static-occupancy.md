@@ -127,17 +127,18 @@ By glancing at our environment, we see that this data contains information from 
 ```R
 # Let's confirm that there are no repeated sites (note there are 170 observations)
 length(unique(raccoon$Site))
-
-# Great, no repeats! Now let's collapse our data into 6-day sampling occasions.
-# Let's grab all the columns that start with day...
+```
+Great, no repeats! Now let's collapse our data into 6-day sampling occasionsby grabbing all the columns that start with day...
+```R
 day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
-
-# split them into six day groups...
+```
+Now we can split them into six day groups 
+```R
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
-
-# and write a function that keeps each occasion with all NA's as such and those
-# with all 0's as 0, and those with at least 1 detection, as 1
+```
+We can write a function (see [Data Manipulation Tutorial](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/data_manipulation) for more details) that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
+```R
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
   for(i in 1:length(groups)){
