@@ -182,10 +182,13 @@ raccoon_wk <- raccoon_wk %>%
 Though raccoons are well adapted to urban environments, we hypothesize that raccoon occupancy will be highest in proximity to forests and water sources given their preference for wooded and wet areas to den and forage. We will use the National Land Cover Database developed by the [United States Geological Survey](https://www.usgs.gov/centers/eros/science/national-land-cover-database) and join landcover covariates to our occasion data. These data were extracted using the `FedData` package in R. Learn more about mapping in the ['Detection Mapping'](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/Detection%20Mapping) tutorial. Column values are the percent landcover within 1000m of each camera site.  
 
 ```R
+# read in landcover data
 landcover <- read.csv("Chicago_NLCD_landcover.csv", head = TRUE)
 head(landcover)
-
-# Let's join this dataset to our raccoon data. First we need to make sure 'sites' are named the same to join these datasets
+```
+To get our raccoon data paired with the landcover data, we need to join our datasets. This can only be done by having a reference column which matches between both datasets. In our case, we can join the datasets based on the site names.
+```R
+# first we need to make sure 'sites' are named the same to join these datasets
 colnames(raccoon_wk)
 colnames(landcover)
 
