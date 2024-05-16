@@ -122,22 +122,21 @@ raccoon <- read.csv("chicago_raccoon.csv", head = TRUE, skip = 3)
 # Check out what data we're working with.
 head(raccoon)
 ```
-By glancing at our environment, we see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions.
+By glancing at our environment, we see that this data contains information from 170 sites. We can choose to consider each 'day' as a visit or, if our species are rare or hard to detect, we can collapse each visit into multiple days as an 'occasion'. Given the large 'zero' or 'unoccupied' occurrence of raccoons, we will collapse each visit into a ~6 day occasions. Let's frist confirm that there are no repeated sites (note there are 170 observations)
 
 ```R
-# Let's confirm that there are no repeated sites (note there are 170 observations)
 length(unique(raccoon$Site))
 ```
 Great, no repeats! Now let's collapse our data into 6-day sampling occasionsby grabbing all the columns that start with day...
 ```R
 day_cols <- raccoon[,grep("^Day_",colnames(raccoon))]
 ```
-Now we can split them into six day groups 
+And split them into six day groups. 
 ```R
 n_weeks <- ceiling(ncol(day_cols)/6)
 week_groups <- rep(1:n_weeks, each = 6)[1:ncol(day_cols)]
 ```
-We can write a function (see [Data Manipulation Tutorial](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/data_manipulation) for more details) that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
+Now we are ready to write a function (see [Data Manipulation Tutorial](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/tree/main/tutorials/data_manipulation) for more details) that keeps each occasion with all NA's as such and those with all 0's as 0, and those with at least 1 detection, as 1
 ```R
 combine_days <- function(y, groups){
   ans <- rep(NA, max(groups))
