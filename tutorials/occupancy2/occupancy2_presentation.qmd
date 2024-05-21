@@ -62,194 +62,23 @@ Mason Fidino and Austin Green
 :::
 
 
+## Autologistic occupancy models
 
-## How do researchers typically store files?
+- The most simple version of a dynamic occupancy model
+  + Estimates occupancy each time step
+  + No separate linear predictors for local colonization and extinction
+  + Well suited when you are interested in patterns of species occupancy (you most often are)
+  + Works far better than standard dynamic occupancy models when you have a smaller sample size (you most often do)
 
-::: columns
-::: {.column width="50%"}
-:::{.incremental}
-- `paper_draft.docx`
-- `paper_draft2.docx`
-- `paper_draft2_MF.docx`
-- `paper_final.docx`
-- `paper_final2.docx`
-- `paper_final_revision.docx`
-:::
-:::
-::: {.column width="50%"}
-::: {.incremental}
-![](./images/malcontent-worker.png)
-:::
-:::
+## The math in a nutshell
+
+::: incremental
+- For $i$ in $1,\dots,I$ sites
+- For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
+- Let $z_{i,t}$ be the occupancy state of your species
 :::
 
-## Why is this a problem?
-
-- How do you keep track of edits?
-- How do we handle "accidents"?
-- fundamentally, an issue with *data reproducibility*.
-
-## Why worry about data reproducibility?
-
-- We are currently experiencing a crisis of reproducibility in science!
-- In response to this, code review is now a required component of peer review for many journals.
-- Better, more reproducible code also makes it easier to standardize methodology.
-
-## Git and GitHub
-
-![](./images/git.png){width=20%}
-
-![](./images/github-mark.png){width=20%}
+::: incremental
 
 
-## What is Git? 
-
-![](./images/git.png){width=20%}
-
-- Started in 2005 - version control system for Linux developers
-- Now, one of the most commonly used **distributed version control systems**
-
-![https://git-scm.com/book/en/v2/images/areas.png](./images/git-scm-git-diagram.png){width=40%}
-
-## What is GitHub?
-
-![](./images/github-mark.png){width=30%}
-
-- GitHub is **an easier, user-friendly way to use Git online**
-- integrates with a number of other software platforms - including RStudio
-
-# A brief overview of GitHub terminology
-
-## Repository
-
-- **Definition**: essentially, a project directory - where code, documents, and everything associated with a project will live.
-- By default, typically contains a **README.md** file that describes the repository. 
-
-## Clone
-
-- **Definition**: the creation of a *local* copy of a *remote* repository.
-  + In other words, you are copying the *remote* repository stored in the cloud on GitHub to a folder of your choice on your computer (i.e., creating a *local* copy).
-  
-## Branch
-
-- **Definition**: Branches are used to isolate the development of code without affecting other parts of the code base.
-  + When you create a repository you have one branch
-  + New branches are created off an existing branch.
-  + Branches are used to develop features, fix bugs, or safely experiment with new ideas in a contained part of a repository.
-![](./images/git_branch_merge.png){width=100% align=center}
-
-## Branch (example)
-
-Nathan has some code for a project that works, but he wants to improve the code to make it run faster. To do so Nathan creates a branch titled `performance-tests` off of the main branch so he can try out different ways to improve the speed of his code without affecting the code in the `main` branch.
-
-## Commit
-- **Definition**: a summary of changes made to files within a repository on a given branch.
-- typically capture the following:
-  + a commit log, explaining the commit and its contributor(s)
-  + a unique hash ID (GitHub handles this for you).
-  + the **parent** commit - basically, where your commit came from!
-  + a summary of files that have changed
-  + In essence, a commit is the changes you made to your *local* copy of a repository, which you want to save and eventually send up to the *remote* repository.
-  + commit early, commit often!
-  
-## Push
-
-- **Definition**: when *local* commits are pushed to a branch on a *remote* repository.
-- What do we mean by this?
-  + you will likely be creating a commit on a local machine.
-  + after you create that commit, it will **not** be reflected in the remote repository until those changes are pushed.
-  + Commits records changes to the *local* repository.
-  + Pushes update the *remote* repository with commits you've made.
-
-## Pull
-
-- **Definition**: when *remote* changes on a branch are applied to your *local*, cloned repository.
-- What do we mean by this?
-  + if you are working on a repository collaboratively, others may make edits that are **not** initially reflected in your *local* repository. 
-  + when you pull from the remote repository, these remote changes are synced with your local directory.
-  + Not to be confused with pull requests, which are a different thing!
-
-## Pull Request
-
-- **Definition**: A pull request (PR) is a way to tell collaborators (or yourself)
-that the changes you pushed to a branch are ready for review. Think of a pull request as a staging area that you use before you merge one branch back into another.
-  + To set up a pull request, you have to select the branch with the code you changed and the branch you want to merge those changes into. 
-  + When working collaboratively, someone else reviews the pull request, discussion happens, and based on that some followup commits may be needed.
-  + Once approved, you can merge the feature branch into the other branch you selected.
-  
-## Pull Request (example)
-
-Example: Mason want's to make a new function for his `autoOcc` R package. To do so, Mason created a new branch, pushed commits to that branch, and when the function was ready made a pull request to merge the feature branch into the main branch.
-  
-  ![](./images/git_branch_merge.png){width=100% align=center}
-
-## fork 
-
-- **Definition**: A fork is a way to create a new repository based on a different repository you are (most often) not the owner of. 
-  + You can think of forks it as a branch off a repository you do not own. You can make changes to your forked repository and then submit a pull request to the
-  original project owner.
-  + As such, forks are used a lot when working on open source projects.
-  + Creating a fork is the easiest way to copy everything in someone else's repository.
-  + However, if you are working on a research project with a few *trusted* people it is often easier to set them up as collaborators instead of having them fork your repository, make a PR of changes, etc.
-  
-  
-# How to use GitHub in your projects (from most to least user friendly)
-
-## Use GitHub Desktop!
-
-::: {.incremental}
-- Found at https://desktop.github.com.
-- Provides a graphical user interface (GUI) to do pretty much everything you would need to do.
-- Can't handle complex Git commands, but 99.9% of researchers will not need them anyways.
-- There are a few other things that are a bit easier to do from your internet browser instead of the desktop GUI.
-  + Pull requests (i.e., merging branches)
-  + Changing settings
-  + Inviting collaborators to a repository
 :::
-
-## Link Rstudio with GitHub
-
-::: {.incremental}
-- Rstudio does provide a way to use GitHub within it's interactive developer environment (IDE)
-- Can be a little finicky
-- Not as general as GitHub desktop, so we suggest the GitHub Desktop GUI instead.
-:::
-
-## Git from the command line (GitHub CLI)
-
-::: {.incremental}
-- Bringing this up for completeness
-- Used to be the primary way you could use Git via GitHub
-- Do not suggest doing this when learning.
-- Sometimes needs to be used to resolve certain issues, but those are quite rare (and the GitHub Desktop GUI provides you with the command line code to run if needed).
-:::
-# Other things to know about GitHub
-
-## Privacy settings
-
-- Repositories can be public or private!
-  + Public repositories are viewable by everyone
-  + Private repositories are only viewable by yourself and collaborators you add to the repository
-  + For most research projects, start your repository as private. You can change them to public when you submit the paper for publication.
-
-## MERGE CONFLICTS!!!
-
-- The most annoying part of version control.
-- Happens when you try to merge branches and they have conflicting commits.
-  + Example: Nathan and Mason are working on a project with GitHub. Nathan does the right thing and creates a new branch to modify a data analysis script. Mason makes some changes to that same script and pushes them to the main branch. When Nathan makes a pull request to merge branches, Git will need your help to decide which changes to incorporate into a final merge.
-  
-## Don't store everything on GitHub
-::: {.incremental}
-- Can't store files > 100 Mb on GitHub (so if you have big datasets you may need a workaround).
-- Don't store files on the cloud that already live there (e.g., large spatial data files), but provide documentation on how to find those files!
-- Don't store sensitive information in public repositories (e.g., API keys, passwords, etc.). GitHub has a way to use those safely.
-:::
-
-## It is really easy and free to archive your code and create a DOI
-- GitHub interfaces with Zenodo, which is an open repository operated by CERN.
-- After connecting the two, you can archive and generate a DOI for a given
-repository in minutes.
-- Archiving code and data is becoming increasingly common when papers get 
-published, so you may as well start getting familiar with this process.
-
-  
