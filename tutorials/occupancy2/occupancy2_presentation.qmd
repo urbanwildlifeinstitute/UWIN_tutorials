@@ -78,7 +78,23 @@ Mason Fidino and Austin Green
 - Let $z_{i,t}$ be the occupancy state of your species
 :::
 
-::: incremental
+## The math in a nutshell
 
 
+- For $i$ in $1,\dots,I$ sites
+- For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
+- Let $z_{i,t}$ be the occupancy state of your species
+
+The probability of occupancy 
+
+## {auto-animate=true}
+
+::: {style="margin-top: 100px;"}
+Animating content
+:::
+
+## {auto-animate=true}
+
+::: {style="margin-top: 200px; font-size: 3em; color: red;"}
+Animating content
 :::
