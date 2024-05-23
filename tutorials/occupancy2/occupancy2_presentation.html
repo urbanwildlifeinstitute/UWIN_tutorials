@@ -390,19 +390,58 @@
 <li>For <span class="math inline">\(t\)</span> in <span class="math inline">\(1,\dots,T\)</span> sampling periods (e.g., UWIN sampling season)</li>
 <li>Let <span class="math inline">\(z_{i,t}\)</span> be the occupancy state of your species</li>
 </ul>
-<p>Double test</p>
+<p>The probability of occupancy during the first season (<span class="math inline">\(t = 1\)</span>) is then treated as Bernoulli trial:</p>
+<p><span class="math display">\[
+z_{i,t=1} \sim \text{Bernoulli}(\psi)
+\]</span></p>
+<p>where <span class="math inline">\(\psi\)</span> is the probabiliy of occupancy.</p>
 </section>
-<section id="section" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title"></h2>
-<div style="margin-top: 100px;">
-<p>Animating content</p>
-</div>
+<section id="the-math-in-a-nutshell-2" class="slide level2">
+<h2>The math in a nutshell</h2>
+<p>If there is spatial (or temporal variation) you can make <span class="math inline">\(\psi\)</span> a function of covariates via the logit link</p>
+<p><span class="math display">\[
+\begin{align}
+\text{logit}(\psi_{i,t=1}) &amp; = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} &amp; \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+\]</span></p>
 </section>
-<section id="section-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title"></h2>
-<div style="margin-top: 200px; font-size: 3em; color: red;">
-<p>Animating content</p>
-</div>
+<section id="the-math-in-a-nutshell-3" class="slide level2">
+<h2>The math in a nutshell</h2>
+<p>After the first timestep we introduce our autologistic term, <span class="math inline">\(\theta\)</span>. It get’s added to our logit linear predictor if and only if the species was present in the previous timestep. How do we do that?</p>
+<p><span class="math display">\[
+\begin{align}
+\text{logit}(\psi_{i,t}) &amp; = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1} \\
+z_{i,t} &amp; \sim \text{Bernoulli}(\psi_{i,t}), \; \; \; t&gt;1
+\end{align}
+\]</span></p>
+</section>
+<section id="the-math-in-a-nutshell-4" class="slide level2">
+<h2>The math in a nutshell</h2>
+<p>If the species is not present at <span class="math inline">\(t-1\)</span>, then <span class="math inline">\(z_{i,t-1} = 0\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{logit}(\psi_{i,t=1}) &amp; = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} &amp; \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+\]</span></p>
+</section>
+<section id="the-math-in-a-nutshell-5" class="slide level2">
+<h2>The math in a nutshell</h2>
+<p>If the species is not present at <span class="math inline">\(t-1\)</span>, then <span class="math inline">\(z_{i,t-1} = 0\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{logit}(\psi_{i,t=1}) &amp; = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} &amp; \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+\]</span></p>
+<p>If the species is present at <span class="math inline">\(t-1\)</span>, the <span class="math inline">\(z_{i,t-1} = 1\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{logit}(\psi_{i,t=1}) &amp; = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} &amp; \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+\]</span></p>
 <div class="footer footer-default">
 
 </div>

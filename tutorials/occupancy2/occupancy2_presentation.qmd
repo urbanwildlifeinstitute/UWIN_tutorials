@@ -85,16 +85,58 @@ Mason Fidino and Austin Green
 - For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
 - Let $z_{i,t}$ be the occupancy state of your species
 
-The probability of occupancy 
+The probability of occupancy during the first season ($t = 1$) is then treated as Bernoulli trial:
+$$
+z_{i,t=1} \sim \text{Bernoulli}(\psi)
+$$
+where $\psi$ is the probabiliy of occupancy.
 
-## {auto-animate=true}
+## The math in a nutshell
 
-::: {style="margin-top: 100px;"}
-Animating content
-:::
+If there is spatial (or temporal variation) you can make $\psi$ a function of covariates via the logit link
 
-## {auto-animate=true}
+$$
+\begin{align}
+\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+$$
+## The math in a nutshell
 
-::: {style="margin-top: 200px; font-size: 3em; color: red;"}
-Animating content
-:::
+After the first timestep we introduce our autologistic term, $\theta$. It get's added to our logit linear predictor if and only if the species was present in the previous timestep. How do we do that?
+
+$$
+\begin{align}
+\text{logit}(\psi_{i,t}) & = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1} \\
+z_{i,t} & \sim \text{Bernoulli}(\psi_{i,t}), \; \; \; t>1
+\end{align}
+$$
+## The math in a nutshell
+
+If the species is not present at $t-1$, then $z_{i,t-1} = 0$:
+
+$$
+\begin{align}
+\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+$$
+
+## The math in a nutshell
+
+If the species is not present at $t-1$, then $z_{i,t-1} = 0$:
+
+$$
+\begin{align}
+\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+$$
+If the species is present at $t-1$, the  $z_{i,t-1} = 1$:
+
+$$
+\begin{align}
+\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
+z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
+\end{align}
+$$
