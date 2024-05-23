@@ -56,7 +56,7 @@ Mason Fidino and Austin Green
 :::
 ::: {.column width="30%"}
 
-![](./images/nathan_headshot.jpg) 
+![](./images/austin_headshot.jpg) 
 
 :::
 :::
@@ -69,8 +69,8 @@ Mason Fidino and Austin Green
   + No separate linear predictors for local colonization and extinction
   + Well suited when you are interested in patterns of species occupancy (you most often are)
   + Works far better than standard dynamic occupancy models when you have a smaller sample size (you most often do)
-
-## The math in a nutshell
+  
+## The first sampling period is identical to a standard occupancy model
 
 ::: incremental
 - For $i$ in $1,\dots,I$ sites
@@ -78,65 +78,124 @@ Mason Fidino and Austin Green
 - Let $z_{i,t}$ be the occupancy state of your species
 :::
 
-## The math in a nutshell
+## The first sampling period is identical to a standard occupancy model
 
 
 - For $i$ in $1,\dots,I$ sites
 - For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
 - Let $z_{i,t}$ be the occupancy state of your species
 
-The probability of occupancy during the first season ($t = 1$) is then treated as Bernoulli trial:
+The probability of occupancy during the first sampling period could be...
 $$
-z_{i,t=1} \sim \text{Bernoulli}(\psi)
-$$
-where $\psi$ is the probabiliy of occupancy.
-
-## The math in a nutshell
-
-If there is spatial (or temporal variation) you can make $\psi$ a function of covariates via the logit link
-
-$$
-\begin{align}
-\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
-z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
-\end{align}
-$$
-## The math in a nutshell
-
-After the first timestep we introduce our autologistic term, $\theta$. It get's added to our logit linear predictor if and only if the species was present in the previous timestep. How do we do that?
-
-$$
-\begin{align}
-\text{logit}(\psi_{i,t}) & = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1} \\
-z_{i,t} & \sim \text{Bernoulli}(\psi_{i,t}), \; \; \; t>1
-\end{align}
-$$
-## The math in a nutshell
-
-If the species is not present at $t-1$, then $z_{i,t-1} = 0$:
-
-$$
-\begin{align}
-\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
-z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
-\end{align}
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i}
 $$
 
-## The math in a nutshell
 
-If the species is not present at $t-1$, then $z_{i,t-1} = 0$:
+## After the first sampling period, autologistic models add a new parameter to 
+the occupancy linear predictor
 
-$$
-\begin{align}
-\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
-z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
-\end{align}
-$$
-If the species is present at $t-1$, the  $z_{i,t-1} = 1$:
+The autologistic term, $\theta$, helps control for temporal correlation in
+occupancy between seasons. Therefore, occupancy at time $t$ depends on
+the occupancy state in the previous timestep ($t-1$)!
 
 $$
-\begin{align}
-\text{logit}(\psi_{i,t=1}) & = \beta_0 + \beta_{forest}\times x_{forest, i} \\
-z_{i,t=1} & \sim \text{Bernoulli}(\psi_{i,t})
-\end{align}
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
 $$
+
+## A little bit of algebra
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+## A little bit of algebra
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+And the species is not present at $t-1$, then $z_{i,t-1} = 0$. 
+
+$\theta \times 0 = 0$, and so the probability of occupancy when a species is not present in the previous timestep simplifies to
+
+$$
+\text{logit}(\psi_{i,t}) = \beta_0 + \beta_{forest}\times x_{forest, i}
+$$
+
+
+
+
+## A little bit of algebra (continued)
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+And the species is present at $t-1$, then $z_{i,t-1} = 1$. 
+
+$\theta \times 1 = \theta$, and so the probability of occupancy when a species is present in the previous timestep is
+
+$$
+\text{logit}(\psi_{i,t})= \beta_0 + \beta_{forest}\times x_{forest, i} + \theta
+$$
+
+
+## How do you interpret the autologistic term?
+
+::: incremental
+- If $\theta$ is positive, then the model intercept $\beta_0$ increases. That 
+means the occupancy of the species is higher at time $t$ if they were present at
+$t-1$.
+- If $\theta$ is negative, then the model intercept $\beta_0$ decreases. That means
+the occupancy of the species is lower at time $t$ if they were present at $t-1$.
+:::
+
+## And what about the detection model?
+
+::: incremental
+- The detection model is nearly identical to a standard occupancy model.
+- The only difference is that you can now include covariates that vary across 
+sampling periods (single season models only have one sampling period).
+:::
+
+## How do you fit autologistic occupancy models?
+
+
+- Code it up in your Bayesian software package of choice.
+
+
+## How do you fit autologistic occupancy models?
+
+
+- Code it up in your Bayesian software package of choice.
+- Use `autoOcc`, an R package Mason developed to fit autologistic models, 
+compare their fit via AIC, and make model predictions.
+
+![](./images/hex.png){fig-align="center"}
+
+## How to format your detection data
+
+![](./images/detection_data.JPG){fig-align="center"}
+
+## How to format your detection data
+
+```{R}
+library(autoOcc)
+my_data <- read.csv("./data/example_detection_data.csv")
+
+my_data <- format_y(
+  x = my_data,
+  site_column = "Site",
+  time_column = "Season",
+  history_columns = "Week"
+)
+dim(my_data)
+
+```
+
+## How to format your covariates
+
+![](./images/covariate.JPG){fig-align="center"}
