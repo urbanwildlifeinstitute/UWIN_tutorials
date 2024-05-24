@@ -12,6 +12,69 @@ format:
 
 ---
 
+
+```{R}
+#| include: false
+library(autoOcc)
+library(dplyr)
+library(magrittr)
+
+# simulating some data
+nsite <- 100
+nrep <- 4
+nseason <- 4
+set.seed(101)
+forest <- data.frame(forest = runif(nsite))
+
+forest$fs <- as.numeric(scale(forest$forest))
+
+occ <- plogis(-0.5 + 1 * forest$fs)
+
+z <- matrix(
+  0,
+  ncol = nseason,
+  nrow = nsite
+)
+
+z[,1] <- rbinom(nsite, 1, occ)
+for(t in 2:nseason){
+  occ <- plogis(
+   -0.5 + 1 * forest$fs + 0.75 * z[,t-1]
+  )
+  z[,t] <- rbinom(nsite, 1, occ)
+}
+
+y <- array(
+  0,
+  dim = c(nsite, nseason, nrep)
+)
+for(tt in 1:nseason){
+  det <- plogis(0.3 + 0.5 * forest$fs)
+  tmp_mat <- matrix(
+    NA,
+    ncol = nsite,
+    nrow = nrep
+  )
+
+   tmp_mat[] <- rbinom(
+    nsite*nrep,
+    1,
+    rep(
+      det * z[,tt],
+      each = nrep
+    )
+  )
+   y[,tt,] <- t(tmp_mat)
+}
+
+
+oy <- y
+od <- data.frame(
+  forest = forest$fs
+)
+
+```
+
 ## UWIN workshop: Occupancy modeling II
 
 Mason Fidino and Austin Green
@@ -91,11 +154,10 @@ $$
 $$
 
 
-## After the first sampling period, autologistic models add a new parameter to 
-the occupancy linear predictor
+## After the first sampling period, autologistic models add a new parameter to the occupancy linear predictor
 
 The autologistic term, $\theta$, helps control for temporal correlation in
-occupancy between seasons. Therefore, occupancy at time $t$ depends on
+occupancy at a site between seasons. Therefore, the occupancy at a site in time $t$ depends on
 the occupancy state in the previous timestep ($t-1$)!
 
 $$
@@ -147,18 +209,20 @@ $$
 
 ::: incremental
 - If $\theta$ is positive, then the model intercept $\beta_0$ increases. That 
-means the occupancy of the species is higher at time $t$ if they were present at
+means the occupancy of the species at the site of interest is higher at time $t$ if they were present at
 $t-1$.
 - If $\theta$ is negative, then the model intercept $\beta_0$ decreases. That means
-the occupancy of the species is lower at time $t$ if they were present at $t-1$.
+the occupancy of the species at the site of interest is lower at time $t$ if they were present at $t-1$.
+- Don't forget that this is site-specific!
 :::
 
 ## And what about the detection model?
 
 ::: incremental
-- The detection model is nearly identical to a standard occupancy model.
-- The only difference is that you can now include covariates that vary across 
-sampling periods (single season models only have one sampling period).
+- The detection model is identical to the detection model in a dynamic occupancy model.
+- Can include covariates that vary spatial, temporal, and spatiotemporal covariates.
+- Temporal or spatiotemporal covariates can vary among primary sampling periods (e.g., average temperature over a whole sampling period).
+- Furthermore, temporal or spatiotemporal covariates can vary among secondary sampling periods within a primary sampling period (e.g., daily average rainfall).
 :::
 
 ## How do you fit autologistic occupancy models?
@@ -199,3 +263,160 @@ dim(my_data)
 ## How to format your covariates
 
 ![](./images/covariate.JPG){fig-align="center"}
+
+## How to format your covariates
+
+
+```{R}
+library(dplyr)
+
+my_covariates <- read.csv("./data/example_covariate_data.csv")
+
+# Scale numeric covariates before analysis (and drop site column)
+my_scaled_df <- my_covariates %>% 
+  select(-Site) %>% 
+  mutate(
+    across(
+      where(is.numeric), ~ as.numeric(scale(.))
+   )
+  )
+
+```
+
+## Fitting models
+
+```{R}
+#| include: false
+
+# overwrite these objects to fit a model
+my_scaled_df <- od
+my_data <- oy
+
+```
+
+
+```{R}
+# Forest model
+m1 <- auto_occ(
+  formula = ~ forest ~ forest, # Double right side formula (detection, occupancy)
+  y = my_data,
+  det_covs = my_scaled_df,
+  occ_covs = my_scaled_df,
+  level = 0.85 # CI consistent with use of AIC
+)
+
+# null model
+m2 <- auto_occ(
+  formula = ~ 1 ~ 1, # Double right side formula (detection, occupancy)
+  y = my_data,
+  level = 0.85 # CI consistent with use of AIC
+)
+
+```
+
+## Compare models
+
+```{R}
+my_model_list <- list(
+  forest = m1,
+  null = m2
+)
+
+my_aic_results <- compare_models(
+  my_model_list,
+  digits = 2
+)
+
+# Check out results
+my_aic_results
+```
+
+## View model results
+
+```{R}
+#| eval: false
+summary(m1)
+
+Call:
+auto_occ(formula = ~forest ~ forest, y = my_data, det_covs = my_scaled_df, 
+    occ_covs = my_scaled_df, level = 0.85)
+
+
+optim convergence code: 0
+optim iterations: 32 
+
+Occupancy estimates:
+
+          parameter    Est    SE  lower  upper
+1 psi - (Intercept) -0.533 0.156 -0.758 -0.308
+2      psi - forest  1.167 0.153  0.947  1.387
+3       psi - theta  1.006 0.274  0.611  1.401
+
+Note: psi - theta is the autologistic term
+
+Detection estimates:
+
+          parameter   Est    SE lower upper
+4 rho - (Intercept) 0.335 0.107 0.180 0.489
+5      rho - forest 0.642 0.113 0.479 0.805
+
+AIC: 1302.625 
+
+```
+
+## And make model predictions!
+
+```{R}
+#| echo: false
+
+y_df <- data.frame(
+  forest = seq(0,1, length.out = 200)
+)
+
+y_s <- y_df
+
+y_s$forest <- (y_s$forest - mean(forest$forest))/
+  sd(y_s$forest)
+
+my_pred <- predict(
+  m1,
+  "psi",
+  newdata = y_s,
+  level = 0.85
+)
+{
+plot(
+  my_pred$estimate ~ y_df$forest,
+  ylim = c(0,1),
+  xlab = "Forest cover (proportion)",
+  ylab = "Occupancy",
+  las = 1,
+  type = "l",
+  bty = "l"
+)
+
+polygon(
+  x = c(
+    y_df$forest,
+    rev(y_df$forest)
+  ),
+  y = c(
+    my_pred$lower,
+    rev(my_pred$upper)
+  ),
+  border = NA,
+  col = "lightgreen"
+)
+lines(
+  x = y_df$forest,
+  y = my_pred$estimate,
+  lwd = 2,
+  col = "darkgreen"
+)
+
+}
+```
+
+
+
+
