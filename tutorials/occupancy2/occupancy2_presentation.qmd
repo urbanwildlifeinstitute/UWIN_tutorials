@@ -127,12 +127,14 @@ Mason Fidino and Austin Green
 
 ## Autologistic occupancy models
 
+::: incremental
 - The most simple version of a dynamic occupancy model
   + Estimates occupancy each time step
-  + No separate linear predictors for local colonization and extinction
+  + No separate linear predictors for local colonization and extinction (i.e., the data hungry parts of standard dynamic occupancy models)
   + Well suited when you are interested in patterns of species occupancy (you most often are)
   + Works far better than standard dynamic occupancy models when you have a smaller sample size (you most often do)
-  
+:::
+
 ## The first sampling period is identical to a standard occupancy model
 
 ::: incremental
@@ -220,9 +222,9 @@ the occupancy of the species at the site of interest is lower at time $t$ if the
 
 ::: incremental
 - The detection model is identical to the detection model in a dynamic occupancy model.
-- Can include covariates that vary spatial, temporal, and spatiotemporal covariates.
+- Can include covariates that are spatial, temporal, and/or spatiotemporal covariates.
 - Temporal or spatiotemporal covariates can vary among primary sampling periods (e.g., average temperature over a whole sampling period).
-- Furthermore, temporal or spatiotemporal covariates can vary among secondary sampling periods within a primary sampling period (e.g., daily average rainfall).
+- In the detection model, temporal or spatiotemporal covariates can vary among primary sampling periods or secondary sampling periods within a primary sampling period (e.g., daily average rainfall).
 :::
 
 ## How do you fit autologistic occupancy models?
