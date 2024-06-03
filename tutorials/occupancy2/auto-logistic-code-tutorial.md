@@ -271,11 +271,24 @@ how you can do this (feel free to skip over this for now in the tutorial).
 # To model average, get the parameters in each model,
 # and set up a binary matrix to denote if they were present or not in that model.
 
+# create model list again
 model_list <- list(
   null = m1,
   spatial = m2,
   temp = m3
 )
+
+# and AIC results
+aic_results <- compare_models(
+  model_list
+)
+
+# reorder the model_list based on relative fit
+model_list <- model_list[aic_results$model]
+
+# specify confidence interval width
+my_ci_width <- 0.85
+
 
 # get only the model parameters 
 parms <- lapply(
@@ -376,20 +389,20 @@ for(i in 1:nrow(avg_parm)){
   ] * parm_matrix[
     which_models,i
   ]
-
+  
   # get beta terms
   beta_mat <- matrix(
     NA,
     ncol = length(which_models),
     nrow = nsim
   )
-
+  
   # multiply weight across columns while we do this
   for(j in 1:ncol(beta_mat)){
     beta_mat[,j] <- mvn_samps[[which_models[j]]][,my_parm] *
       weights[j]
   }
-
+  
   # sum each row
   beta_mat <- rowSums(beta_mat)
   
@@ -400,16 +413,24 @@ for(i in 1:nrow(avg_parm)){
   avg_parm$est[i] <- median(beta_mat)
   avg_parm$lower[i] <- quantile(
     beta_mat,
-    0.025
+    (1 - my_ci_width) / 2
   )
   avg_parm$upper[i] <- quantile(
     beta_mat,
-    0.975
+    1 - ( (1 - my_ci_width) / 2 )
   )
   
 }
 
-avg_parm
+
+# get average estimate
+avg_parm %>% 
+  mutate(
+    across(
+      where(is.numeric), ~ round(., digits = 2))
+    )
+  )
+
 ```
 
 ### Next steps
