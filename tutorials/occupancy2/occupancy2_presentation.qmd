@@ -1,0 +1,425 @@
+---
+format: 
+  revealjs:
+    slide-number: c/t
+    width: 1200
+    height: 800
+    theme: solarized
+    transition: none
+    transition-speed: fast
+    incremental: false
+    echo: true
+
+---
+
+
+```{R}
+#| include: false
+library(autoOcc)
+library(dplyr)
+library(magrittr)
+
+# simulating some data
+nsite <- 100
+nrep <- 4
+nseason <- 4
+set.seed(101)
+forest <- data.frame(forest = runif(nsite))
+
+forest$fs <- as.numeric(scale(forest$forest))
+
+occ <- plogis(-0.5 + 1 * forest$fs)
+
+z <- matrix(
+  0,
+  ncol = nseason,
+  nrow = nsite
+)
+
+z[,1] <- rbinom(nsite, 1, occ)
+for(t in 2:nseason){
+  occ <- plogis(
+   -0.5 + 1 * forest$fs + 0.75 * z[,t-1]
+  )
+  z[,t] <- rbinom(nsite, 1, occ)
+}
+
+y <- array(
+  0,
+  dim = c(nsite, nseason, nrep)
+)
+for(tt in 1:nseason){
+  det <- plogis(0.3 + 0.5 * forest$fs)
+  tmp_mat <- matrix(
+    NA,
+    ncol = nsite,
+    nrow = nrep
+  )
+
+   tmp_mat[] <- rbinom(
+    nsite*nrep,
+    1,
+    rep(
+      det * z[,tt],
+      each = nrep
+    )
+  )
+   y[,tt,] <- t(tmp_mat)
+}
+
+
+oy <- y
+od <- data.frame(
+  forest = forest$fs
+)
+
+```
+
+## UWIN workshop: Occupancy modeling II
+
+Mason Fidino and Austin Green
+
+![](./images/hex.png){fig-align="center"}
+
+## Who we are
+
+
+
+::: columns
+::: {.column width="70%"}
+
+::: {.nonincremental}
+- Mason Fidino
+  + Senior Quantitative Ecologist at the Urban Wildlife Institute, Lincoln Park Zoo
+  + Analytics advisor for UWIN, helps steer database management and development
+  + contact: mfidino@lpzoo.org
+:::
+
+:::
+::: {.column width="30%"}
+
+![](./images/mason_headshot.jpg)
+
+:::
+:::
+
+## Who we are
+
+::: columns
+::: {.column width="70%"}
+
+::: {.nonincremental}
+- Austin Green
+  + Conservation Ecologist, Sageland Collaborative
+  + Research Instructor, Science Research Initiative, University of Utah
+  + Contact: austin@sagelandcollaborative.org OR austin.m.green@utah.edu
+
+:::
+
+:::
+::: {.column width="30%"}
+
+![](./images/austin_headshot.jpg) 
+
+:::
+:::
+
+
+## Autologistic occupancy models
+
+::: incremental
+- The most simple version of a dynamic occupancy model
+  + Estimates occupancy each time step
+  + No separate linear predictors for local colonization and extinction (i.e., the data hungry parts of standard dynamic occupancy models)
+  + Well suited when you are interested in patterns of species occupancy (you most often are)
+  + Works far better than standard dynamic occupancy models when you have a smaller sample size (you most often do)
+:::
+
+## The first sampling period is identical to a standard occupancy model
+
+::: incremental
+- For $i$ in $1,\dots,I$ sites
+- For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
+- Let $z_{i,t}$ be the occupancy state of your species
+:::
+
+## The first sampling period is identical to a standard occupancy model
+
+
+- For $i$ in $1,\dots,I$ sites
+- For $t$ in $1,\dots,T$ sampling periods (e.g., UWIN sampling season)
+- Let $z_{i,t}$ be the occupancy state of your species
+
+The probability of occupancy during the first sampling period could be...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i}
+$$
+
+
+## After the first sampling period, autologistic models add a new parameter to the occupancy linear predictor
+
+The autologistic term, $\theta$, helps control for temporal correlation in
+occupancy at a site between seasons. Therefore, the occupancy at a site in time $t$ depends on
+the occupancy state in the previous timestep ($t-1$)!
+
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+## A little bit of algebra
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+## A little bit of algebra
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+And the species is not present at $t-1$, then $z_{i,t-1} = 0$. 
+
+$\theta \times 0 = 0$, and so the probability of occupancy when a species is not present in the previous timestep simplifies to
+
+$$
+\text{logit}(\psi_{i,t}) = \beta_0 + \beta_{forest}\times x_{forest, i}
+$$
+
+
+
+
+## A little bit of algebra (continued)
+
+If this is our linear predictor...
+$$
+\text{logit}(\psi_{i,t})  = \beta_0 + \beta_{forest}\times x_{forest, i} + \theta \times z_{i,t-1}
+$$
+
+And the species is present at $t-1$, then $z_{i,t-1} = 1$. 
+
+$\theta \times 1 = \theta$, and so the probability of occupancy when a species is present in the previous timestep is
+
+$$
+\text{logit}(\psi_{i,t})= \beta_0 + \beta_{forest}\times x_{forest, i} + \theta
+$$
+
+
+## How do you interpret the autologistic term?
+
+::: incremental
+- If $\theta$ is positive, then the model intercept $\beta_0$ increases. That 
+means the occupancy of the species at the site of interest is higher at time $t$ if they were present at
+$t-1$.
+- If $\theta$ is negative, then the model intercept $\beta_0$ decreases. That means
+the occupancy of the species at the site of interest is lower at time $t$ if they were present at $t-1$.
+- Don't forget that this is site-specific!
+:::
+
+## And what about the detection model?
+
+::: incremental
+- The detection model is identical to the detection model in a dynamic occupancy model.
+- Can include covariates that are spatial, temporal, and/or spatiotemporal covariates.
+- Temporal or spatiotemporal covariates can vary among primary sampling periods (e.g., average temperature over a whole sampling period).
+- In the detection model, temporal or spatiotemporal covariates can vary among primary sampling periods or secondary sampling periods within a primary sampling period (e.g., daily average rainfall).
+:::
+
+## How do you fit autologistic occupancy models?
+
+
+- Code it up in your Bayesian software package of choice.
+
+
+## How do you fit autologistic occupancy models?
+
+
+- Code it up in your Bayesian software package of choice.
+- Use `autoOcc`, an R package Mason developed to fit autologistic models, 
+compare their fit via AIC, and make model predictions.
+
+![](./images/hex.png){fig-align="center"}
+
+## How to format your detection data
+
+![](./images/detection_data.JPG){fig-align="center"}
+
+## How to format your detection data
+
+```{R}
+library(autoOcc)
+my_data <- read.csv("./data/example_detection_data.csv")
+
+my_data <- format_y(
+  x = my_data,
+  site_column = "Site",
+  time_column = "Season",
+  history_columns = "Week"
+)
+dim(my_data)
+
+```
+
+## How to format your covariates
+
+![](./images/covariate.JPG){fig-align="center"}
+
+## How to format your covariates
+
+
+```{R}
+library(dplyr)
+
+my_covariates <- read.csv("./data/example_covariate_data.csv")
+
+# Scale numeric covariates before analysis (and drop site column)
+my_scaled_df <- my_covariates %>% 
+  select(-Site) %>% 
+  mutate(
+    across(
+      where(is.numeric), ~ as.numeric(scale(.))
+   )
+  )
+
+```
+
+## Fitting models
+
+```{R}
+#| include: false
+
+# overwrite these objects to fit a model
+my_scaled_df <- od
+my_data <- oy
+
+```
+
+
+```{R}
+# Forest model
+m1 <- auto_occ(
+  formula = ~ forest ~ forest, # Double right side formula (detection, occupancy)
+  y = my_data,
+  det_covs = my_scaled_df,
+  occ_covs = my_scaled_df,
+  level = 0.85 # CI consistent with use of AIC
+)
+
+# null model
+m2 <- auto_occ(
+  formula = ~ 1 ~ 1, # Double right side formula (detection, occupancy)
+  y = my_data,
+  level = 0.85 # CI consistent with use of AIC
+)
+
+```
+
+## Compare models
+
+```{R}
+my_model_list <- list(
+  forest = m1,
+  null = m2
+)
+
+my_aic_results <- compare_models(
+  my_model_list,
+  digits = 2
+)
+
+# Check out results
+my_aic_results
+```
+
+## View model results
+
+```{R}
+#| eval: false
+summary(m1)
+
+Call:
+auto_occ(formula = ~forest ~ forest, y = my_data, det_covs = my_scaled_df, 
+    occ_covs = my_scaled_df, level = 0.85)
+
+
+optim convergence code: 0
+optim iterations: 32 
+
+Occupancy estimates:
+
+          parameter    Est    SE  lower  upper        p
+1 psi - (Intercept) -0.533 0.156 -0.758 -0.308 6.39e-04
+2      psi - forest  1.167 0.153  0.947  1.387 2.39e-14
+3       psi - theta  1.006 0.274  0.611  1.401 2.45e-04
+
+Note: psi - theta is the autologistic term
+
+Detection estimates:
+
+          parameter   Est    SE lower upper        p
+4 rho - (Intercept) 0.335 0.107 0.180 0.489 1.82e-03
+5      rho - forest 0.642 0.113 0.479 0.805 1.47e-08
+
+AIC: 1302.625 
+
+
+```
+
+## And make model predictions!
+
+```{R}
+#| echo: false
+
+y_df <- data.frame(
+  forest = seq(0,1, length.out = 200)
+)
+
+y_s <- y_df
+
+y_s$forest <- (y_s$forest - mean(forest$forest))/
+  sd(y_s$forest)
+
+my_pred <- predict(
+  m1,
+  "psi",
+  newdata = y_s,
+  level = 0.85
+)
+{
+plot(
+  my_pred$estimate ~ y_df$forest,
+  ylim = c(0,1),
+  xlab = "Forest cover (proportion)",
+  ylab = "Occupancy",
+  las = 1,
+  type = "l",
+  bty = "l"
+)
+
+polygon(
+  x = c(
+    y_df$forest,
+    rev(y_df$forest)
+  ),
+  y = c(
+    my_pred$lower,
+    rev(my_pred$upper)
+  ),
+  border = NA,
+  col = "lightgreen"
+)
+lines(
+  x = y_df$forest,
+  y = my_pred$estimate,
+  lwd = 2,
+  col = "darkgreen"
+)
+
+}
+```
+
+
+
+
