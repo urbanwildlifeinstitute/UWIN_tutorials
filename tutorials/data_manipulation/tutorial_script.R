@@ -1,3 +1,23 @@
+# UWIN Workshop Series: Static Occupancy
+package_load<-function(packages = NA, quiet=TRUE, verbose=FALSE, warn.conflicts=FALSE){
+  
+  # download required packages if they're not already
+  pkgsToDownload<- packages[!(packages  %in% installed.packages()[,"Package"])]
+  if(length(pkgsToDownload)>0)
+    install.packages(pkgsToDownload, repos="http://cran.us.r-project.org", quiet=quiet, verbose=verbose)
+  
+  # then load them
+  for(i in 1:length(packages))
+    require(packages[i], character.only=T, quietly=quiet, warn.conflicts=warn.conflicts)
+}
+
+package_load(
+  c(
+    "dplyr", "ggplot2", "unmarked"
+  )
+)
+
+
 setwd("D:/GitHub/UWIN_tutorials/tutorials/data_manipulation")
 
 library(dplyr) # grammar of data manipulation using set of verbs; tidyverse 
