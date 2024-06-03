@@ -623,3 +623,16 @@ ggsave("./plots/opo_income_ggplot.jpg", width = 6, height = 6)
 </p>
 
 </details>
+
+## Other resources
+
+In addition to the papers, blog posts, and the like that has already been shared
+in this tutorial, `autoOcc` also has a vignette that provides more details
+on this class of model as well as code to fit temporally varying covariates (
+and make predictions from said model). If you built the vignette when you
+installed `autoOcc`, then you can view it with this call:
+
+```R
+vignette("Overview")
+```
+)
