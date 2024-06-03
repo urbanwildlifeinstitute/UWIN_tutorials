@@ -394,7 +394,7 @@
 <h2>UWIN workshop: Occupancy modeling II</h2>
 <p>Mason Fidino and Austin Green</p>
 
-<img data-src="./images/github-mark.png" style="width:30.0%" class="r-stretch"></section>
+<img data-src="./images/hex.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="who-we-are" class="slide level2">
 <h2>Who we are</h2>
 <div class="columns">
@@ -422,9 +422,9 @@
 <ul>
 <li>Austin Green
 <ul>
-<li></li>
-<li></li>
-<li>Contact:</li>
+<li>Conservation Ecologist, Sageland Collaborative</li>
+<li>Research Instructor, Science Research Initiative, University of Utah</li>
+<li>Contact: austin@sagelandcollaborative.org OR austin.m.green@utah.edu</li>
 </ul></li>
 </ul>
 </div>
@@ -518,9 +518,9 @@
 <div>
 <ul>
 <li class="fragment">The detection model is identical to the detection model in a dynamic occupancy model.</li>
-<li class="fragment">Can include covariates that vary spatial, temporal, and spatiotemporal covariates.</li>
+<li class="fragment">Can include covariates that are spatial, temporal, and/or spatiotemporal covariates.</li>
 <li class="fragment">Temporal or spatiotemporal covariates can vary among primary sampling periods (e.g., average temperature over a whole sampling period).</li>
-<li class="fragment">Furthermore, temporal or spatiotemporal covariates can vary among secondary sampling periods within a primary sampling period (e.g., daily average rainfall).</li>
+<li class="fragment">In the detection model, temporal or spatiotemporal covariates can vary among primary sampling periods or secondary sampling periods within a primary sampling period (e.g., daily average rainfall).</li>
 </ul>
 </div>
 </section>
@@ -653,18 +653,18 @@ Column names: Week_1, Week_2, Week_3, Week_4</code></pre>
 <span id="cb9-10"><a href=""></a></span>
 <span id="cb9-11"><a href=""></a>Occupancy estimates<span class="sc">:</span></span>
 <span id="cb9-12"><a href=""></a></span>
-<span id="cb9-13"><a href=""></a>          parameter    Est    SE  lower  upper</span>
-<span id="cb9-14"><a href=""></a><span class="dv">1</span> psi <span class="sc">-</span> (Intercept) <span class="sc">-</span><span class="fl">0.533</span> <span class="fl">0.156</span> <span class="sc">-</span><span class="fl">0.758</span> <span class="sc">-</span><span class="fl">0.308</span></span>
-<span id="cb9-15"><a href=""></a><span class="dv">2</span>      psi <span class="sc">-</span> forest  <span class="fl">1.167</span> <span class="fl">0.153</span>  <span class="fl">0.947</span>  <span class="fl">1.387</span></span>
-<span id="cb9-16"><a href=""></a><span class="dv">3</span>       psi <span class="sc">-</span> theta  <span class="fl">1.006</span> <span class="fl">0.274</span>  <span class="fl">0.611</span>  <span class="fl">1.401</span></span>
+<span id="cb9-13"><a href=""></a>          parameter    Est    SE  lower  upper        p</span>
+<span id="cb9-14"><a href=""></a><span class="dv">1</span> psi <span class="sc">-</span> (Intercept) <span class="sc">-</span><span class="fl">0.533</span> <span class="fl">0.156</span> <span class="sc">-</span><span class="fl">0.758</span> <span class="sc">-</span><span class="fl">0.308</span> <span class="fl">6.39e-04</span></span>
+<span id="cb9-15"><a href=""></a><span class="dv">2</span>      psi <span class="sc">-</span> forest  <span class="fl">1.167</span> <span class="fl">0.153</span>  <span class="fl">0.947</span>  <span class="fl">1.387</span> <span class="fl">2.39e-14</span></span>
+<span id="cb9-16"><a href=""></a><span class="dv">3</span>       psi <span class="sc">-</span> theta  <span class="fl">1.006</span> <span class="fl">0.274</span>  <span class="fl">0.611</span>  <span class="fl">1.401</span> <span class="fl">2.45e-04</span></span>
 <span id="cb9-17"><a href=""></a></span>
 <span id="cb9-18"><a href=""></a>Note<span class="sc">:</span> psi <span class="sc">-</span> theta is the autologistic term</span>
 <span id="cb9-19"><a href=""></a></span>
 <span id="cb9-20"><a href=""></a>Detection estimates<span class="sc">:</span></span>
 <span id="cb9-21"><a href=""></a></span>
-<span id="cb9-22"><a href=""></a>          parameter   Est    SE lower upper</span>
-<span id="cb9-23"><a href=""></a><span class="dv">4</span> rho <span class="sc">-</span> (Intercept) <span class="fl">0.335</span> <span class="fl">0.107</span> <span class="fl">0.180</span> <span class="fl">0.489</span></span>
-<span id="cb9-24"><a href=""></a><span class="dv">5</span>      rho <span class="sc">-</span> forest <span class="fl">0.642</span> <span class="fl">0.113</span> <span class="fl">0.479</span> <span class="fl">0.805</span></span>
+<span id="cb9-22"><a href=""></a>          parameter   Est    SE lower upper        p</span>
+<span id="cb9-23"><a href=""></a><span class="dv">4</span> rho <span class="sc">-</span> (Intercept) <span class="fl">0.335</span> <span class="fl">0.107</span> <span class="fl">0.180</span> <span class="fl">0.489</span> <span class="fl">1.82e-03</span></span>
+<span id="cb9-24"><a href=""></a><span class="dv">5</span>      rho <span class="sc">-</span> forest <span class="fl">0.642</span> <span class="fl">0.113</span> <span class="fl">0.479</span> <span class="fl">0.805</span> <span class="fl">1.47e-08</span></span>
 <span id="cb9-25"><a href=""></a></span>
 <span id="cb9-26"><a href=""></a>AIC<span class="sc">:</span> <span class="fl">1302.625</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

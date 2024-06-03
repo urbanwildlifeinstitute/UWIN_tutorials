@@ -79,7 +79,7 @@ od <- data.frame(
 
 Mason Fidino and Austin Green
 
-![](./images/github-mark.png){width=30%}
+![](./images/hex.png){fig-align="center"}
 
 ## Who we are
 
@@ -110,9 +110,9 @@ Mason Fidino and Austin Green
 
 ::: {.nonincremental}
 - Austin Green
-  + 
-  +
-  + Contact: 
+  + Conservation Ecologist, Sageland Collaborative
+  + Research Instructor, Science Research Initiative, University of Utah
+  + Contact: austin@sagelandcollaborative.org OR austin.m.green@utah.edu
 
 :::
 
@@ -349,20 +349,21 @@ optim iterations: 32
 
 Occupancy estimates:
 
-          parameter    Est    SE  lower  upper
-1 psi - (Intercept) -0.533 0.156 -0.758 -0.308
-2      psi - forest  1.167 0.153  0.947  1.387
-3       psi - theta  1.006 0.274  0.611  1.401
+          parameter    Est    SE  lower  upper        p
+1 psi - (Intercept) -0.533 0.156 -0.758 -0.308 6.39e-04
+2      psi - forest  1.167 0.153  0.947  1.387 2.39e-14
+3       psi - theta  1.006 0.274  0.611  1.401 2.45e-04
 
 Note: psi - theta is the autologistic term
 
 Detection estimates:
 
-          parameter   Est    SE lower upper
-4 rho - (Intercept) 0.335 0.107 0.180 0.489
-5      rho - forest 0.642 0.113 0.479 0.805
+          parameter   Est    SE lower upper        p
+4 rho - (Intercept) 0.335 0.107 0.180 0.489 1.82e-03
+5      rho - forest 0.642 0.113 0.479 0.805 1.47e-08
 
 AIC: 1302.625 
+
 
 ```
 
