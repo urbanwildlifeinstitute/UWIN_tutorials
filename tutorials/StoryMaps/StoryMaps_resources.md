@@ -1,4 +1,4 @@
 # StoryMaps and ArcGIS StoryMaps
 ## Resources
 ### Links
--[StoryMap Tutorial Series](https://www.youtube.com/playlist?list=PLXpHG2ApmOtZlBA6ZBdeDHeXDE5pDV3ky)
+1. [StoryMap Tutorial Series](https://www.youtube.com/playlist?list=PLXpHG2ApmOtZlBA6ZBdeDHeXDE5pDV3ky)
