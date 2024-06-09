@@ -1,17 +1,17 @@
----
-title: "Data Visualization in R"
-author: Dan Herrera and Gabby Palomo
-date: "`r format(Sys.time(), '%B, %Y')`"
-output: 
-  html_document:
-    toc: true
----
+# Data visualization 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      message=FALSE, 
-                      warning=FALSE)
-```
+*Dan Herrera and Gabby Palomo*
+June 2024
+
+## Table of contents 
+
+- <a href="#introduction"> Introduction</a> 
+- <a href="#presentation"> Presentation</a> 
+- <a href="#tutorial"> Data Visualization for an Occupancy Analysis</a> 
+- <a href="#graph1"> Pre-analysis: covariate plots</a> 
+- <a href="#graph2"> Pre-analysis: correlation plot</a> 
+- <a href="#graph3"> Post-analysis: prediction plots</a> 
+- <a href="#graph4"> Post-analysis: coefficients</a> 
 
 ## Learning objectives 
 
@@ -23,13 +23,19 @@ knitr::opts_chunk$set(echo = TRUE,
 
 > You will find that we are using the native pipe operator `|>`. This native pipe is part of base R and has been available since R version 4.1.0 (May 2021). You can choose which pipe to use, either the native pipe `|>` or the magrittr pipe `%>%` by going to Tools > Global options > Code.
 
+<a name="#introduction"></a>
+
 ## Introduction 
 
 We are going to use the package `ggplot2` to create publication ready graphs in r. To begin, we are going to go over a presentation linked below to learn the basic components of `ggplot2` and the grammar of graphics. Once we have covered the basics, then we will proceed to the tutorial. 
 
+<a name="#presentation"></a>
+
 ## Presentation 
 
 Here's a link to the [presentation](https://gabspalomo.github.io/slides/uwin_ggplot2/ppt/uwin_intro_ggplot2.html#/title-slide)
+
+<a name="#tutorial"></a>
 
 ## Tutorial: Data visualization for an occupancy analysis. 
 
@@ -78,6 +84,7 @@ land_cover |>
 
 ```
 
+<a name="#graph1"></a>
 
 ### Pre-analysis data visualization: graph 1
 
@@ -925,6 +932,8 @@ ggplot(data = covariates, #specify our data source
   )
 ```
 
+<a name="#graph2"></a>
+
 ### Correlation plot: graph 2
 
 Now that we know the distribution of our covariates, we also have to know if any of them are correlated. 
@@ -1218,6 +1227,8 @@ m1 <- occu(~1 # detection
 
 
 ```
+
+<a name="#graph3"></a>
 
 ### Post-analysis data visualization: prediction plots graph 3
 
@@ -1569,6 +1580,7 @@ ggsave(plot = all.plots, #Specify the (named) plot that you wish to save
 
 ![](./images/all.plots_2.png)
 
+<a name="#graph4"></a>
 
 ### Post-analysis: coefficient plot graph 4
 
