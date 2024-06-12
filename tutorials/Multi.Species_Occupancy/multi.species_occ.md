@@ -4,7 +4,7 @@
 This tutorial is aimed at folks interested in advancing their skills in occupancy modeling, or as refresher for those already familiar wiht multi-species occupancy. 
 
 ### Some helpful references:
-1. [Multi-species occupancy presentation]([https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13090](https://www.canva.com/design/DAGHCouesQE/8sKrrKxBElfwvWA0eYw_yw/edit?utm_content=DAGHCouesQE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)) - Austin Green
+1. [Multi-species occupancy presentation](https://www.canva.com/design/DAGHCouesQE/8sKrrKxBElfwvWA0eYw_yw/edit?utm_content=DAGHCouesQE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) - Austin Green
 
 ### Tutorial Aims:
 
