@@ -8,7 +8,7 @@ This tutorial is aimed at folks interested in advancing their skills in occupanc
 
 ### Tutorial Aims:
 
-#### <a href="#occupancy"> 1. What are Autologistic occupancy models?</a>
+#### <a href="#occupancy"> 1. What are Multi-species occupancy models?</a>
 
 #### <a href="#formatting"> 2. Formatting data</a>
 
@@ -19,4 +19,4 @@ This tutorial is aimed at folks interested in advancing their skills in occupanc
 
 <a name="occupancy"></a>
 
-## 1. What are Autologistic occupancy models?
+## 1. What are Multi-species occupancy models?
