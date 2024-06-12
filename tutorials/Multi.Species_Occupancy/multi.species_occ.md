@@ -1,4 +1,4 @@
-# UWIN Tutorial: Autologistic Occupancy
+# UWIN Tutorial: Multi-species Occupancy
 *Created by Austin Green - last updated June 2024 by Austin Green*
 
 This tutorial is aimed at folks interested in advancing their skills in occupancy modeling, or as refresher for those already familiar wiht multi-species occupancy. 
