@@ -192,7 +192,7 @@ Our model is going to include:
 
 1. Priors for species-specific occupancy at an 'average' site (the intercept in our occurence model) that will be drawn from a community hyperparameter
 2. Priors for species-specific effects of both urban development and forest cover, each of which will be drawn from a community hyperparameter
-3. Priors for species-specific detection probability at an 'average' site (the intercept in our detection model)
+3. Priors for species-specific detection probability at an 'average' site (the intercept in our detection model) that will be drawn from a community hyperparameter
 4. Hyperpriors for the effects of both urban development and forest cover
 5. Linear predictors of both urban development and forest cover on species occupancy
 6. Derived site-specific estimates of species richness
