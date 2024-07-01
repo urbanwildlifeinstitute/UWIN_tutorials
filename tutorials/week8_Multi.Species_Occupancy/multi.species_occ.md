@@ -190,8 +190,8 @@ After the priors and hyperpriors are set, we'll then build the process model, wh
 
 Our model is going to include:
 
-1. Priors for species-specific occupancy at an 'average' site (the intercept in our occurence model)
-2. Priors for speciesi-specific effects of both urban development and forest cover, each of which will be drawn from a community hyperparameter
+1. Priors for species-specific occupancy at an 'average' site (the intercept in our occurence model) that will be drawn from a community hyperparameter
+2. Priors for species-specific effects of both urban development and forest cover, each of which will be drawn from a community hyperparameter
 3. Priors for species-specific detection probability at an 'average' site (the intercept in our detection model)
 4. Hyperpriors for the effects of both urban development and forest cover
 5. Linear predictors of both urban development and forest cover on species occupancy
