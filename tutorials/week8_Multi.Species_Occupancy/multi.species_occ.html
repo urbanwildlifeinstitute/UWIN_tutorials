@@ -661,6 +661,10 @@ you want help with calculating this, let me know: <a href="mailto:austin.m.green
 are only looking at the community effect. However, we could have made
 two specific parameters looking at the difference between herbivores and
 carnivores, for example</li>
+<li>Any analysis or subsequent use of our derived species richness
+estimates. I’m simply showing that this can be calculated with precision
+quite easily. However, we will not do any second-stage analyses with
+these values</li>
 </ol>
 <p>Without further ado, here we go!</p>
 </div>
@@ -894,6 +898,10 @@ crazy way to do it, but it helps with clarity.</p>
 <pre class="r"><code># Create a matrix to house predictions from the model
 pred.dat &lt;- matrix(NA, nrow = 1000, ncol = 3) # match the rows with the number of values in your sequences from above
 
+#############
+# MULE DEER
+#############
+
 # Predictions.
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,1] + out$sims.list$beta.forest[,1] * forest.seq[i]
@@ -917,7 +925,11 @@ title(xlab = &quot;Forest cover (scaled)&quot;, cex.lab = 2, line = 3)
 axis(2, las = 2, cex.axis = 2)
 axis(1, cex.axis = 2, tick = T, at = c(round(min(forest.range),1), round(max(forest.range),1)), line = 0)
 
-lines(forest.seq, pred.dat[,1], col = pal[1], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[1], lwd = 5) # Mule Deer Average Response
+
+########
+# MOOSE
+########
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,2] + out$sims.list$beta.forest[,2] * forest.seq[i]
@@ -927,7 +939,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(forest.seq, pred.dat[,1], col = pal[3], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[3], lwd = 5) # Moose average response
+
+######
+# ELK
+######
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,3] + out$sims.list$beta.forest[,3] * forest.seq[i]
@@ -937,7 +953,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(forest.seq, pred.dat[,1], col = pal[5], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[5], lwd = 5) # Elk average response
+
+#########
+# COYOTE
+#########
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,4] + out$sims.list$beta.forest[,4] * forest.seq[i]
@@ -947,7 +967,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(forest.seq, pred.dat[,1], col = pal[7], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[7], lwd = 5) # Coyote average response
+
+#######
+# PUMA
+#######
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,5] + out$sims.list$beta.forest[,5] * forest.seq[i]
@@ -957,7 +981,7 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(forest.seq, pred.dat[,1], col = pal[9], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[9], lwd = 5) # Puma average response
 
 legend(&#39;bottomright&#39;, bty = &quot;n&quot;, cex = 2, col = c(pal[1], pal[3], pal[5], pal[7], pal[9]), lty = 1, lwd = 5, legend = c(&quot;Deer&quot;, &quot;Moose&quot;, &quot;Elk&quot;, &quot;Coyote&quot;, &quot;Puma&quot;))</code></pre>
 <p float="center">
@@ -965,6 +989,10 @@ legend(&#39;bottomright&#39;, bty = &quot;n&quot;, cex = 2, col = c(pal[1], pal[
 </p>
 <pre class="r"><code># Create a matrix to house predictions from the model
 pred.dat &lt;- matrix(NA, nrow = 1000, ncol = 3) # match the rows with the number of values in your sequences from above
+
+############
+# MULE DEER
+############
 
 # Predictions.
 for(i in 1:1000) {
@@ -989,7 +1017,11 @@ title(xlab = &quot;Urban development (scaled)&quot;, cex.lab = 2, line = 3)
 axis(2, las = 2, cex.axis = 2)
 axis(1, cex.axis = 2, tick = T, at = c(round(min(urban.range),1), round(max(urban.range),1)), line = 0)
 
-lines(urban.seq, pred.dat[,1], col = pal[1], lwd = 5)
+lines(urban.seq, pred.dat[,1], col = pal[1], lwd = 5) # Mule deer average response
+
+########
+# MOOSE
+########
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,2] + out$sims.list$beta.urban[,2] * urban.seq[i]
@@ -999,7 +1031,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(forest.seq, pred.dat[,1], col = pal[3], lwd = 5)
+lines(forest.seq, pred.dat[,1], col = pal[3], lwd = 5) # Moose average response
+
+######
+# ELK
+######
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,3] + out$sims.list$beta.urban[,3] * urban.seq[i]
@@ -1009,7 +1045,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(urban.seq, pred.dat[,1], col = pal[5], lwd = 5)
+lines(urban.seq, pred.dat[,1], col = pal[5], lwd = 5) # Elk average response
+
+#########
+# COYOTE
+#########
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,4] + out$sims.list$beta.urban[,4] * urban.seq[i]
@@ -1019,7 +1059,11 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(urban.seq, pred.dat[,1], col = pal[7], lwd = 5)
+lines(urban.seq, pred.dat[,1], col = pal[7], lwd = 5) # Coyote average response
+
+#######
+# PUMA
+#######
 
 for(i in 1:1000) {
   community.occupancy &lt;- out$sims.list$psi[,5] + out$sims.list$beta.urban[,5] * urban.seq[i]
@@ -1029,7 +1073,7 @@ for(i in 1:1000) {
   pred.dat[i,3] &lt;- quantile(community.occupancy, 0.975) # upper BCI
 } ; pred.dat = as.data.frame(pred.dat) ; names(pred.dat) = c(&quot;mean&quot;, &quot;lower&quot;, &quot;upper&quot;) ; str(pred.dat)
 
-lines(urban.seq, pred.dat[,1], col = pal[9], lwd = 5)
+lines(urban.seq, pred.dat[,1], col = pal[9], lwd = 5) # Puma average response
 
 legend(&#39;bottomleft&#39;, bty = &quot;n&quot;, cex = 2, col = c(pal[1], pal[3], pal[5], pal[7], pal[9]), lty = 1, lwd = 5, legend = c(&quot;Deer&quot;, &quot;Moose&quot;, &quot;Elk&quot;, &quot;Coyote&quot;, &quot;Puma&quot;))</code></pre>
 <p float="center">
