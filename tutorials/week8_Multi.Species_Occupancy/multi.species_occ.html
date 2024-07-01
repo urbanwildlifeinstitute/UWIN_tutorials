@@ -634,12 +634,14 @@ frequentist modeling approach.</p>
 <p>Our model is going to include:</p>
 <ol style="list-style-type: decimal">
 <li>Priors for species-specific occupancy at an ‘average’ site (the
-intercept in our occurence model)</li>
-<li>Priors for speciesi-specific effects of both urban development and
+intercept in our occurence model) that will be drawn from a community
+hyperparameter</li>
+<li>Priors for species-specific effects of both urban development and
 forest cover, each of which will be drawn from a community
 hyperparameter</li>
 <li>Priors for species-specific detection probability at an ‘average’
-site (the intercept in our detection model)</li>
+site (the intercept in our detection model) that will be drawn from a
+community hyperparameter</li>
 <li>Hyperpriors for the effects of both urban development and forest
 cover</li>
 <li>Linear predictors of both urban development and forest cover on
@@ -705,8 +707,6 @@ cat(&quot;
         for (j in 1:nrep) { # Loop through replicate surveys
           logit(p[i,j,k]) = det[k] # species-specific detection probability
           y[i,j,k] ~ dbern(p[i,j,k] * z[i,k]) # hierarchical piece that ties detection and true occurence
-          
-
       
         } # Close species loop
       } # Close sites loop

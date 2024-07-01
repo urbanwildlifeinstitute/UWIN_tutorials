@@ -202,6 +202,7 @@ Our model does NOT include:
 1. Any detection effects. Our model will only estimate species-specific detection probabilities. It wil NOT model the effects of any covariates. However, these could easily be added
 2. Model checking assessment. We already have a lot going on in this model, so I exclude calculating a Bayesian p-value from here. However, this should ALWAYS be done before reporting the results of a model. If you want help with calculating this, let me know: austin.m.green@utah.edu
 3. Any guild, trait, or taxonomy-related effects. Our hyperparameters are only looking at the community effect. However, we could have made two specific parameters looking at the difference between herbivores and carnivores, for example
+4. Any analysis or subsequent use of our derived species richness estimates. I'm simply showing that this can be calculated with precision quite easily. However, we will not do any second-stage analyses with these values
 
 Without further ado, here we go!
 
