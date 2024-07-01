@@ -249,8 +249,6 @@ cat("
         for (j in 1:nrep) { # Loop through replicate surveys
           logit(p[i,j,k]) = det[k] # species-specific detection probability
           y[i,j,k] ~ dbern(p[i,j,k] * z[i,k]) # hierarchical piece that ties detection and true occurence
-          
-
       
         } # Close species loop
       } # Close sites loop
