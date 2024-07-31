@@ -80,7 +80,7 @@ deer.detect <- detectionHistory(recordTable      = detect, # detections dataset
                          stationCol           = "Site", # site column
                          speciesCol           = "Species", # species column
                          recordDateTimeCol    = "Date.Time", # date and time column. There is a chance that you will get an error because of this argument. Your csv may revert your date and time to a format that this command does not agree with. However, you can fix this by opening your dataset in excel and formatting the Date.Time column so that it is in yyyy-mm-dd hh:mm:ss format.
-                         species              = "Puma", # species of interest
+                         species              = "Deer", # species of interest
                          occasionLength       = 7, # repeat sampling occasion duration
                          day1                 = "station", # when is the first day of sampling? 'station' means that the first day of sampling at a site is the begin date of that site.
                          datesAsOccasionNames = FALSE, # Not needed
@@ -217,11 +217,11 @@ cat("
     # Priors for species specific effects on occupancy #
     for (k in 1:nspec) { # for each of k species
     # Occupancy parameters
-      psi[k] ~ dunif(mu.psi,tau.psi) # prior for logit-transformed specific specific occupancy
+      psi[k] ~ dnorm(mu.psi,tau.psi) # prior for logit-transformed specific specific occupancy
       beta.urban[k] ~ dnorm(mu.beta.urban, tau.beta.urban) # species-specific effects will be drawn from a community hyperparameter with a normal distribution
       beta.forest[k] ~ dnorm(mu.beta.forest, tau.beta.forest) # same as above
     # Detection probability parameters
-      det[k] ~ dunif(mu.det, tau.det) # same as above
+      det[k] ~ dnorm(mu.det, tau.det) # same as above
     } # end species loop for priors
     
     # Hyperpriors #
@@ -387,7 +387,7 @@ polygon(c(rev(urban.seq), urban.seq), c(rev(pred.dat[,2]), pred.dat[,3]), col = 
 lines(urban.seq, pred.dat[,1], col = pal[8], lwd = 5)
 ```
 
-We see that the BCI (Bayesian Credible Intervals) span practically the entire parameter space, which is probably due to running a multi-species model with covariates on only 21 sites.
+We see that the BCI (Bayesian Credible Intervals) span practically the entire parameter space, which is probably due to running a multi-species model with two covariates on only 21 sites.
 
 <p float="center">
   <img src="./plots/community_urban.png" alt="Community occupancy plot across impervious cover using plot()" width="800" height="auto" />
