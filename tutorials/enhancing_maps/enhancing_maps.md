@@ -16,6 +16,12 @@ Wildlife abundance and movement are strongly impacted by landscape heterogeneity
 
 However, we can use community-based database, such as OpenStreetMap, to improve the quality and spatial resolution of urban land cover data. 
 
+<p float="center">
+  <img src="./figures/visual_comparison.png" alt="Visual comparison of the global land cover used in this study (Commission for Environmental Cooperation (CEC) LULC map, 30 m resolution, left), and the final output of our workflow, the OSM-enhanced land cover map (30 m resolution, right) at the same location, in Chicago, Illinois, USA. Vegetation areas are represented in green shades, barren soil in brown, built environment or land use areas are represented in red shades, different road types are represented in yellow shades, and building footprints are represented in black." width="500" height="auto" />
+
+</p>
+
+
 #### <a href="#formatting"> 2. Pulling and filtering data</a>
 
 #### <a href="#models"> 3. Building landcover classes</a>
