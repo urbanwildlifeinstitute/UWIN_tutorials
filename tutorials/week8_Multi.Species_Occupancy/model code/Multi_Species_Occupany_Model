@@ -1,0 +1,58 @@
+
+    model {
+    
+    # PRIORS #
+    # Priors for species specific effects on occupancy #
+    for (k in 1:nspec) { # for each of k species
+    # Occupancy parameters
+      psi[k] ~ dunif(mu.psi,tau.psi) # prior for logit-transformed specific specific occupancy
+      beta.urban[k] ~ dnorm(mu.beta.urban, tau.beta.urban) # species-specific effects will be drawn from a community hyperparameter with a normal distribution
+      beta.forest[k] ~ dnorm(mu.beta.forest, tau.beta.forest) # same as above
+    # Detection probability parameters
+      det[k] ~ dunif(mu.det, tau.det) # same as above
+    } # end species loop for priors
+    
+    # Hyperpriors #
+    mu.psi ~ dunif(-5,5)
+    tau.psi = pow(sd.psi, -2)
+    sd.psi ~ dunif(0,10)
+    mu.det ~ dunif(-5,5)
+    tau.det = pow(sd.det, -2)
+    sd.det ~ dunif(0,10)
+    mu.beta.urban ~ dunif(-5,5) # Community parameter on the effect of urban development
+    tau.beta.urban = pow(sd.beta.urban, -2) # Transformation
+    sd.beta.urban ~ dunif(0,10) # # Measure of how much variation there is in species-specific parameters
+    mu.beta.forest ~ dunif(-5,5)
+    tau.beta.forest = pow(sd.beta.forest, -2)
+    sd.beta.forest ~ dunif(0,10)
+    
+    # Ecological model (LIKELIHOOD)
+    for (k in 1:nspec) { # Loop through species
+      for (i in 1:nsite) { # Loop through sites
+        logit(occ[i,k]) = psi[k] # species-specific 'average' occupancy
+        + beta.urban[k] * urban[i] # species-specific effect on site-specific urban development
+        + beta.forest[k] * forest[i] # species-specific effect on site-specific forest cover
+        z[i,k] ~ dbern(occ[i,k]) # distribution for true occupancy at a site
+
+    # Observation model from replicated detection/non-detection data
+        for (j in 1:nrep) { # Loop through replicate surveys
+          logit(p[i,j,k]) = det[k] # species-specific detection probability
+          y[i,j,k] ~ dbern(p[i,j,k] * z[i,k]) # hierarchical piece that ties detection and true occurence
+          
+
+      
+        } # Close species loop
+      } # Close sites loop
+    } # Close replicate surveys loop
+    
+    # Derived quantities (species richness at a site)
+    for (i in 1:nsite) {
+      sp.rich[i] = sum(z[i,]) # Number of occuring species at each site
+    } # Close sites loop
+    for (k in 1:nspec){
+      occupancy.probability[k] = exp(psi[k])/(1 + exp(psi[k]))
+      detection.probability[k] = exp(det[k])/(1 + exp(det[k]))
+    } # Close species loop
+    
+  } # Close model
+      
