@@ -1,4 +1,4 @@
-# UWIN Tutorial: Enhancing maps with Open Street Map Data
+# UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated December 2024*
 
 This tutorial is aimed at those interested in (1) advancing their spatial mapping skills and (2) integrating OpenStreetMap data to enhance exisiting spatial datasets. 
@@ -12,6 +12,9 @@ This tutorial builds on work described in the manuscript,
 ### Tutorial Aims:
 
 #### <a href="#occupancy"> 1. What is OpenStreetMap and why should we use these data?</a>
+Wildlife abundance and movement are strongly impacted by landscape heterogeneity, especially in cities which are among the world's most heterogeneous landscapes. Nonetheless, current global land cover maps, which are used as a basis for large-scale spatial ecological modeling, represent urban areas as a single, homogeneous, class. 
+
+However, we can use community-based database, such as OpenStreetMap, to improve the quality and spatial resolution of urban land cover data. 
 
 #### <a href="#formatting"> 2. Pulling and filtering data</a>
 
