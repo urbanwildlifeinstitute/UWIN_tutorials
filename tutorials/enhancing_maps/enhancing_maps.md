@@ -11,23 +11,25 @@ This tutorial builds on work described in the manuscript,
 
 ### Tutorial Aims:
 
-#### <a href="#occupancy"> 1. What is OpenStreetMap and why should we use these data?</a>
+#### <a href="#OpenStreetMaps"> 1. What is OpenStreetMap and why should we use these data?</a>
 
-#### <a href="#formatting"> 2. Pulling and filtering data</a>
+#### <a href="#pullingandformatting"> 2. Pulling and filtering data</a>
 
-#### <a href="#models"> 3. Building landcover classes</a>
+#### <a href="#building"> 3. Building landcover classes</a>
 
-#### <a href="#plots"> 4. Intgrating Maps</a>
+#### <a href="#integrating"> 4. Intgrating Maps</a>
 
 
 <a name="occupancy"></a>
 
 ## 1. What is OpenStreetMap and why should we use these data?
-Wildlife abundance and movement are strongly impacted by landscape heterogeneity, especially in cities which are among the world's most heterogeneous landscapes. Nonetheless, current global land cover maps, which are used as a basis for large-scale spatial ecological modeling, represent urban areas as a single, homogeneous, class. 
+Wildlife ecology and behavior are strongly driven by landscape characteristics, especially in urban regions. Cities are among the world's most heterogeneous landscapes however, global land cover maps often represent urban areas as a single, homogeneous, class therefore limiting our ability to build useful spatial ecological models over large scales. 
 
-However, we can use community-based database, such as OpenStreetMap, to improve the quality and spatial resolution of urban land cover data. 
+However, we can use community-based geographic databases, such as OpenStreetMap (OSM), to improve the quality and spatial resolution of urban land cover data. Take the below example of Chicago, Illinois (USA). On the left we see a reletivley homogenous ladnscape of 'urban' land cover (in red) from the Commission for Environmental Cooperation Land Use Land Cover data. On the right we have the same dataset overlaid by spatial data collected from OSM. 
 
 <p float="center">
-  <img src="./figures/visual_comparison.png" alt="Visual comparison of the global land cover used in this study (Commission for Environmental Cooperation (CEC) LULC map, 30 m resolution, left), and the final output of our workflow, the OSM-enhanced land cover map (30 m resolution, right) at the same location, in Chicago, Illinois, USA. Vegetation areas are represented in green shades, barren soil in brown, built environment or land use areas are represented in red shades, different road types are represented in yellow shades, and building footprints are represented in black." width="800" height="auto" />
+  <img src="./figures/visual_comparison.png" alt="Visual comparison of the global land cover used in this study (Commission for Environmental Cooperation (CEC) LULC map, 30 m resolution, left), and the final output of our workflow, the OSM-enhanced land cover map (30 m resolution, right) at the same location, in Chicago, Illinois, USA. Vegetation areas are represented in green shades, barren soil in brown, built environment or land use areas are represented in red shades, different road types are represented in yellow shades, and building footprints are represented in black." width="1000" height="auto" />
 
 </p>
+
+We can see OSM greatly improves our ability to asses heterogeneity in the urban landscape. 
