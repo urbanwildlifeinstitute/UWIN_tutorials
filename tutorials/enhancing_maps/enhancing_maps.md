@@ -63,7 +63,7 @@ library(geos)
 # Load in functions
 source("OSM_to_LULC_functions_Bariloche.R") 
 ```
-OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, the feature may be a building, while a **key** maybe include *amenity* or *building*. The *amenity* key may be described as a *school* or a simple *yes* (as in yes this is a building). Note a feature may have multiple keys. 
+OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
 
 | feature  | key | value | 
 |---------|------|-------|
