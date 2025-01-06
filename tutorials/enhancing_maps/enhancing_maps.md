@@ -71,4 +71,4 @@ OSM data is made up of various features which include linear (e.g. a river or ro
 |Building|building    |school, hospital, commerical|
 |          |parking    |multi-storey| 
 |Water          | natural    |spring| 
-|Water          | landuse    |basin| 
+|          | landuse    |basin| 
