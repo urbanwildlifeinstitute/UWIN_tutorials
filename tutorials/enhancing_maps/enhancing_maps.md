@@ -84,4 +84,20 @@ osm_kv <- osm_kv %>%
   filter(!is.na(key))
 keys <- unique(osm_kv$key)
 ```
+Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
+
+Let start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
+
+```R
+# Set our first query
+place <- "Argentina" 
+
+# Narrow down our first query to a bounding box using latitude/longitude coordinates which wil help load data faster
+study_area_bbox <- sf::st_bbox(c(xmin=-71.900000,ymin=-41.262600,xmax=-70.650000,ymax=-40.490000), 
+                         crs = "epsg:4326") %>% 
+  st_as_sfc() 
+
+# Confirm the box is the correct coordinates for you study area 
+plot(study_area_bbox, axes = TRUE)
+```
 
