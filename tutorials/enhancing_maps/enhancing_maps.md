@@ -206,7 +206,7 @@ lin_feat <- osmextract::oe_get("Argentina",
 ```
 Our next step is to Categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
 
-<details closed><summary>valyers() function</a></summary>
+<details closed><summary>`vlayers()` function</a></summary>
 
 ```R
 OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
