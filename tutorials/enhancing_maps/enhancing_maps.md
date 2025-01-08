@@ -349,7 +349,7 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
              
 </details>
 
-### Convert OSM features to rasters
+### Converting OSM features to rasters
 Now we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
 | variable  | coordinate |
@@ -430,6 +430,6 @@ rlayers <- OSMtoLULC_rlayers(
 plot(rlayers[[14]], col = "black") # 14 = building list
 ```
 
-### Merge rasters
+### Merging rasters
 It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
 
