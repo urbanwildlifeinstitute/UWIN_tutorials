@@ -118,9 +118,9 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                force_download = TRUE,
                                extra_tags=keys)
 ```
-Great, we now have all the OSM data defined in our *keys* from our outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape. 
+Great, we now have all the OSM data grabbed using our *keys* and outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape. 
 
-We can do this by cherry picking OSM polygons or boundaries and filter our `pol_feat`  on boundaries, osm_id or admin_level. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
+We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
 
 ```R
 # This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
@@ -135,16 +135,39 @@ bariloche_boundary <- pol_feat %>%
   filter(osm_id == 3405247)
 
 # Here we subset to our Bariloche boundary (excluding Villa La Angostura). This is so 
-# we can apply a smoothing function in our next step. Ignore Warning message here.
+# we can apply a smoothing function in our next step. Ignore the warning message here.
 sf_use_s2(FALSE)
 bariloche <- study_area_boundary %>% 
   st_intersection(bariloche_boundary)
 ```
-Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with varibles in this function to buffer more widely or smooth other gaps in the boundary. See the boundary before and after smoothing below.
+Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with varibles in this function to buffer more widely or smooth other gaps in the boundary. Then we can grab all the OSM data within our new buffered aread. See how the boundary changed before and after smoothing below.
+
+```R
+# notice that filtering to the townships of Bariloche misses some urban data nearby.
+# By using a buffer and smoothing function, we can grab additional areas around 
+# the small municipalities
+sf_use_s2(TRUE)
+bariloche_buffer <-
+  st_geometry(bariloche) %>% 
+  st_buffer(1) %>%  
+  st_union() %>%
+  as_geos_geometry() %>% 
+  geos_concave_hull(ratio = .02) %>% 
+  st_as_sfc() %>% 
+  st_buffer(5) %>% 
+  smoothr::smooth(method = "ksmooth", smoothness = 3) 
+
+# Now we are ready to grab all OSM polygons which fall within our new'bariloche buffer'
+sf_use_s2(FALSE)
+bariloche_poly <- pol_feat %>% 
+  st_intersection(bariloche_buffer)
+```
 
 <p float="left">
   <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="300" height="auto" />
   <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="300" height="auto" /> 
 </p>
+
+
 
 
