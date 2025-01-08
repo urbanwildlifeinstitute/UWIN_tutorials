@@ -104,3 +104,42 @@ plot(study_area_bbox, axes = TRUE)
   <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
 
 </p>
+
+It helpful to check your grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
+
+```R
+pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
+                               boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
+                               boundary_type = c("spat","clipsrc"),
+                               provider ="geofabrik",
+                               layer = "multipolygons",
+                               stringsAsFactors = FALSE,
+                               quiet = FALSE,
+                               force_download = TRUE,
+                               extra_tags=keys)
+```
+Great, we now have all the OSM data defined in our *keys* from our outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape. 
+
+We can do this by cherry picking OSM polygons or boundaries and filter our `pol_feat`  on boundaries, osm_id or admin_level. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
+
+```R
+# This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
+# the barriers we want to grab OSM data. Grabbing the smaller municipalities lets us limit our boundary to the city area more specifically. Then we will use 
+# a national landcover map to fill in regions not covered well by OSM (e.g. non-urban areas)
+study_area_boundary <- pol_feat %>% 
+  filter((boundary == "administrative" & admin_level %in% c(8,9) # admin_level=* key describes the administrative level of a feature within a subdivision hierarchy
+          & osm_id != 3405247) | natural == "scrub")
+
+# Now we grab the larger Bariloche boundary so we can subset our study area just to Bariloche
+bariloche_boundary <- pol_feat %>% 
+  filter(osm_id == 3405247)
+
+# Here we subset to our Bariloche boundary (excluding Villa La Angostura). This is so 
+# we can apply a smoothing function in our next step. Ignore Warning message here.
+sf_use_s2(FALSE)
+bariloche <- study_area_boundary %>% 
+  st_intersection(bariloche_boundary)
+```
+Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with varibles in this function to buffer more widely or smooth other gaps in the boundary. See the boundary before and after smoothing below.
+
+
