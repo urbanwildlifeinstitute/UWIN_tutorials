@@ -204,7 +204,139 @@ lin_feat <- osmextract::oe_get("Argentina",
                                stringsAsFactors = FALSE, 
                                extra_tags=keys)
 ```
-Our next step is to convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `vlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
+Our next step is to Categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
+
+<details closed><summary>valyers() function</a></summary>
+
+```R
+OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
+  
+  # Create list to hold vector layers
+  classL1 <- list()
+  
+  #class_01 <- industrial  
+  classL1[[1]] <- OSM_polygon_layer %>% filter(landuse %in% c("industrial", "fairground") |
+                                                 industrial %in% c("factory") |
+                                                 power %in% c("substation"))
+  #class_02 <- commercial 
+  classL1[[2]] <- OSM_polygon_layer %>% filter(landuse %in% c("commercial", "retail"))
+  
+  # class_03 <- institutional  
+  classL1[[3]] <- OSM_polygon_layer %>% filter(landuse %in% c("institutional", "education", "religious", "military") |
+                                                 amenity %in% c("school", "hospital", "university", "fast_food", "clinic", "theatre", "conference_center", "place_of_worship", "police") |
+                                                 leisure %in% c("golf_course")|
+                                                 healthcare %in% c("clinic", "hospital"))
+  #class_04 <- residential
+  classL1[[4]] <- OSM_polygon_layer %>% filter(landuse %in% c("residential"))
+  
+  #class_05 <- landuse_railway
+  classL1[[5]] <- OSM_polygon_layer %>% filter(landuse %in% c("railway"))
+  
+  #class_06 <- open_green
+  classL1[[6]] <- OSM_polygon_layer %>% filter(landuse %in% c("park", "grass", "cemetery", "greenfield", "recreation_ground", "winter_sports")|
+                                                 (!is.na(golf) & !(golf %in% c("rough","bunker"))) |
+                                                 amenity %in% c("park") |
+                                                 leisure %in% c("park", "stadium", "playground", "pitch", "sports_centre", "stadium", "pitch", "picnic_table", "pitch", "dog_park", "playground")|
+                                                 sport %in% c("soccer")|
+                                                 power %in% c("substation")|
+                                                 surface %in% c("grass"))
+  # class_07 <- protected_area
+  classL1[[7]] <- OSM_polygon_layer %>% filter(leisure	%in% c("nature_reserve")|
+                                                 #boundary %in% c("protected_area","national_park")|
+                                                 protected_area %in% c("nature")|
+                                                 landuse %in% c("nature_reserve", "natural_reserve", "landscape_reserve"))
+  # class_08 <- resourceful_area
+ 
+   classL1[[8]] <- OSM_polygon_layer %>% filter(landuse %in% c("orchard","farmland", "landfill","vineyard", "farmyard", "allotments", "allotment", "farmland")|
+                                                 leisure %in% c('garden')|
+                                                 !is.na(allotments))
+  # class_09 <- heterogenous_green 
+  classL1[[9]] 	<- OSM_polygon_layer %>% filter(natural %in% c("garden", "scrub", "shrubbery", "tundra", "cliff", "shrub", "wetland", "grassland", "fell",
+                                                               "heath","moor")|
+                                                  landuse	%in% c("plant_nursery", "meadow", "flowerbed", "wetland")|
+                                                  #!is.na("meadow")| # This part creates an error
+                                                  golf %in% c("rough") | 
+                                                  grassland %in% c("pairie"))
+  
+  #class_10 <- barren_soil 
+  classL1[[10]] 	<- OSM_polygon_layer %>% filter(natural %in% c("mud", "dune", "sand","scree","sinkhole", "beach")|
+                                                   landuse	%in% c("brownfield", "construction")|
+                                                   golf	%in% c("bunker"))
+  #class_11 <- dense_green
+  classL1[[11]] <- OSM_polygon_layer %>% filter(landuse %in% c("forest")|
+                                                  natural  %in% c("wood")|
+                                                  boundary %in% c("forest", "forest_compartment"))
+  #class_12 <- water 
+  classL1[[12]]  <- OSM_polygon_layer %>% filter(landuse %in% c("basin")|
+                                                   natural	 %in% c("water", "spring", "waterway")|
+                                                   waterway	 %in% c("river", "stream", "tidal_channel", "canal", "drain", "ditch", "yest")|
+                                                   (!is.na(water) & water != "intermittent")|
+                                                   basin  %in% c("detention")|
+                                                   intermittent != "yes"|
+                                                   seasonal	!= "yes"|
+                                                   tidal!= "yes")
+  
+  # class_13 <- parking_surface 
+  classL1[[13]] <- OSM_polygon_layer %>% filter(parking	%in% c("surface")|
+                                                  aeroway	%in% c("runway", "apron"))
+  
+  # class_14 <- building
+  classL1[[14]] 	<- OSM_polygon_layer %>% filter( #!is.na("building")| # This part creates an error
+    building %in% c("hospital", "parking", "industrial", "school", "commercial", "terrace", "detached", "semideatched_house", "house", "retail", "hotel", "apartments", "yes", "airport", "university")|
+      parking	%in% c("multi-storey")|
+      aeroway	%in% c("terminal"))
+  
+  # class_15 <- roads_very_high_traffic	
+  classL1[[15]] <-  OSM_line_layer %>% filter(highway	%in% c("motorway",'motorway_link', "motorway_junction") &
+                                                !grepl('/"bridge/"=>/"yes/"', OSM_line_layer$other_tags))
+  
+  # class_16 <- roads_sidewalk	
+  classL1[[16]]	<- OSM_line_layer %>% filter(footway	%in% c("sidewalk"))
+  
+  # class_17 <- roads_unclassified
+  classL1[[17]] <- OSM_line_layer %>% filter(!(highway %in% c("footway","construction","escape","cycleway","steps","bridleway","construction","path","pedestrian","track","abandoned", "turning_loop","living_street", "bicycle road", "cyclestreet", "cycleway lane","cycleway tracks", "bus and cyclists", "service","services", "busway", "sidewalk", "residential", "rest_area", "primary", "motorway_junction", "secondary", "secondary_link", "tertiary", "tertiary_link", "motorway","motorway_link","trunk_link", "trunk", "corridor","elevator","platform","crossing","proposed", "razed")))
+  
+  # class_18 <- roads_very_low_traffic
+  classL1[[18]] <-  OSM_line_layer %>% filter(highway	 %in% c("services","service","turning_loop","living_street"))
+  
+  # class_19 <- roads_low_traffic
+  classL1[[19]] <- OSM_line_layer %>% filter(highway	%in% c("residential", "rest_area", "busway"))
+  
+  # class_20 <- roads_med_traffic 
+  classL1[[20]] <- OSM_line_layer %>% filter(highway	%in% c("tertiary", "tertiary_link"))
+  
+  # class_21 <- roads_high_traffic_low_speed
+  classL1[[21]] <-  OSM_line_layer %>% filter(highway	%in% c("primary", "primary_link", "secondary", "secondary_link"))
+  
+  # class_22 <- roads_high_traffic_high_speed
+  classL1[[22]] <- OSM_line_layer %>% filter(highway	%in% c("trunk", "trunk_link"))
+  
+  # class_23 <- streetcars
+  classL1[[23]] <- OSM_line_layer %>% filter(railway	%in% c("tram"))
+  
+  # class_24 <- pedestrian_trails
+  classL1[[24]] <- OSM_line_layer %>% filter(highway	%in% c("footway","construction","escape", "cycleway","steps","bridleway","path","pedestrian","track", "abandoned","bicycle road", "cyclestreet", "cycleway lane", "cycleway tracks", "bus and cyclists")|
+                                               footway	!= "sidewalk")
+  
+  # class_25 <- railway	
+  classL1[[25]] <- OSM_line_layer %>% filter(railway	%in% c("light_rail","narrow_gauge","rail","preserved")|
+                                               railway != "tram")
+  # class_26 <- linear_features_not_in_use
+  classL1[[26]] <- OSM_line_layer %>% filter(railway	%in% c("abandonded","construction","disused")|
+                                               highway	%in% c("construction"))
+  # class_27 <- barriers
+  #classL1[[28]] <- OSM_line_layer %>% filter(!is.na("barrier"))
+  classL1[[27]] <- OSM_line_layer %>% filter(barrier !='')
+  
+  return(classL1)
+  
+}
+
+```
+             
+</details>
+
+Our next step is to convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
 | variable  | coordinate |
 |---------|------|
@@ -212,3 +344,15 @@ Our next step is to convert all the filtered OSM features into raster layers. We
 |xmax|maximum latitude|
 |ymin|minimum longitude|
 |ymax|maximum longitude|
+
+```R
+extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
+
+# this function which assigns each landcover class information such as its geometry or a buffer
+rlayers <- OSMtoLULC_rlayers(
+  OSM_LULC_vlayers = vlayers,
+  study_area_extent = extent
+)
+
+# Test this worked by plotting our building layer 
+plot(rlayers[[14]], col = "black") # 14 = building list
