@@ -9,7 +9,7 @@ This tutorial builds on work described in the manuscript,
 1. [Manuscript GitHub Repository](https://github.com/tgelmi-candusso/OSM_for_Ecology.git) - Tiziana Gelmi-Candusso 
 2. [OpenStreetMap](https://www.openstreetmap.org/export#map=15/-41.15840/-71.31170)
 3. [Open Buildings](https://sites.research.google/gr/open-buildings/)
-4. [Introduction to spatial mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) - Tiziana Gelmi Candusso and Mark Jordan 
+4. [Introduction to spatial mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) - Tiziana Gelmi-Candusso and Mark Jordan 
 
 ### Tutorial Aims:
 
