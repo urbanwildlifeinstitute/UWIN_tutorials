@@ -212,6 +212,13 @@ lin_feat <- osmextract::oe_get("Argentina",
 
 Our next step is to Categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
 
+```R
+vlayers <- OSMtoLULC_vlayers(
+  OSM_polygon_layer = pol_feat_agg, 
+  OSM_line_layer = lin_feat
+)
+```
+
 <details closed><summary> See the vlayers function</a></summary>
 
 ```R
@@ -342,7 +349,7 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
              
 </details>
 
-Our next step is to convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
+Now we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
 | variable  | coordinate |
 |---------|------|
@@ -350,6 +357,64 @@ Our next step is to convert all the filtered OSM features into raster layers. We
 |xmax|maximum latitude|
 |ymin|minimum longitude|
 |ymax|maximum longitude|
+
+<details closed><summary> See the vlayers function</a></summary>
+
+```R
+OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
+  classL1 <- OSM_LULC_vlayers
+  rtemplate <- rast(res=0.00001, ext = study_area_extent, crs= "EPSG:4326") #PR
+  # rtemplate5 <- terra::project(rtemplate, "EPSG:5070")
+  classL1  <- Filter(Negate(is.null), classL1) #eliminates any nulls
+  
+  refTable <- cbind.data.frame(
+    "rid"=c(1:27), 
+    "feature"=c("industrial", "commercial", "institutional", "residential", "landuse_railway",
+                "open_green","protected area", "resourceful_area", "heterogenous_green", "barren_soil",
+                "dense green","water", "parking_surface", "building","roads_very_high_traffic", 
+                "roads_sidewalk", "roads_unclassified","roads_very_low_traffic", "roads_low_traffic",
+                "roads_med_traffic", "roads_high_traffic_low_speed", "roads_high_traffic_high_speed",
+                "streetcars", "pedestrian_trails", "railway", "linear_features_not_in_use","barriers"),
+    "priority"=c(1:27),
+    "geometry"=c(rep("poly",14), rep("line",13)),
+    "buffer"=c(rep(NA,12),6,NA,NA,24,3,12,6, 12,18,36,6,3,12,6,1) # buffer in meters
+  )
+  
+  classL2 <- list()
+  
+  for(i in 1:27){
+    if(as.character(st_geometry_type(classL1[[i]], by_geometry = FALSE)) %in% c("POLYGON","MULTIPOLYGON", "GEOMETRY")){
+      temp1 <- classL1[[i]]
+      if(nrow(temp1)>0){
+        temp1 <- st_make_valid(temp1) #PR
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- terra::project(svc(temp1)[1], rtemplate)
+        temp1$priority <- refTable$priority[i]
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") 
+        print(paste0("layer ", i, "/27 ready"))
+      }
+    }else{
+      temp1 <- classL1[[i]]
+      if(!is.null(temp1)){
+        temp1 <- st_make_valid(temp1) #PR
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- st_transform(temp1, "EPSG:5070")
+        temp1 <- st_buffer(temp1, dist=refTable$buffer[i])
+        temp1 <- terra::project(svc(temp1)[1], rtemplate)
+        temp1$priority <- refTable$priority[i]
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority")
+        print(paste0("layer ", i, "/27 ready"))
+      }else{print(paste0("layer ", i, "/27 null"))}
+    }
+  }
+  return(classL2)
+}
+
+```
+</details>
+
 
 ```R
 extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
