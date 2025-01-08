@@ -142,4 +142,9 @@ bariloche <- study_area_boundary %>%
 ```
 Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with varibles in this function to buffer more widely or smooth other gaps in the boundary. See the boundary before and after smoothing below.
 
+<p float="left">
+  <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="300" height="auto" />
+  <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="300" height="auto" /> 
+</p>
+
 
