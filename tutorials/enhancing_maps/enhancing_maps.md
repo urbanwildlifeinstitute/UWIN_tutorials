@@ -157,7 +157,7 @@ bariloche_buffer <-
   st_buffer(5) %>% 
   smoothr::smooth(method = "ksmooth", smoothness = 3) 
 
-# Now we are ready to grab all OSM polygons which fall within our new'bariloche buffer'
+# Now we are ready to grab all OSM polygons which fall within our new 'bariloche buffer'
 sf_use_s2(FALSE)
 bariloche_poly <- pol_feat %>% 
   st_intersection(bariloche_buffer)
@@ -169,5 +169,38 @@ bariloche_poly <- pol_feat %>%
 </p>
 
 
+We do not need to buffer or smooth Villa Angostura like we did for Bariloche as the OSM boundary captures the urban region quite well. Therefore we can just filter to the city's *osm_id* and convert our boundary data.frame to a multipolygon. If we wanted to buffer or smooth our data, we can use the same functions as above.
 
+```R
+angostura_boundary <- pol_feat %>%
+  filter(osm_id == 3442889)
 
+# convert to a multipolygon
+sf_use_s2(TRUE)
+angostura_buffer <- 
+  st_geometry(angostura_boundary) %>% 
+  as_geos_geometry() %>%
+  st_as_sfc() 
+
+# Grab all OSM polygons which fall within the Angostura polgygon
+sf_use_s2(FALSE)
+angostura_poly <- pol_feat %>% 
+  st_intersection(angostura_buffer)
+```
+Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina.
+
+```R
+# Join our two cities into one data.frame of polygons
+pol_feat_agg <- rbind(bariloche_poly, angostura_poly)
+
+# We're ready to grab out linear data from our study area region
+
+lin_feat <- osmextract::oe_get("Argentina",
+                               layer = "lines", 
+                               boundary = study_area_bbox,
+                               boundary_type = 'clipsrc',
+                               quiet = FALSE,
+                               force_download = TRUE,
+                               stringsAsFactors = FALSE, 
+                               extra_tags=keys)
+```
