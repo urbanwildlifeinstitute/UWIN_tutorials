@@ -101,6 +101,6 @@ study_area_bbox <- sf::st_bbox(c(xmin=-71.900000,ymin=-41.262600,xmax=-70.650000
 plot(study_area_bbox, axes = TRUE)
 ```
 <p float="center">
-  <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="1000" height="auto" />
+  <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
 
 </p>
