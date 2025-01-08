@@ -209,6 +209,6 @@ Our next step is to convert all the filtered OSM features into raster layers. We
 | variable  | coordinate |
 |---------|------|
 |xmin|minimum latitude|
-|xmax|minimum latitude|
+|xmax|maximum latitude|
 |ymin|minimum longitude|
-|ymax|minimum longitude|
+|ymax|maximum longitude|
