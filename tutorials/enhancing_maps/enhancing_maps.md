@@ -164,8 +164,8 @@ bariloche_poly <- pol_feat %>%
 ```
 
 <p float="left">
-  <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="300" height="auto" />
-  <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="300" height="auto" /> 
+  <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="400" height="auto" />
+  <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="400" height="auto" /> 
 </p>
 
 
