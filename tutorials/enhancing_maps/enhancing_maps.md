@@ -358,7 +358,7 @@ Now we will convert all the filtered OSM features into raster layers. We will do
 |ymin|minimum longitude|
 |ymax|maximum longitude|
 
-<details closed><summary> See the vlayers function</a></summary>
+<details closed><summary> See the rlayers function</a></summary>
 
 ```R
 OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
@@ -427,3 +427,6 @@ rlayers <- OSMtoLULC_rlayers(
 
 # Test this worked by plotting our building layer 
 plot(rlayers[[14]], col = "black") # 14 = building list
+```
+It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
+
