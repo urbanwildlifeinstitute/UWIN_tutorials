@@ -9,7 +9,7 @@ This tutorial builds on work described in the manuscript,
 1. [Manuscript GitHub Repository](https://github.com/tgelmi-candusso/OSM_for_Ecology.git) - Tiziana Gelmi-Candusso 
 2. [OpenStreetMap](https://www.openstreetmap.org/export#map=15/-41.15840/-71.31170)
 3. [Open Buildings](https://sites.research.google/gr/open-buildings/)
-4. [Introduction to spatial mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) - Tiziana Gelmi Candusso and Mark Jordan 
+4. [Introduction to spatial mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) - Tiziana Gelmi-Candusso and Mark Jordan 
 
 ### Tutorial Aims:
 
@@ -84,6 +84,9 @@ osm_kv <- osm_kv %>%
   filter(!is.na(key))
 keys <- unique(osm_kv$key)
 ```
+
+<a name="pullingandformatting"></a>
+## 2. Pulling and filtering data
 Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
 Let start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
@@ -104,3 +107,338 @@ plot(study_area_bbox, axes = TRUE)
   <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
 
 </p>
+
+It helpful to check your grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
+
+```R
+pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
+                               boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
+                               boundary_type = c("spat","clipsrc"),
+                               provider ="geofabrik",
+                               layer = "multipolygons",
+                               stringsAsFactors = FALSE,
+                               quiet = FALSE,
+                               force_download = TRUE,
+                               extra_tags=keys)
+```
+Great, we now have all the OSM data grabbed using our *keys* and outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape. 
+
+We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
+
+```R
+# This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
+# the barriers we want to grab OSM data. Grabbing the smaller municipalities lets us limit our boundary to the city area more specifically. Then we will use 
+# a national landcover map to fill in regions not covered well by OSM (e.g. non-urban areas)
+study_area_boundary <- pol_feat %>% 
+  filter((boundary == "administrative" & admin_level %in% c(8,9) # admin_level=* key describes the administrative level of a feature within a subdivision hierarchy
+          & osm_id != 3405247) | natural == "scrub")
+
+# Now we grab the larger Bariloche boundary so we can subset our study area just to Bariloche
+bariloche_boundary <- pol_feat %>% 
+  filter(osm_id == 3405247)
+
+# Here we subset to our Bariloche boundary (excluding Villa La Angostura). This is so 
+# we can apply a smoothing function in our next step. Ignore the warning message here.
+sf_use_s2(FALSE)
+bariloche <- study_area_boundary %>% 
+  st_intersection(bariloche_boundary)
+```
+Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with varibles in this function to buffer more widely or smooth other gaps in the boundary. Then we can grab all the OSM data within our new buffered aread. See how the boundary changed before and after smoothing below.
+
+```R
+# notice that filtering to the townships of Bariloche misses some urban data nearby.
+# By using a buffer and smoothing function, we can grab additional areas around 
+# the small municipalities
+sf_use_s2(TRUE)
+bariloche_buffer <-
+  st_geometry(bariloche) %>% 
+  st_buffer(1) %>%  
+  st_union() %>%
+  as_geos_geometry() %>% 
+  geos_concave_hull(ratio = .02) %>% 
+  st_as_sfc() %>% 
+  st_buffer(5) %>% 
+  smoothr::smooth(method = "ksmooth", smoothness = 3) 
+
+# Now we are ready to grab all OSM polygons which fall within our new 'bariloche buffer'
+sf_use_s2(FALSE)
+bariloche_poly <- pol_feat %>% 
+  st_intersection(bariloche_buffer)
+```
+
+<p float="left">
+  <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="400" height="auto" />
+  <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="400" height="auto" /> 
+</p>
+
+
+We do not need to buffer or smooth Villa Angostura like we did for Bariloche as the OSM boundary captures the urban region quite well. Therefore we can just filter to the city's *osm_id* and convert our boundary data.frame to a multipolygon. If we wanted to buffer or smooth our data, we can use the same functions as above.
+
+```R
+angostura_boundary <- pol_feat %>%
+  filter(osm_id == 3442889)
+
+# convert to a multipolygon
+sf_use_s2(TRUE)
+angostura_buffer <- 
+  st_geometry(angostura_boundary) %>% 
+  as_geos_geometry() %>%
+  st_as_sfc() 
+
+# Grab all OSM polygons which fall within the Angostura polgygon
+sf_use_s2(FALSE)
+angostura_poly <- pol_feat %>% 
+  st_intersection(angostura_buffer)
+```
+Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina.
+
+```R
+# Join our two cities into one data.frame of polygons
+pol_feat_agg <- rbind(bariloche_poly, angostura_poly)
+
+# We're ready to grab out linear data from our study area region
+
+lin_feat <- osmextract::oe_get("Argentina",
+                               layer = "lines", 
+                               boundary = study_area_bbox,
+                               boundary_type = 'clipsrc',
+                               quiet = FALSE,
+                               force_download = TRUE,
+                               stringsAsFactors = FALSE, 
+                               extra_tags=keys)
+```
+<a name="building"></a>
+## 3. Building landcover classes
+### Categorizing OSM features
+Our next step is to Categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
+
+```R
+vlayers <- OSMtoLULC_vlayers(
+  OSM_polygon_layer = pol_feat_agg, 
+  OSM_line_layer = lin_feat
+)
+```
+
+<details closed><summary> See the vlayers function</a></summary>
+
+```R
+OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
+  
+  # Create list to hold vector layers
+  classL1 <- list()
+  
+  #class_01 <- industrial  
+  classL1[[1]] <- OSM_polygon_layer %>% filter(landuse %in% c("industrial", "fairground") |
+                                                 industrial %in% c("factory") |
+                                                 power %in% c("substation"))
+  #class_02 <- commercial 
+  classL1[[2]] <- OSM_polygon_layer %>% filter(landuse %in% c("commercial", "retail"))
+  
+  # class_03 <- institutional  
+  classL1[[3]] <- OSM_polygon_layer %>% filter(landuse %in% c("institutional", "education", "religious", "military") |
+                                                 amenity %in% c("school", "hospital", "university", "fast_food", "clinic", "theatre", "conference_center", "place_of_worship", "police") |
+                                                 leisure %in% c("golf_course")|
+                                                 healthcare %in% c("clinic", "hospital"))
+  #class_04 <- residential
+  classL1[[4]] <- OSM_polygon_layer %>% filter(landuse %in% c("residential"))
+  
+  #class_05 <- landuse_railway
+  classL1[[5]] <- OSM_polygon_layer %>% filter(landuse %in% c("railway"))
+  
+  #class_06 <- open_green
+  classL1[[6]] <- OSM_polygon_layer %>% filter(landuse %in% c("park", "grass", "cemetery", "greenfield", "recreation_ground", "winter_sports")|
+                                                 (!is.na(golf) & !(golf %in% c("rough","bunker"))) |
+                                                 amenity %in% c("park") |
+                                                 leisure %in% c("park", "stadium", "playground", "pitch", "sports_centre", "stadium", "pitch", "picnic_table", "pitch", "dog_park", "playground")|
+                                                 sport %in% c("soccer")|
+                                                 power %in% c("substation")|
+                                                 surface %in% c("grass"))
+  # class_07 <- protected_area
+  classL1[[7]] <- OSM_polygon_layer %>% filter(leisure	%in% c("nature_reserve")|
+                                                 #boundary %in% c("protected_area","national_park")|
+                                                 protected_area %in% c("nature")|
+                                                 landuse %in% c("nature_reserve", "natural_reserve", "landscape_reserve"))
+  # class_08 <- resourceful_area
+ 
+   classL1[[8]] <- OSM_polygon_layer %>% filter(landuse %in% c("orchard","farmland", "landfill","vineyard", "farmyard", "allotments", "allotment", "farmland")|
+                                                 leisure %in% c('garden')|
+                                                 !is.na(allotments))
+  # class_09 <- heterogenous_green 
+  classL1[[9]] 	<- OSM_polygon_layer %>% filter(natural %in% c("garden", "scrub", "shrubbery", "tundra", "cliff", "shrub", "wetland", "grassland", "fell",
+                                                               "heath","moor")|
+                                                  landuse	%in% c("plant_nursery", "meadow", "flowerbed", "wetland")|
+                                                  #!is.na("meadow")| # This part creates an error
+                                                  golf %in% c("rough") | 
+                                                  grassland %in% c("pairie"))
+  
+  #class_10 <- barren_soil 
+  classL1[[10]] 	<- OSM_polygon_layer %>% filter(natural %in% c("mud", "dune", "sand","scree","sinkhole", "beach")|
+                                                   landuse	%in% c("brownfield", "construction")|
+                                                   golf	%in% c("bunker"))
+  #class_11 <- dense_green
+  classL1[[11]] <- OSM_polygon_layer %>% filter(landuse %in% c("forest")|
+                                                  natural  %in% c("wood")|
+                                                  boundary %in% c("forest", "forest_compartment"))
+  #class_12 <- water 
+  classL1[[12]]  <- OSM_polygon_layer %>% filter(landuse %in% c("basin")|
+                                                   natural	 %in% c("water", "spring", "waterway")|
+                                                   waterway	 %in% c("river", "stream", "tidal_channel", "canal", "drain", "ditch", "yest")|
+                                                   (!is.na(water) & water != "intermittent")|
+                                                   basin  %in% c("detention")|
+                                                   intermittent != "yes"|
+                                                   seasonal	!= "yes"|
+                                                   tidal!= "yes")
+  
+  # class_13 <- parking_surface 
+  classL1[[13]] <- OSM_polygon_layer %>% filter(parking	%in% c("surface")|
+                                                  aeroway	%in% c("runway", "apron"))
+  
+  # class_14 <- building
+  classL1[[14]] 	<- OSM_polygon_layer %>% filter( #!is.na("building")| # This part creates an error
+    building %in% c("hospital", "parking", "industrial", "school", "commercial", "terrace", "detached", "semideatched_house", "house", "retail", "hotel", "apartments", "yes", "airport", "university")|
+      parking	%in% c("multi-storey")|
+      aeroway	%in% c("terminal"))
+  
+  # class_15 <- roads_very_high_traffic	
+  classL1[[15]] <-  OSM_line_layer %>% filter(highway	%in% c("motorway",'motorway_link', "motorway_junction") &
+                                                !grepl('/"bridge/"=>/"yes/"', OSM_line_layer$other_tags))
+  
+  # class_16 <- roads_sidewalk	
+  classL1[[16]]	<- OSM_line_layer %>% filter(footway	%in% c("sidewalk"))
+  
+  # class_17 <- roads_unclassified
+  classL1[[17]] <- OSM_line_layer %>% filter(!(highway %in% c("footway","construction","escape","cycleway","steps","bridleway","construction","path","pedestrian","track","abandoned", "turning_loop","living_street", "bicycle road", "cyclestreet", "cycleway lane","cycleway tracks", "bus and cyclists", "service","services", "busway", "sidewalk", "residential", "rest_area", "primary", "motorway_junction", "secondary", "secondary_link", "tertiary", "tertiary_link", "motorway","motorway_link","trunk_link", "trunk", "corridor","elevator","platform","crossing","proposed", "razed")))
+  
+  # class_18 <- roads_very_low_traffic
+  classL1[[18]] <-  OSM_line_layer %>% filter(highway	 %in% c("services","service","turning_loop","living_street"))
+  
+  # class_19 <- roads_low_traffic
+  classL1[[19]] <- OSM_line_layer %>% filter(highway	%in% c("residential", "rest_area", "busway"))
+  
+  # class_20 <- roads_med_traffic 
+  classL1[[20]] <- OSM_line_layer %>% filter(highway	%in% c("tertiary", "tertiary_link"))
+  
+  # class_21 <- roads_high_traffic_low_speed
+  classL1[[21]] <-  OSM_line_layer %>% filter(highway	%in% c("primary", "primary_link", "secondary", "secondary_link"))
+  
+  # class_22 <- roads_high_traffic_high_speed
+  classL1[[22]] <- OSM_line_layer %>% filter(highway	%in% c("trunk", "trunk_link"))
+  
+  # class_23 <- streetcars
+  classL1[[23]] <- OSM_line_layer %>% filter(railway	%in% c("tram"))
+  
+  # class_24 <- pedestrian_trails
+  classL1[[24]] <- OSM_line_layer %>% filter(highway	%in% c("footway","construction","escape", "cycleway","steps","bridleway","path","pedestrian","track", "abandoned","bicycle road", "cyclestreet", "cycleway lane", "cycleway tracks", "bus and cyclists")|
+                                               footway	!= "sidewalk")
+  
+  # class_25 <- railway	
+  classL1[[25]] <- OSM_line_layer %>% filter(railway	%in% c("light_rail","narrow_gauge","rail","preserved")|
+                                               railway != "tram")
+  # class_26 <- linear_features_not_in_use
+  classL1[[26]] <- OSM_line_layer %>% filter(railway	%in% c("abandonded","construction","disused")|
+                                               highway	%in% c("construction"))
+  # class_27 <- barriers
+  #classL1[[28]] <- OSM_line_layer %>% filter(!is.na("barrier"))
+  classL1[[27]] <- OSM_line_layer %>% filter(barrier !='')
+  
+  return(classL1)
+  
+}
+
+```
+             
+</details>
+
+### Converting OSM features to rasters
+Now we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
+
+| variable  | coordinate |
+|---------|------|
+|xmin|minimum latitude|
+|xmax|maximum latitude|
+|ymin|minimum longitude|
+|ymax|maximum longitude|
+
+<details closed><summary> See the rlayers function</a></summary>
+
+```R
+OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
+  classL1 <- OSM_LULC_vlayers
+  rtemplate <- rast(res=0.00001, ext = study_area_extent, crs= "EPSG:4326") #PR
+  # rtemplate5 <- terra::project(rtemplate, "EPSG:5070")
+  classL1  <- Filter(Negate(is.null), classL1) #eliminates any nulls
+  
+  refTable <- cbind.data.frame(
+    "rid"=c(1:27), 
+    "feature"=c("industrial", "commercial", "institutional", "residential", "landuse_railway",
+                "open_green","protected area", "resourceful_area", "heterogenous_green", "barren_soil",
+                "dense green","water", "parking_surface", "building","roads_very_high_traffic", 
+                "roads_sidewalk", "roads_unclassified","roads_very_low_traffic", "roads_low_traffic",
+                "roads_med_traffic", "roads_high_traffic_low_speed", "roads_high_traffic_high_speed",
+                "streetcars", "pedestrian_trails", "railway", "linear_features_not_in_use","barriers"),
+    "priority"=c(1:27),
+    "geometry"=c(rep("poly",14), rep("line",13)),
+    "buffer"=c(rep(NA,12),6,NA,NA,24,3,12,6, 12,18,36,6,3,12,6,1) # buffer in meters
+  )
+  
+  classL2 <- list()
+  
+  for(i in 1:27){
+    if(as.character(st_geometry_type(classL1[[i]], by_geometry = FALSE)) %in% c("POLYGON","MULTIPOLYGON", "GEOMETRY")){
+      temp1 <- classL1[[i]]
+      if(nrow(temp1)>0){
+        temp1 <- st_make_valid(temp1) #PR
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- terra::project(svc(temp1)[1], rtemplate)
+        temp1$priority <- refTable$priority[i]
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") 
+        print(paste0("layer ", i, "/27 ready"))
+      }
+    }else{
+      temp1 <- classL1[[i]]
+      if(!is.null(temp1)){
+        temp1 <- st_make_valid(temp1) #PR
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- st_transform(temp1, "EPSG:5070")
+        temp1 <- st_buffer(temp1, dist=refTable$buffer[i])
+        temp1 <- terra::project(svc(temp1)[1], rtemplate)
+        temp1$priority <- refTable$priority[i]
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority")
+        print(paste0("layer ", i, "/27 ready"))
+      }else{print(paste0("layer ", i, "/27 null"))}
+    }
+  }
+  return(classL2)
+}
+
+```
+</details>
+
+
+```R
+extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
+
+# this function which assigns each landcover class information such as its geometry or a buffer
+rlayers <- OSMtoLULC_rlayers(
+  OSM_LULC_vlayers = vlayers,
+  study_area_extent = extent
+)
+
+# Test this worked by plotting our building layer 
+plot(rlayers[[14]], col = "black") # 14 = building list
+```
+## ADD PLOT HERE
+
+### Merging rasters
+It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
+
+```R
+
+OSM_only_map <- merge_OSM_LULC_layers(
+  OSM_raster_layers = rlayers
+)
+```
+
+##
