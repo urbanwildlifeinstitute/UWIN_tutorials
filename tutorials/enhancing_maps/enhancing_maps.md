@@ -447,5 +447,49 @@ OSM_only_map <- merge_OSM_LULC_layers(
   OSM_raster_layers = rlayers
 )
 ```
+<details closed><summary> See the OSM_only_map function function</a></summary>
+  ```R
+  merge_OSM_LULC_layers <- function(OSM_raster_layers){ 
+  classL2 <- OSM_raster_layers
+  classL2 <- Filter(Negate(is.null), classL2)
+  classL2 <- rev(classL2) #Seattle loses class 16 when we revert but reverting works as expected to overlay classes
+  r3 <- terra::app(rast(classL2), fun='first', na.rm=TRUE)
+  return(r3)
+}
+  ```
+</details>
 
-##
+Let's have a quick view of our final OSM map using `ggplot()`
+```R
+ggplot() +
+  geom_spatraster(data = as.factor(OSM_only_map), aes(fill = first)) +
+  # You can use coord_sf
+  coord_sf(crs = 4326) +
+  scale_fill_manual(values = viridis::viridis(27), breaks = 1:27,
+                    labels = c("industrial", 
+                               "commercial", "institutional",
+                               "residential","landuse_railway", "open green",
+                               "protected area", "resourceful area","heterogeneous green area",
+                               "barren soil","dense green area", "water",
+                               "parking surface", "buildings",
+                               "roads (v.h. traffic)", 
+                               "sidewalks", "roads_na",
+                               "roads (v.l. traffic)", "roads (l. traffic)", "roads (m. traffic)",
+                               "roads (h.t.l.s)", "roads (h.t.h.s)", 
+                               "trams/streetcars",
+                               "walking trails", "railways", "unused linear feature",
+                               "barriers"),
+                    na.value = "white")
+```
+We can also interact with our map using `tmap` and get a closer look at our featured lines and polygons
+```R
+tmap_mode("view")
+tm_shape(as.factor(OSM_only_map))+
+  tm_raster(breaks= 1:27)
+```
+### Integrating OSM features into global landcover map
+As a reminder, the OSM database is primarily populated by community contibutions, thus there are likely gaps of information. To enhance our map and to ensure we dont have any gaps in the final output of the framework we will integrate the `OSM_only_map` on to a global or continental land cover map (depending on your region of interest). Here we 
+
+# In this case we use the CEC land cover map as a background map by reclassifying it into our classification system
+# and filling any NA cells with the information provided in the reclassified CEC map.
+
