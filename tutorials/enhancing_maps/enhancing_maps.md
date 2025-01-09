@@ -429,7 +429,16 @@ rlayers <- OSMtoLULC_rlayers(
 # Test this worked by plotting our building layer 
 plot(rlayers[[14]], col = "black") # 14 = building list
 ```
+## ADD PLOT HERE
 
 ### Merging rasters
 It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
 
+```R
+
+OSM_only_map <- merge_OSM_LULC_layers(
+  OSM_raster_layers = rlayers
+)
+```
+
+##
