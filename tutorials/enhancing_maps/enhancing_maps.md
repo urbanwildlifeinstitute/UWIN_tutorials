@@ -217,7 +217,14 @@ vlayers <- OSMtoLULC_vlayers(
   OSM_polygon_layer = pol_feat_agg, 
   OSM_line_layer = lin_feat
 )
+
+# plot a layer to see if this worked as expected
+plot(vlayers[[14]][1]) # This is the building layer
 ```
+<p float="center">
+  <img src="./figures/vlayers_building.png" alt="A plot of the different buildings in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+
+</p>
 
 <details closed><summary> See the vlayers function</a></summary>
 
