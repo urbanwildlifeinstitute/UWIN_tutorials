@@ -121,7 +121,7 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                force_download = TRUE,
                                extra_tags=keys)
 ```
-Great, we now have all the OSM data grabbed using our *keys* and outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape. 
+Great, we now have all the OSM data grabbed using our *keys* and outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes. For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region. Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape (more on this later). 
 
 We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
 
@@ -488,8 +488,7 @@ tm_shape(as.factor(OSM_only_map))+
   tm_raster(breaks= 1:27)
 ```
 ### Integrating OSM features into global landcover map
-As a reminder, the OSM database is primarily populated by community contibutions, thus there are likely gaps of information. To enhance our map and to ensure we dont have any gaps in the final output of the framework we will integrate the `OSM_only_map` on to a global or continental land cover map (depending on your region of interest). Here we 
+As a reminder, the OSM database is primarily populated by community contibutions, thus there are likely gaps of information. To enhance our map and to ensure we dont have any gaps in the final output of the framework we will integrate the `OSM_only_map` on to a global or continental land cover map (depending on your region of interest). As mentioned above, we use the CDS land cover map as a background map by reclassifying to be coheisve with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided in the reclassified CDS map.
 
-# In this case we use the CEC land cover map as a background map by reclassifying it into our classification system
-# and filling any NA cells with the information provided in the reclassified CEC map.
+
 
