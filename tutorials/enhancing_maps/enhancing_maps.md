@@ -211,7 +211,7 @@ In addition to OSM data, we can incorperate other sources of relevant data, such
 
 Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) and downloads as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy. 
 
-<details closed><summary> See converting code here </a></summary>
+<details closed><summary> See code to convert data here </a></summary>
 ```R
 # Read in building data downloaded from: https://sites.research.google/gr/open-buildings/
 buildings <- read_csv("./global_landcover_maps/961_buildings.csv.gz")
@@ -219,9 +219,9 @@ head(buildings)
 
 building_df = st_as_sf(buildings, crs = "EPSG:4326", wkt = "geometry") # convert to spatial object
 write_sf(building_df, "./global_landcover_maps/Argentina_buildings.gpkg") # save as geopackage
-
 ```
 </details>
+
 
 For this tutorial, we will read in the coverted geopackage directly.
 ```R
