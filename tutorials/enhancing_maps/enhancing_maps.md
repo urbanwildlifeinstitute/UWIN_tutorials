@@ -568,10 +568,10 @@ my_map = rast("./global_landcover_maps/CCS-Map-300m-P1Y-2022-Argentina.nc")
 # subset raster to just the landcover data
 my_map <- my_map$lccs_class
 
-# view the global landcover map
 # crop map to OSM map extent
 my_map_crop <- crop(my_map, ext(OSM_only_map))
 
+# view the global landcover map
 ggplot(data = as.factor(my_map_crop)) +
   geom_raster(aes(x = x, y = y, fill = lccs_class)) +
   theme(
@@ -633,6 +633,6 @@ ggplot(data = as.factor(my_map_crop)) +
 ```
 
 <p float="center">
-  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) within study region" width="500" height="auto" />
+  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) within study region" width="800" height="auto" />
 
 </p>
