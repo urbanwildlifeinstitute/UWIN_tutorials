@@ -632,6 +632,6 @@ ggplot(data = as.factor(my_map_crop)) +
   coord_equal()
 ```
 <p float="center">
-  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) within study region" width="950" height="auto" />
+  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) within study region" width="1000" height="auto" />
 
 </p>
