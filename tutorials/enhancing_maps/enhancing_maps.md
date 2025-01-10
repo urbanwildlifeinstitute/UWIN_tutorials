@@ -559,5 +559,78 @@ For our example, we will be overlaying OSM data ontop of a global dataset from [
 
 To integrate these maps, we need to reclassify the CDS data to be coheisve with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided in the reclassified CDS map.
 
+```R
+# read in global dataset
+my_map = rast("./global_landcover_maps/CCS-Map-300m-P1Y-2022-Argentina.nc")
 
+# subset raster to just the landcover data
+my_map <- my_map$lccs_class
 
+# view the global landcover map
+# crop map to OSM map extent
+my_map_crop <- crop(my_map, ext(OSM_only_map))
+
+ggplot(data = as.factor(my_map_crop)) +
+  geom_raster(aes(x = x, y = y, fill = lccs_class)) +
+  theme(
+    legend.title = element_text(size=11), #change legend title font size
+    legend.text = element_text(size=8)) + #change legend text font size
+  scale_fill_manual(name = "Landcover Class", 
+                    #values= viridis::viridis(36),
+                    values = c("#BFAE15", "#84D982", "#84D982",
+                      "#BFAE15", "#BFAE15", "#84D982",
+                      "#144F28", "#144F28", "#144F28", 
+                      "#144F28", "#144F28", "#144F28", 
+                      "#144F28", "#144F28", "#144F28",
+                      "#144F28", "#144F28", "#84D982", 
+                      "#84D982", "#768A5E", "#29612C", 
+                      "#43993D", "#84D982", "#64B39B", 
+                      "#B6C49A", "#B6C49A", "#B6C49A",
+                      "#31635E", "#31635E", "#5A967A",
+                      "#000000", "#A68964", "#A68964",
+                      "#A68964", "#088da5", "#6CF7EE"),
+                    breaks = c(10:12, 20, 30, 40, 50, 60:62, 70:72,
+                               80:82, 90, 100, 110, 120:122, 130, 140, 150:152, 160, 170,
+                               180, 190, 200:202, 210, 220), # to match map values
+                    labels=c("cropland, rainfed", "herbaceous cover", "tree or shrub cover",
+                             "cropland, irrigates, or post-flooding",
+                             "mosaic cropland >50%",
+                             "mosaic natural vegetation >50%", "tree cover, evergreen >15%",
+                             "tree cover, deciduous >15%",
+                             "tree cover, deciduous, closed >40%",
+                             "tree cover, deciduous, open 15-40%",
+                             "tree cover, needleleaved, evergreen, >15%",
+                             "tree cover, needleleaved, evergreen >40%",
+                             "tree cover, needleleaved, evergreen, 15-40%",
+                             "tree cover, needleleaved, deciduous, >15%",
+                             "tree cover, needleleaved, deciduous >40%",
+                             "tree cover, needleleaved, deciduous, 15-40%",
+                             "tree cover, mixed leaf",
+                             "mosaic tree and shrub",
+                             "mosaic herbaceous cover",
+                             "shrubland",
+                             "evergreen shrubland",
+                             "deciduous shrubland",
+                             "grassland",
+                             "lichens and moses",
+                             "sparse vegetation (tree, shrub, herbaceous cover)",
+                             "spare shrub <15%",
+                             "sparse herbaceous cover <15%",
+                             "tree cover, flooded, fresh or brakish water",
+                             "tree cover, flooded, saline water",
+                             "shrub or herbaceous cover, flooded, fresh/saline/brakish",
+                             "urban areas",
+                             "bare areas",
+                             "consolidated bare areas",
+                             "unconcolidates bare areas",
+                             "water bodies",
+                             "permanent snow and ice")) +
+  theme_void() +
+  theme(legend.position = "right")+
+  coord_equal()
+```
+
+<p float="center">
+  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) within study region" width="500" height="auto" />
+
+</p>
