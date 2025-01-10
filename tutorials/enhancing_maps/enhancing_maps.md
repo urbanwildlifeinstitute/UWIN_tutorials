@@ -554,7 +554,7 @@ tm_shape(as.factor(OSM_only_map))+
 ```
 
 <a name="integrating"></a>
-## Integrating maps
+## 4. Integrating maps
 As a reminder, the OSM database is primarily populated by community contibutions, thus there are likely gaps of information. To enhance our map and to ensure we dont have any gaps in the final output of the framework we will integrate the `OSM_only_map` onto a global or continental land cover map (depending on your region of interest). 
 
 For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
