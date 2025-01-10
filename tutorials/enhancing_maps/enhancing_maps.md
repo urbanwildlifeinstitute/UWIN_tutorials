@@ -631,7 +631,5 @@ ggplot(data = as.factor(my_map_crop)) +
   theme(legend.position = "right")+
   coord_equal()
 ```
-<p float="center">
-  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1000" height="auto" />
 
-</p>
+
