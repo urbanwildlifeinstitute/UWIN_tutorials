@@ -560,6 +560,7 @@ As a reminder, the OSM database is primarily populated by community contibutions
 For our example, we will be overlaying OSM data ontop of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
 
 To integrate these maps, we need to reclassify the CDS data to be coheisve with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided in the reclassified CDS map.
+### Read in and view data
 
 ```R
 # read in global dataset
@@ -636,3 +637,14 @@ ggplot(data = as.factor(my_map_crop)) +
 
 </p>
 
+### Reclassify Data
+When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data, here CDS, will transpose to the OSM dataset. We can choose to convert exisiting classes into representative OSM classes or retain the CDS classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf). We have prepped this dictionary for this example. We will read in the .csv and extract just the numeric values.
+
+```R
+# Read in reclassification dictionary
+reclass_values <- read_csv("D:/GitHub/OSM_for_Ecology/reclass_tables/reclass_cds_2_mcsc.csv")
+
+# Select classification values only
+CDS_to_OSM_table <- reclass_values %>% 
+  dplyr::select(cds_value, mcsc_value)
+```
