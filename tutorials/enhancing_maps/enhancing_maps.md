@@ -209,7 +209,7 @@ lin_feat <- osmextract::oe_get("Argentina",
 ### Integrating Open Building Data
 In addition to OSM data, we can incorperate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
-Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) and downloads as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy. 
+Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the coverted geopackage directly.
 
 <details closed><summary> See code to convert data here </a></summary>
   
@@ -225,7 +225,7 @@ write_sf(building_df, "./global_landcover_maps/Argentina_buildings.gpkg") # save
 </details>
 
 
-For this tutorial, we will read in the coverted geopackage directly.
+
 ```R
 # read in as .gpkg file
 build <- st_read("./global_landcover_maps/Argentina_buildings.gpkg")
