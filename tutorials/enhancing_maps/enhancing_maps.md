@@ -1,4 +1,4 @@
-ready# UWIN Tutorial: Enhancing maps with OpenStreetMap Data
+# UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated December 2024*
 
 This tutorial is aimed at those interested in (1) advancing their spatial mapping skills and (2) integrating OpenStreetMap and other data sources to enhance exisiting spatial datasets. 
