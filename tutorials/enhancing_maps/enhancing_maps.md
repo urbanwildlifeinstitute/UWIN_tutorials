@@ -225,12 +225,11 @@ write_sf(building_df, "./global_landcover_maps/Argentina_buildings.gpkg") # save
 </details>
 
 
-
 ```R
-# read in as .gpkg file
+# read in .gpkg file
 build <- st_read("./global_landcover_maps/Argentina_buildings.gpkg")
 ```
-Note that these data come with confidence probabilities of the building existence. For our example, we will limit our dataset to buildings with great than 80% confidence. We will also format the data to easily bind it with our existing polygon data e.g. `pol_data`.
+Note that these data come with confidence values for each building's probable existence. For our example, we will limit our dataset to buildings with greater than 80% confidence of exisiting. Next, we will format the data to easily bind it with our existing polygon data e.g. `pol_data`. 
 
 ```R
 # filter to buildings with >80% confidence
@@ -251,7 +250,7 @@ build_80 <- rename(build_80, geometry = geom)
 We can easily combine our data using `rbind`, however we need to match our columns for each dataset. We can do this by adding all missing columns to each dataset and populating them with NA's/
 ```R
 # Step 1: Make sure columns in both data.frames are the same
-all_columns <- union(names(build_80), names(pol_feat))  # Combine all unique columns from both
+all_columns <- union(names(build_80), names(pol_feat_agg))  # Combine all unique columns from both
 
 # Step 2: Add missing columns with NA in each data.frame
 # Add missing columns to 'build'
@@ -260,27 +259,27 @@ for (col in missing_build) {
   build_80[[col]] <- NA  # Add missing column with NA values
 }
 
-# Add missing columns to 'pol_feat'
-missing_pol_feat <- setdiff(all_columns, names(pol_feat))  # Columns missing in 'pol_feat'
+# Add missing columns to 'pol_feat_agg'
+missing_pol_feat <- setdiff(all_columns, names(pol_feat_agg))  # Columns missing in 'pol_feat_agg'
 for (col in missing_pol_feat) {
-  pol_feat[[col]] <- NA  # Add missing column with NA values
+  pol_feat_agg[[col]] <- NA  # Add missing column with NA values
 }
 ```
 Now we are ready to row bind our datasets and save as a `sf` object.
 ```R
-combined <- rbind(build_80, pol_feat)
+combined <- rbind(build_80, pol_feat_agg)
 combined <- st_as_sf(combined)
 ```
-
+Note that other data sources can be used to bolster existing OSM data (like we have done here with the OSM `building` column) or be used to create new sources or columns of data (for example, vacant lots). However, any new columns that are added to the OSM data.frame, or `pol_data`, will need to be added as new layers in our next steps.
 
 <a name="building"></a>
 ## 3. Building landcover classes
 ### Categorizing OSM features
-Our next step is to Categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
+Now we are ready to categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
 
 ```R
 vlayers <- OSMtoLULC_vlayers(
-  OSM_polygon_layer = pol_feat_agg, 
+  OSM_polygon_layer = combined, 
   OSM_line_layer = lin_feat
 )
 
@@ -423,7 +422,7 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
 </details>
 
 ### Converting OSM features to rasters
-Now we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using numeric value. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
+Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using coordinate values. We will not use an sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
 | variable  | coordinate |
 |---------|------|
