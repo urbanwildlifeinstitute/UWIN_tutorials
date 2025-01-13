@@ -650,3 +650,36 @@ reclass_values <- read_csv("D:/GitHub/OSM_for_Ecology/reclass_tables/reclass_cds
 CDS_to_OSM_table <- reclass_values %>% 
   dplyr::select(cds_value, mcsc_value)
 ```
+Now we are ready to create our final product, our integrated OSM and global landcover map!
+
+<details closed><summary> See the integrate_OSM_to_globalLULC() function</a></summary>
+  
+integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_table){
+  
+  #load global lulc raster that will work as a background layer to cover any missing data in the OSM_database
+  r5 <-  global_lulc_map
+  r3 <-  OSM_lulc_map
+
+  r3p <- project(r3, crs(r5)) #reproject OSM-only raster to global LULC raster to crop the global LULC
+  r5 <- crop(r5, r3p) #crop
+  
+  #reproject cropped global LULC to our frameworks projection
+  r6 <- terra::project(r5, r3, method="near", align=TRUE)
+
+  # crop again after reprojection to ensure rasters have the same extent
+  r6 <- terra::crop(r6, r3)
+  r6 <- terra::extend(r6, r3) # this is to ensure the rasters line up before masking.
+  r7 <- classify(r6, reclass_table)
+  r4 <- ifel(is.na(r3), r7, r3)
+ 
+  return(as.factor(r4))
+} 
+
+</details>
+
+```R
+sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
+OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
+                                                     global_lulc_map = my_map, 
+                                                     reclass_table = CDS_to_OSM_table)
+```
