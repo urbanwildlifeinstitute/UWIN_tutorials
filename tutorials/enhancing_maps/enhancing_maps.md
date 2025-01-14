@@ -650,6 +650,7 @@ reclass_values <- read_csv("D:/GitHub/OSM_for_Ecology/reclass_tables/reclass_cds
 CDS_to_OSM_table <- reclass_values %>% 
   dplyr::select(cds_value, mcsc_value)
 ```
+### Integrate Data
 Now we are ready to create our final product, our integrated OSM and global landcover map!
 
 <details closed><summary> See the integrate_OSM_to_globalLULC() function</a></summary>
@@ -683,7 +684,7 @@ OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map
                                                      global_lulc_map = my_map, 
                                                      reclass_table = CDS_to_OSM_table)
 ```
-Voilà! We now have a new and improved integrated OSM land-use land-cover map! Our object, OSM_enhanced_LULC_map, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened in ArcGIS or other mapping programs.
+Voilà! We now have a new and improved integrated OSM land use land cover map! Our object, OSM_enhanced_LULC_map, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened in ArcGIS or other mapping programs.
 
 ```R
 # To save SpatRaster as .tif
