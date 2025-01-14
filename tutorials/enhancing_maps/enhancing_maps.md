@@ -19,7 +19,7 @@ This tutorial builds on work described in the manuscript,
 
 #### <a href="#building"> 3. Building landcover classes</a>
 
-#### <a href="#integrating"> 4. Intgrating Maps</a>
+#### <a href="#integrating"> 4. Integrating Maps</a>
 
 
 <a name="OpenStreetMaps"></a>
@@ -683,3 +683,76 @@ OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map
                                                      global_lulc_map = my_map, 
                                                      reclass_table = CDS_to_OSM_table)
 ```
+Voilà! We now have a new and improved integrated OSM land-use land-cover map! Our object, OSM_enhanced_LULC_map, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened in ArcGIS or other mapping programs.
+
+```R
+# To save SpatRaster as .tif
+terra::writeRaster(
+  OSM_enhanced_LULC_map,
+  "Bariloche_enhanced_lcover.tif",
+  overwrite=TRUE
+)
+
+# To save raster as a shapefile
+# Convert SpatRaster to raster
+raster_data <- rast(OSM_enhanced_LULC_map)
+
+# Convert raster to polygons
+polygon_data <- as.polygons(raster_data)
+
+# Create a new column which adds classification levels and can be used as an attribute table in ArcGIS
+polygon_data$landuse_class <- values(raster_data)
+
+# Save shapefile
+writeVector(polygon_data, "Bariloche_enhanced_lcover.shp", overwrite = TRUE)
+```
+We can also use `ggplot2` to view our map in R and export as a .png, .tif, etc.
+
+```R
+OSM_enahnced_LULC_plot <- ggplot(data = OSM_enhanced_LULC_map) +
+   geom_raster(aes(x = x, y = y, fill = first)) +
+   theme( #change legend key size
+  #       legend.key.height = unit(1, 'cm'), #change legend key height
+  #       legend.key.width = unit(1, 'cm'), #change legend key width
+        legend.title = element_text(size=11), #change legend title font size
+        legend.text = element_text(size=8)) + #change legend text font size
+    scale_fill_manual(name = "Landcover Class", 
+                      values=c("#843438","#df919a", "#B5605E",
+                             "#A37279", "#F7D200","#D4ED88",
+                             "#AFDC70", "#BFAE15", "#84D982",
+                             "#A68964", "#144F28","#088da5",
+                             "#C2C2C2", "#000000",
+                             "#F00400", "#6B6666",
+                             "#ffce00","#F2C3A2", "#FCAC74",
+                             "#ED9026", "#F25250", "#9C0300",
+                             "#E8DBDA", "#783F04",
+                             "#FFDA61", "#400000", 
+                             "#BA0A07", "#518F77",
+                             "#768A5E", "#29612C", "#43993D",
+                             "#64B39B","#B6C49A", "#31635E",
+                             "#5A967A", "#6CF7EE"),
+                    breaks = c(c(1:27), 110, 120, 121, 122, 140, 150, 160, 180, 220), # to match map values
+                    labels=c("industrial", "commercial", "institutional",
+                             "residential","landuse_railway", "open green",
+                             "protected area", "resourceful area","heterogeneous green area",
+                             "barren soil","dense green area", "water",
+                             "parking surface", "buildings",
+                             "roads (v.h. traffic)", "sidewalks", "roads_na",
+                             "roads (v.l. traffic)", "roads (l. traffic)", "roads (m. traffic)",
+                             "roads (h.t.l.s)", "roads (h.t.h.s)", "trams/streetcars",
+                             "walking trails", "railways", "unused linear feature",
+                             "barriers", "mosaic herbaceous cover",
+                             "shrubland", "evergreen shrubland","deciduous shrubland",
+                             "lichens and moses", "sparse vegetation (tree, shrub, herbaceous cover)", 
+                             "tree cover, flooded",
+                             "herbaceous, flooded", "permanent snow and ice")) +
+  theme_void() +
+  theme(legend.position = "right")+
+  coord_equal()
+
+OSM_enahnced_LULC_plot
+
+ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height = 8.5, units = "in")
+```
+
+ADD PLOT HERE
