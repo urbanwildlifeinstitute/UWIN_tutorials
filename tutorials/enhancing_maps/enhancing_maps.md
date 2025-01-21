@@ -178,6 +178,8 @@ We do not need to buffer or smooth Villa Angostura like we did for Bariloche as 
 angostura_boundary <- pol_feat %>%
   filter(osm_id == 3442889)
 
+plot(angostura_boundary[1], main = "Angostura boundary")
+
 # convert to a multipolygon
 sf_use_s2(TRUE)
 angostura_buffer <- 
@@ -190,6 +192,10 @@ sf_use_s2(FALSE)
 angostura_poly <- pol_feat %>% 
   st_intersection(angostura_buffer)
 ```
+<p float="left">
+  <img src="./figures/angostura_boundary.png" alt="A plot of Angostura's munipality boundary" width="400" height="auto" />
+</p>
+
 Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina.
 
 ```R
