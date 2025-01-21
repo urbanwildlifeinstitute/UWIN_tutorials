@@ -105,7 +105,7 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It helpful to check your are grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
+It helpful to check your are grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load.
 
 ```R
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
@@ -155,7 +155,10 @@ bariloche_buffer <-
   geos_concave_hull(ratio = .02) %>% 
   st_as_sfc() %>% 
   st_buffer(5) %>% 
-  smoothr::smooth(method = "ksmooth", smoothness = 3) 
+  smoothr::smooth(method = "ksmooth", smoothness = 3)
+
+plot(bariloche[1], main = "Bariloche boundary") # before smoothing
+plot(bariloche_buffer[1], main = "Bariloche boundary smooth") #after smoothing
 
 # Now we are ready to grab all OSM polygons which fall within our new 'bariloche buffer'
 sf_use_s2(FALSE)
