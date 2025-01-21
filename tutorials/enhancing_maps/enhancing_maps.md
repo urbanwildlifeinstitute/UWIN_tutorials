@@ -84,8 +84,6 @@ osm_kv <- osm_kv %>%
 keys <- unique(osm_kv$key)
 ```
 
-<a name="pullingandformatting"></a>
-## 2. Pulling and filtering data
 Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
 Let start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
@@ -107,7 +105,7 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It helpful to check your grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
+It helpful to check your are grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load.
 
 ```R
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
@@ -157,7 +155,10 @@ bariloche_buffer <-
   geos_concave_hull(ratio = .02) %>% 
   st_as_sfc() %>% 
   st_buffer(5) %>% 
-  smoothr::smooth(method = "ksmooth", smoothness = 3) 
+  smoothr::smooth(method = "ksmooth", smoothness = 3)
+
+plot(bariloche[1], main = "Bariloche boundary") # before smoothing
+plot(bariloche_buffer[1], main = "Bariloche boundary smooth") #after smoothing
 
 # Now we are ready to grab all OSM polygons which fall within our new 'bariloche buffer'
 sf_use_s2(FALSE)
