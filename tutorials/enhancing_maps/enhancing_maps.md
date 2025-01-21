@@ -107,7 +107,7 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It helpful to check your grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
+It helpful to check your are grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data
 
 ```R
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
