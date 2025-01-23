@@ -496,6 +496,36 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
 ```
 </details>
 
+Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. We have included the output .tif files from the `rlayers()` function with a resolution of .00001 in the data folder of this tutorial for your use and comparison later in the tutorial. To read in the .tifs files, use the code below.  
+
+<details closed><summary> See the rlayers function</a></summary>
+
+```R
+# List all .RDS files in the directory
+rlayer_files <- list.files('./data', pattern = "\\.tif$", full.names = TRUE)
+
+# Read each .RDS file back into a list, these do not load in order
+loaded_rlayers <- lapply(rlayer_files, terra::rast)
+
+# Add in null list items where data was missing to keep order cohesive with remaining code
+loaded_rlayers <- append(loaded_rlayers, "NULL", after = 14)
+loaded_rlayers <- append(loaded_rlayers, "NULL", after = 22)
+
+
+# Check the data is working as expected and plot the buildings layer 
+plot(loaded_rlayers[[14]], col = "black") # building polygons
+
+# Give each list element its appropriate landcover name
+names(loaded_rlayers) <- c("industrial", "commercial", "institutional", "residential", "landuse_railway",
+                    "open_green", "protected_area", "resourceful_area", "heterogenous_green", 
+                    "barren_soil", "danse_green", "water", "parking_surface", "building", "roads_very_high_traffic",
+                    "roads_sidewalks", "roads_unsclassified", "roads_very_low_traffic", "roads_low_traffic",
+                    "roads_med_traffic", "roads_high_traffic_low_speed", "roads_high_traffic_high_speed",
+                    "street_cars", "pedestrian_trails", "railway", "linear_features_not_in_use",
+                    "barriers")
+```
+</details>
+
 
 ```R
 extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
