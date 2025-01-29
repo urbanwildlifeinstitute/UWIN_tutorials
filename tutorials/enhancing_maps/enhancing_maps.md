@@ -105,7 +105,7 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It's helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load, thus we can read `pol_feat` in from our `./data` folder.
+It's helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load, thus we can read `pol_feat` in from our `./data` folder if needed (see code chunk below).
 
 ```R
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
@@ -118,7 +118,7 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                force_download = TRUE,
                                extra_tags=keys)
 ```
-If `pol_feat`is loading slowley, read in.
+If `pol_feat`is loading slowly, read in `pol_feat.rds`.
 ```R
 pol_feat <- readRDS("./data/pole_feat.rds")
 ```
@@ -145,7 +145,7 @@ sf_use_s2(FALSE)
 bariloche <- study_area_boundary %>% 
   st_intersection(bariloche_boundary)
 ```
-Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with variables in this function to buffer more widely or smooth other gaps in the boundary. Then we can grab all the OSM data within our new buffered area. See how the boundary changed before and after smoothing below.
+Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with variables in this function to buffer the boundary more widely or smooth gaps in the boundary. Then we can grab all the OSM data within our new buffered area. See how the boundary changed before and after smoothing below.
 
 ```R
 # notice that filtering to the townships of Bariloche misses some urban data nearby.
@@ -201,7 +201,7 @@ angostura_poly <- pol_feat %>%
   <img src="./figures/angostura_boundary.png" alt="A plot of Angostura's munipality boundary" width="400" height="auto" />
 </p>
 
-Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina.
+Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina. This may take a few minutes to load, thus we can read `lin_feat` in from our `./data` folder if needed (see code chunk below).
 
 ```R
 # Join our two cities into one data.frame of polygons
@@ -217,6 +217,10 @@ lin_feat <- osmextract::oe_get("Argentina",
                                force_download = TRUE,
                                stringsAsFactors = FALSE, 
                                extra_tags=keys)
+```
+If `lin_feat`is loading slowly, read in `lin_feat.rds`.
+```R
+lin_feat <- readRDS("./data/lin_feat.rds")
 ```
 ### Integrating Open Building Data
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
