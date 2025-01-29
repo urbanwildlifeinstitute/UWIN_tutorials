@@ -86,7 +86,7 @@ keys <- unique(osm_kv$key)
 
 Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
-Let start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
+Let's start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
 
 ```R
 # Set our first query
@@ -105,7 +105,7 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It helpful to check your are grabbing the expected study area as a common mistake is mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load.
+It's helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load, thus we can read `pol_feat` in from our `./data` folder.
 
 ```R
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
@@ -118,7 +118,12 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                force_download = TRUE,
                                extra_tags=keys)
 ```
-Great, we now have all the OSM data grabbed using our *keys* and outlined study area. Depending on your research questions or data available for your region, you may wish to limit OSM data to more specific areas within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to the urban regions only and use CDS data to describe the surrounding natural landscape (more on this later). 
+If `pol_feat`is loading slowley, read in.
+```R
+pol_feat <- readRDS("./data/pole_feat.rds")
+```
+
+Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
 
 We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
 
