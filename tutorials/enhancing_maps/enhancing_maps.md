@@ -231,11 +231,11 @@ Data can be downloaded directly from [Open Buildings](https://sites.research.goo
   
 ```R
 # Read in building data downloaded from: https://sites.research.google/gr/open-buildings/
-buildings <- read_csv("./global_landcover_maps/961_buildings.csv.gz")
+buildings <- read_csv("./data/961_buildings.csv.gz")
 head(buildings)
 
 building_df = st_as_sf(buildings, crs = "EPSG:4326", wkt = "geometry") # convert to spatial object
-write_sf(building_df, "./global_landcover_maps/Argentina_buildings.gpkg") # save as geopackage
+write_sf(building_df, "./data/Argentina_buildings.gpkg") # save as geopackage
 ```
 
 </details>
@@ -243,7 +243,7 @@ write_sf(building_df, "./global_landcover_maps/Argentina_buildings.gpkg") # save
 
 ```R
 # read in .gpkg file
-build <- st_read("./global_landcover_maps/Argentina_buildings.gpkg")
+build <- st_read("./data/Argentina_buildings.gpkg")
 ```
 Note that these data come with confidence values for each building's probable existence. For our example, we will limit our dataset to buildings with greater than 80% confidence of existing. Next, we will format the data to easily bind it with our existing polygon data e.g. `pol_data`.
 
