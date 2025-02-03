@@ -10,9 +10,9 @@
 
 
 
-<meta name="date" content="2025-01-28" />
+<meta name="date" content="2025-02-03" />
 
-<title>autologistic_tutorial</title>
+<title>Autologistic occupancy modeling</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -349,44 +349,607 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">autologistic_tutorial</h1>
-<h4 class="date">2025-01-28</h4>
+<h1 class="title toc-ignore">Autologistic occupancy modeling</h1>
+<h4 class="date">2025-02-03</h4>
 
 </div>
 
-<div id="TOC">
+
+<p>NOTE: For this code to work as intended, your working directory
+should be set to <code>&quot;./tutorials/autologistic_enhanced&quot;</code> where
+the <code>.</code> represents the location of the
+<code>UWIN_tutorials.Rproj</code> file on your computer. If you
+double-click on <code>UWIN_tutorials.Rproj</code> on your computer a new
+window of Rstudio will open up and you can enter
+<code>setwd(&quot;./tutorials/autologistic_enhanced&quot;)</code> into your R
+console.</p>
+<div id="tutorial-aims" class="section level3">
+<h3>Tutorial Aims:</h3>
+<div id="what-are-autologistic-occupancy-models" class="section level4">
+<h4><a href="#occupancy"> 1. What are Autologistic occupancy
+models?</a></h4>
+</div>
+<div id="load-necessary-packages" class="section level4">
+<h4><a href="#packages"> 2. Load necessary packages</a></h4>
+</div>
+<div id="formatting-data" class="section level4">
+<h4><a href="#formatting"> 3. Formatting data</a></h4>
+</div>
+<div id="fitting-models" class="section level4">
+<h4><a href="#models"> 4. Fitting models</a></h4>
+</div>
+<div id="predicting-plotting-model-outputs" class="section level4">
+<h4><a href="#plots"> 5. Predicting &amp; plotting model
+outputs</a></h4>
+<p><a name="occupancy"></a></p>
+</div>
+</div>
+<div id="what-are-autologistic-occupancy-models-1" class="section level2">
+<h2>1. What are Autologistic occupancy models?</h2>
+<p>Though static occupancy models can be a useful tool to study a
+species distribution at a single point in time they are limited to a
+‘static’ system, meaning we cannot account for temporal changes in the
+environment or species occupancy. By considering a dynamic system (i.e.,
+one that can change over time), we can account for things like changing
+environmental conditions (such as climate or fire), impacts of
+management interventions, or variations in sampling methodologies.
+Often, scientists are interested in modeling temporal dynamics or how a
+species’ habitat use changes across time. There are <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100">a
+variety of ways we can model</a> such a dynamic system. Some common ways
+to account for temporal changes include dynamic occupancy models,
+multi-state occupancy models, or with random effects. However, all these
+methods require large amounts of data to estimate all affiliated
+parameters. An alternative to these methods is to add a temporal
+autologistic parameter to the model so that the occupancy status of a
+species at one time point depends in part on the occupancy status in the
+previous timestep. Unlike the other methods listed above, autologistic
+occupancy models only introduce one new parameter. To get into the nitty
+gritty of the equations, please review <a href="https://masonfidino.com/autologistic_occupancy_model/">this blog
+post</a> (also listed in references above) or check out the help file
+for fitting autologistic occupancy models ( i.e.,
+<code>?autoOcc::auto_occ</code>).</p>
+<p><a name="packages"></a></p>
+</div>
+<div id="load-necessary-packages-1" class="section level2">
+<h2>2. Load necessary packages</h2>
+<p>We are going to need three packages for this tutorial. You should
+already have the <code>autoOcc</code> R package installed. If not, then
+install the <code>devtools</code> package so that you can download the
+package from GitHub. The readme file for <code>autoOcc</code> has those
+details <a href="https://github.com/mfidino/autoOcc">if you need to
+install that package</a>. Aside from <code>autoOcc</code> we are going
+to need two packages from the <code>tidyverse</code>: <code>dplyr</code>
+and <code>ggplot2</code>. If you do not have <code>dplyr</code> or
+<code>ggplot2</code> then the code below will download them for you.</p>
+<pre class="r"><code># To conduct the analysis
+library(autoOcc)
+
+# To summarise data
+if(&quot;dplyr&quot; %in% installed.packages()){
+  library(dplyr)
+} else {
+  install.packages(&quot;dplyr&quot;)
+  library(dplyr)
+}
+
+# To plot results
+library(ggplot2)
+if(&quot;ggplot2&quot; %in% installed.packages()){
+  library(ggplot2)
+} else {
+  install.packages(&quot;ggplot2&quot;)
+  library(ggplot2)
+}</code></pre>
+<p><a name="formatting"></a></p>
+</div>
+<div id="formatting-data-for-an-autologistic-model" class="section level2">
+<h2>3. Formatting data for an Autologistic model</h2>
+<p>For this example, we are going to be modeling coyote (<em>Canis
+latrans</em>) occupancy from data we collected throughout Chicago,
+Illinois. The <code>autoOcc</code> package contains the utility function
+<code>format_y()</code>, which can be used to prepare the data for
+analsysis. However, to ensure that <code>format_y()</code> works
+correctly, the data you supplied to it must be properly formatted.
+Specifically, we need a <code>data.frame</code> that contains:</p>
 <ul>
-<li><a href="#r-markdown" id="toc-r-markdown">R Markdown</a></li>
-<li><a href="#including-plots" id="toc-including-plots">Including
-Plots</a></li>
+<li>A column that provides the name of the site that data point is
+associated with</li>
+<li>A column that provides the primary sampling period that data point
+is associated with</li>
+<li>Columns that are named in a similar way that contain a species
+detection history.</li>
 </ul>
-</div>
+<p>As a small example, this would be an appropriately formatted
+<code>data.frame</code></p>
+<table>
+<thead>
+<tr class="header">
+<th>season</th>
+<th>site</th>
+<th align="right">occ_1</th>
+<th align="right">occ_2</th>
+<th align="right">occ_3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Season1</td>
+<td>A</td>
+<td align="right">NA</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Season1</td>
+<td>B</td>
+<td align="right">NA</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>Season1</td>
+<td>C</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Season2</td>
+<td>A</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>Season2</td>
+<td>B</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td>Season2</td>
+<td>C</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>Some important aspects of this data.frame are:</p>
+<ul>
+<li><p>It is sorted by season, then site, and seasons are sorted
+temporally from the first to the last.</p></li>
+<li><p>The columns with the detection history all start the same. The
+<code>format_y()</code> function uses regular expressions to collect
+these columns. Thus, this is the easiest way to ensure you collect all
+of them.</p></li>
+<li><p>Detection histories can either have a <code>1</code> (species
+detected), <code>0</code> (species not detected), or <code>NA</code>
+(sampling did not occur on that occasion).</p></li>
+<li><p>It is okay if not every site is represented within each season.
+However, site names for a given sampling location cannot change across
+seasons. For example, if <code>HUP2</code> was the name of a sampling
+location then that site must be named <code>HUP2</code> across all
+seasons. <code>HUP3</code> would be treated as a new site.</p></li>
+</ul>
+<p>Okay, now let’s load in the coyote detection / non-detection data and
+take a quick look at it with <code>dplyr::glimpse()</code>. The coyote
+data is within the data sub-folder and it is titled
+<code>chicago_coyote.csv.</code></p>
+<pre class="r"><code># read in the coyote detection data
+coyote &lt;- read.csv(
+  &quot;./data/chicago_coyote.csv&quot;
+)
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting
-syntax for authoring HTML, PDF, and MS Word documents. For more details
-on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be
-generated that includes both content as well as the output of any
-embedded R code chunks within the document. You can embed an R code
-chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+
+# check out the structure of the data
+dplyr::glimpse(coyote)</code></pre>
+<pre><code>## Rows: 900
+## Columns: 18
+## $ Species &lt;chr&gt; &quot;coyote&quot;, &quot;coyote&quot;, &quot;coyote&quot;, &quot;coyote&quot;, &quot;coyote&quot;, &quot;coyote&quot;, &quot;c…
+## $ Season  &lt;chr&gt; &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;…
+## $ Site    &lt;chr&gt; &quot;C04-MBP1&quot;, &quot;C05-BMP1&quot;, &quot;C05-BMP2&quot;, &quot;C06-HMP1&quot;, &quot;D02-BMT1&quot;, &quot;D…
+## $ Start   &lt;chr&gt; &quot;2017-12-18&quot;, &quot;2017-12-18&quot;, &quot;2017-12-18&quot;, &quot;2017-12-18&quot;, &quot;2017-…
+## $ End     &lt;chr&gt; &quot;2018-02-14&quot;, &quot;2018-02-14&quot;, &quot;2018-02-14&quot;, &quot;2018-02-14&quot;, &quot;2018-…
+## $ City    &lt;chr&gt; &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;, &quot;chil&quot;…
+## $ Long    &lt;dbl&gt; -87.57339, -87.57511, -87.56486, -87.56992, -87.66978, -87.699…
+## $ Lat     &lt;dbl&gt; 41.71308, 41.69479, 41.68575, 41.65681, 41.91434, 41.90586, 41…
+## $ Crs     &lt;int&gt; 4326, 4326, 4326, 4326, 4326, 4326, 4326, 4326, 4326, 4326, 43…
+## $ Week_1  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ Week_2  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ Week_3  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ Week_4  &lt;int&gt; NA, NA, NA, NA, 0, 1, NA, 0, 0, 0, 0, 0, NA, 0, 0, 0, 0, 1, NA…
+## $ Week_5  &lt;int&gt; NA, NA, NA, NA, 0, 0, NA, 0, 1, 0, 0, 0, NA, 0, 0, 0, 0, NA, N…
+## $ Week_6  &lt;int&gt; NA, NA, NA, NA, 0, 1, NA, 0, 0, 0, 0, 0, NA, 0, 1, 1, 1, 1, NA…
+## $ Week_7  &lt;int&gt; NA, NA, NA, NA, 0, 1, NA, 0, 0, 0, 0, 0, NA, 0, 1, 1, 0, 0, NA…
+## $ Week_8  &lt;int&gt; NA, NA, NA, NA, 0, 1, NA, 0, 0, 0, 0, 0, NA, 0, 0, 0, 0, 0, NA…
+## $ Week_9  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
+<p>We can see here that we have columns for <code>Season</code>,
+<code>Site</code>, and the detection / non-detection data (i.e.,
+<code>Week_1</code> through <code>Week_9</code>).</p>
+<div id="challenge-1.-use-format_y" class="section level3">
+<h3>Challenge 1. Use <code>format_y()</code></h3>
+<p>Check out the help file for <code>autoOcc::format_y()</code> to see
+what the arguments are for this function. After reading through them,
+apply <code>format_y()</code> to the <code>coyote</code> data.frame. It
+is okay to overwrite the <code>coyote</code> object with the output from
+<code>format_y()</code></p>
+<pre class="r"><code># Solution is below if you need it to compare to what you coded up!</code></pre>
+<p><br></p>
+<details closed>
+<summary>
+Solution</a>
+</summary>
+<pre class="r"><code>  coyote &lt;- autoOcc::format_y(
+    x = coyote, # coyote data.frame
+    site_column = &quot;Site&quot;, # Name of site column in coyote
+    time_column = &quot;Season&quot;, # Name of season column in coyote 
+    history_columns = &quot;Week&quot; # what the detection history columns start with.
+  ) </code></pre>
+<pre><code>## 
+## 
+## TEMPORAL ORDERING
+## -----------------
+## 
+## Primary sampling period column is a character vector, using their order of appearance from top of x to order temporally.
+## Ordering: JA18, AP18, JU18, OC18, JA19, AP19, JU19, OC19, JA20
+## 
+## DETECTION HISTORIES
+## -------------------
+## 
+## 9 detection history columns found.
+## Column names: Week_1, Week_2, Week_3, Week_4, Week_5, Week_6, Week_7, Week_8, Week_9</code></pre>
+</details>
+<p><br></p>
+<p>The output of <code>format_y</code> is a three-dimensional array. The
+dimensions are site by primary sampling period by secondary sampling
+period (i.e., weeks of sampling within each season). If we wanted to see
+all the detection data for site 15 we can use subset notation, but don’t
+forget this has three dimensions!</p>
+<pre class="r"><code>coyote[15,,]</code></pre>
+<pre><code>##      Week_1 Week_2 Week_3 Week_4 Week_5 Week_6 Week_7 Week_8 Week_9
+## JA18     NA     NA     NA      0      0      1      1      0     NA
+## AP18     NA     NA      1      0      1      0      0     NA     NA
+## JU18     NA      1      1      1      1      0     NA     NA     NA
+## OC18     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## JA19     NA     NA     NA      1      1      1      0     NA     NA
+## AP19     NA     NA     NA      0      1      1      1      0     NA
+## JU19     NA     NA      1      1      0      0      0     NA     NA
+## OC19     NA     NA      1      0      1      1      0     NA     NA
+## JA20     NA     NA     NA      0     NA      0      1      0     NA</code></pre>
+<p>One last thing you may want to ensure is that all of your sites
+actually have data. Sites with zero data across all seasons will be
+dropped from the analysis in autoOcc, but it’s better to just ensure you
+remove them first. Since this is an array the easiest way to do this is
+with the <code>apply()</code> function. Since we just want to sum across
+all the data for each site, the dimension (i.e., MARGIN) we want to
+apply our function to is the first one.</p>
+<pre class="r"><code>nweeks_sampled &lt;- apply(
+  X = coyote,
+  MARGIN = 1,
+  function(x){
+    sum(!is.na(x))
+  }
+)
+
+# Check out a little histogram of this
+hist(
+  nweeks_sampled,
+  main = &quot;Number of weeks sampled per site&quot;,
+  xlab = &quot;Weeks sampled&quot;
+)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAABAlBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZmYAZpAAZrY6AAA6ADo6OgA6Ojo6OmY6OpA6ZmY6ZpA6ZrY6kJA6kNtmAABmOgBmOjpmOmZmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv+QOgCQOjqQZgCQZjqQZmaQkDqQkGaQkJCQkLaQkNuQtraQttuQtv+Q27aQ29uQ2/+2ZgC2Zjq2kDq2kGa2kJC2kLa2tma2tpC2tra2ttu225C227a229u22/+2/7a2/9u2///T09PbkDrbkGbbtmbbtpDbtrbbttvb25Db27bb29vb2//b/7bb/9vb////tmb/25D/27b/29v//7b//9v///+XWkZVAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3dfWMUy53d8R4QGxTAF8JDrGsWsHG8zmVjxCqORRaSu7pAFt01QjB6/28l/dw9M11SdY1KVeen7+cPWxpJraMq6tye7p6e4gwAEKRIHQAAVFGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoFn5uluUHvaff39Ufrp4vd1Gj6pt3t4y2TmWB3eqlPf++5fL33ad/VaEDW9r1szsR56BdevhPvzj1f3ua4YCzUpToMM/fYUCbTJH6jkKNMRquI+PR/9JxuWiQLPSllHfGAIFWkcsYv0KCjTEONzpy5XnNLhcFGhWur255+3nAgV60vVnlFVKgYYYh9uPNTWoUKBZ6Qr0xs/N5wIFetQddFhG2zoFugUKNCoKNCv98cT2X7xKgUarOAp0WxRoVBRoVvoCbZcmBUqBbokCjYoCzUpfoO1yGy3TcZUsX/QHSvebb1ge3C0/uPeq/vLHJ+XHd592tdMVaP1w+y2tzy9362/99Wz8vQ/PfrlTFDefbvbW55fVFUs373cbGQ6ArhbEeNWO22N/OMC78avdeZq/uv7ZbgQ+/rYKUty9v/LnDCa//q0epGJxr//LfEfveXut1jB6awU6+dfUW7r57Mt0gTo27B4G17Rs/q19uPH8PD8nKUJRoFkZCrT59+5boL+MLiU6fby6F9sWaP/wTr/qT1/0v+3Bl9H3PnyzsuSGdI/7799pFqurQE+GB5qz9E3w+uP6+O7Er3bnqX/4aNSfo2Ea/TmTwzj6+i/Do4v2wkjf0Xv+ofuWnfdnw5/Vfc/0X9MP+PtzCnRjw3OnZepvdRfoZFKEo0CzMloNdc94FujdYZnc+ve1TbQ/udNfbdQv+/HS67Zcf+/dlR/vHRVj9f6lq0CHply5tLXv1alf7c5Tfdz8pp16kyfjb5x4Hj399Yn43qO3t7G5cYFe9Ncs7qyPzzkbnjktk3+rs0Ank2ILFGhW6n/gN/5Xv8T9CtSpaYmj9YebJThcwFkM63v8vWsHzk6KVQ/P3AU6eq5+NCzf7lnr9K925yn/6mblTwbfKILpr690R7epLUevmZnJ4M0UbT4+uJRpmf5bXQU6uW1sgwLNSlOg/7defNUC8C7QB7+eLf+lXRc7787OmmeGzbe3q696jvj58bAG659cPPtytnxT9JsbrdS1Pbtm8S2qI3Afxq+Xmj7NMzyH3x8Wax27qonJX+3Oc+tL+8tfD9u+8Zfyo2+j71z73Rtf3+/GoHlq3Wxrxui96p+UP+yHY7SR6YGsf+rFdF05NjxvWqb/Vtd1oJPbxjYo0Kw0Bfpzs7d0279AhyekK+u+2acZHz1sfrJ6fLzIhvP07UqdOD62P1q94+Oa0wVa/wXVo91OT/Vx/eBtx68+J8+tv78YV8fRuBJu/vjT+umQya+PNt+M7najN9reZPDRd3Zbni7QLadleiwcBTq9bWyDAs1KW6DtgnnuW6Djw3XtbsXJWgV07XPSfTI6zzM6ZDle1SuaIuyePp4Uk7kGdcLqG7pnzv2vfOj41efk2Wn2Gbv9pebvcZx+d359+emPd8fHCmaNXrevVv81a7U5GXxU0t0n0wW6vuGZ0zL9tzoKdHrb2AYFmpWuQJs1fuNnzwIdn2poF8Ww1Fcrrm+P8VO7vu5WV/XYqFL6AA83tj7odo2q/7+5O/zK6rdM/urz8tQerAxStdkf306eBrno6+sF6jF63R8+/N3DzEwGP9n8qckC3djwzGmZ/lsdBTq9bWyDAs1KV6Dt0f+HngXars3xql2vgG75dit18yRHvb2VvdWxtZ4cfq2jQLun69U33q7/p1nW5XdO/urz8jT6VONvXdx/v/6bz//68vOf7gxt5Dt6/d/Xd1A/M9PBJ35qskDXNzx3Wqb/1ukCdWwb26BAs9IXaHvI8X/ML9D2W1wFes5KfXi2tls0tnbMbP0o5UaBtieM6qX8/Kj+ljrSw8mFfH6eVv/bvz8ef9vORoW6vn568GTtOtuw0Vs5ZDsdfHVUJg84Tm547rRM/63eBcorlLZFgWZlKNDmudk/JCnQqQsE5xZoe8nSSdGdFFu8PjqvcjwKdNhfWh6Mr0na3DOb/PqH8WOKBTp93ebU30qBXhkKNCtDgY6qY7NA14/ieVRAt/pWn8JvLKDzC3TGU/j2OXyz71n/smcv2m+c/NXn5WkPAqz8lm8Hd/oBmjqZvPH19mU8d398+x/ho+d8Cr8e/GTzp2Y8hfeflum/9bwCpTMvFQWalVGBDhc9X0qBrtwgb/0k0sC5UqdOIj0/7yfqb6nPn7enRuq96eFSx/VffU6e/kLQtUN2x//zSbES68z99ea6gVcrQzB/9C46iTQ9XKEnkda+99xXDq2MhcdJJFwOCjQrowIdXkUyehnkypdmVcDG9TLTa9K5UmdexnQ22oV+Pvpb3J17QZ5R3Sw/Hzz5z+PXPa49h5/8+vrlkFuO3qijJoOvFP6cy5hmTsv0WDgK9OIaxlwUaFbGBdq/znBUoM16aw9mzauAtnxedN8zfv+6k8UPT9+dc1l8/4tWLqRffbHl9N9SjC+LXH15/NqvviDPUODjX746YGcb4fqvj5++jprLf/Ter47eqKMmg48vpG+na7pA1zc8b1ocY+Eo0OltYxsUaFZW+mB8DXp/U45X/esxZ1bA9GsGqxe3LH8ZXrnoLtD293u+lPNs9TVI3fmL8V3t1n/1BXmGXdD2JUNV83x8PPHbp77eBFg861/yOHf0qh8976Wc68FP1sfc9VLO9Q3Pm5bpsdgo0PIbPv/q2Da2QYFmZXWHqlti9UrYPIc6swIGk3fXOP+I5sRmno8edu+zrtTC6nPatU1dkGc4kLh+A431Q6OTX98YhCFW0OhtvDR0LU7AzURCpmV6LDZes9n+wZPbxjYo0KysFmi7Osb30Ggsftv/8/etgNF907rtr94J7eLDZKsr/uH40cmfOBmt0pOV3zz5qy/KMxx3XeuBjdMiU18fN83d3W7MfEdvZ7jacuJ2dpN/zfgCzR92C0eBbm545rRMjsXkvfYeupJiCxRoVtYO6Z2srKzh3ruvm4ssqwd9K2Dyzr2j1fuseejc8wwfRzdU7s/buH+iez3q8PHQIRO/+qI8owOQ9Vv1bvz4YOrr/d2gF8+G14F7X8b0926L0zdUnvprln2Ih1+dBbq54bnTMvW3roRrD1k0v38yKcJRoFlZPycyPnNTHb67U35279WXs4ACXX3filbzFh31JhsXnKg9/WPzlh7vhofO+YlRts1rEDd+9YV5RqfRzk7/VN9e+Obqj4+Cbn59+aF6qH5HjP7EyozrQNfeEGXjLT2m/pr6LT2e/np2ToFubPjCYfD4W1fDNe8s8sOrc5IiFAUKnCfatT9cVGQBBQqchwLFOShQ4DwUKM5BgQLnoUBxDgoUOA8FinNQoMB5KFCcgwIFzkOB4hwUKHAeChTnoEABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAl1NgS4/Hb799Up+E5C5QkbqkVIQb5C+HXeV+fFxPR2LB1+i/TJAQ+JOnCX1WCmINkjfHxU3fq4+WL7pJ2TxPNZvAzQUxb+JoEB9xC/Q/ao5f9jbe1JVKA2K640CtSV6gZ6Utdk8dz99UbSdClxXFKgt0Qu03AG93T60LBv0YazfByigQG2JXaBVafbP28u90VucSMJ1RoHaErtA+0Oho8eAa4sCtYUCBa4QBWrLFRwDXbzuHvu6S4HieqNAbYlZoIu/nNXHPfsTRxwDxXVHgdoSs0BLN3/37g/9Lmj1EGfhca1RoLZELtBG/bx9+csu14HiuqNAbYk4SMvPB092hwKtGnU4HApcSxSoLbEHqW7RrkB33kf+bUDmKFBbrm6Qln+lPnHtUaC2ZDRI3E8L9lGgtmQ0SNyREPZRoLZc1SB9DrklPVMIayhQWyIP0nF93fzyoD4bv/Nq5k8zhbCGArUl5iCdvqxa83VzT+Xag3kbYAphDQVqS8RB+tpcBLp4Xd1T+d7eXvXpvBciMYWwhgK1Jd4g1S9Funun3Ad93FxAX7050rwr6ZlCWEOB2hJvkI6K4sb7dj+0uaXy7DvSM4WwhgK1Jdog9beiPxpuwTT3bkxMIayhQG2J/66c5S7o7fXHPDGFsIYCtSV+gZYfUKBAgwK1JeoNleszRsvf3/1N+7x97h3pmUJYQ4HaEm+Q9jfPGB0Nb3HshSmENRSoLfEG6WTjoqXTuXekZwphDQVqS7xBqk7DF78ZTrrXr+ec95ZITCGsoUBtiThI3x+vvIVHwB3pmUJYQ4HaEnOQyn3O1QKde0d6phDWUKC2ZH1HeqYQ1lCgtmQ9SEwhrKFAbcl6kJhCWEOB2pL1IDGFsIYCtSXrQWIKYQ0FakvWg8QUwhoK1JasB4kphDUUqC1ZDxJTCGsoUFuyHiSmENZQoLZkPUhMIayhQG3JepCYQlhDgdqS9SAxhbCGArUl60FiCmENBWpL1oPEFMIaCtSWrAeJKYQ1FKgtWQ8SUwhrKFBbsh4kphDWUKC2ZD1ITCGsoUBtyXqQmEJYQ4HakvUgMYWwhgK1JetBYgphDQVqS9aDxBTCGgrUlqwHiSmENRSoLVkPElMIayhQW7IeJKYQ1lCgtmQ9SEwhrKFAbcl6kJhCWEOB2pL1IDGFsIYCtSXrQWIKYQ0FakvWg8QUwhoK1JasB4kphDUUqC1ZDxJTCGsoUFuyHiSmENZQoLZkPUhMIayhQG3JepCYQlhDgdqS9SAxhbCGArUl60FiCmENBWpL1oPEFMIaCtSWrAeJKYQ1FKgtWQ8SUwhrKFBbsh4kphDWUKC2ZD1ITCGsoUBtyXqQmEJYQ4HakvUgMYWwhgK1JetBYgphDQVqS/RBWh5/Ojw8fHv8JeBnmUJYQ4HaEneQPr8sBvffzf1xphDWUKC2xByk08fFqp3X8zbAFMIaCtSWiIN0sluV5t29xp3qk8XzWVtgCmENBWpLvEH6/qgszFejBz6WhXrj5zmbYAphDQVqS7xBOtqoy6pSH87ZBFMIayhQW6IN0vJFUaw/YT8piltzzsYzhbCGArUl2iCVu5sbz9enHjsPUwhrKFBbKFDgClGgtsR8Cr9Yv2qJp/C47ihQW+IN0v5GW1aHRW/P2QRTCGsoUFviDdLX3bJB348eOC37c2On9FxMIayhQG2JOEhH9aXzez8dVv7WXEk/6yomChTmUKC2xBykD7trL+VcPJu3AaYQ1lCgtkQdpOXBuEIXT+fekYkphDUUqC2xB2n5+fBgb2/v6eG7gPvZMYWwhgK1JaNBKiakzgRcLgrUlowGiQKFfRSoLVc1SJ8P3/46+4eYQlhDgdoSeZCad/JoTybtvLro29cwhbCGArUl6h3pX7Z3od/vnpE/mLcBphDWUKC2RBykr801TIvXJ+X/3tvb2+VCelx7FKgtce9IX9y9U+6DPm5ewbl8w0s5cd1RoLbEvSP9+3Y/tLmzcnUzEe5Ij2uNArUl/h3pj4a7MnE7O1x3FKgt8W+oXO6C3l5/zBNTCGsoUFviF2j5AQUKNChQW2IWaHPGaPn7u79pn7eXO6MUKK41CtSWqHekXz9jdMQd6XHNUaC2xBukk42Llk55X3hcdxSoLfEGqToNX/xmOOlev55z1kl4ChTmUKC2RByk74+L8SHP6sL6edfRU6AwhwK1JeYglfucqwW68/6c757AFMIaCtSWqxuk5V9n1icFCnsoUFuyHiSmENZQoLZkPUhMIayhQG3JepCYQlhDgdqS9SAxhbCGArUl60FiCmENBWpL1oPEFMIaCtSWrAeJKYQ1FKgtWQ8SUwhrKFBbsh4kphDWUKC2ZD1ITCGsoUBtyXqQmEJYQ4HakvUgMYWwhgK1JetBYgphDQVqS9aDxBTCU6EjdTH6YvX5yHqQmEJ4Sd2Js6QuRl+sPh9ZDxJTCC86rfRvOlFZfT6yHiSmEF50WokCNSbrQWIK4UWnlShQY7IeJKYQXnRaiQI1JutBYgrhRaeVKFBjsh4kphBedFqJAjUm60FiCuFFp5UoUGOyHiSmEF50WokCNSbrQWIK4UWnlShQY7IeJKYQXnRaiQI1JutBYgrhRaeVKFBjsh4kphBedFqJAjUm60FiCuFFp5UoUGOyHiSmEF50WokCNSbrQWIK4UWnlShQY7IeJKYQXnRaiQI1JutBYgrhRaeVKFBjsh4kphBedFqJAjUm60FiCuFFp5UoUGOyHiSmEF50WokCNSbrQWIK4UWnlShQY7IeJKYQXnRaiQI1JutBYgrhRaeVKFBjsh4kphBedFqJAjUm60FiCuFFp5UoUGOyHiSmEF50WokCNSbrQWIK4UWnlShQY7IeJKYQXnRaiQI1JutBYgrhRaeVKFBjrmaQlp8O3/46/8eYQnjRaSUK1Jh4g/TtuKvMj4+LyuLBl5mbYArhRaeVKFBjog3S90fFjZ+rD5Zvis7i+bxtMIXwotNKFKgx8Qt0v2rOH/b2nlQVOq9BmUJ40WklCtSY6AV6UtZm89z99EXRdqovphBedFqJAjUmeoGWO6C324eWZYM+nLMNphBedFqJAjUmdoFWpdk/by/3Rm/NOZHEFMKLTitRoMbELtD+UOjoMW9MIbzotBIFagwFCn06rUSBGnMFx0AXr7vHvu5SoIhAp5UoUGNiFujiL2f1cc/+xBHHQBGFTitRoMbELNDSzd+9+0O/C1o9xFl4XD6dVqJAjYlcoI36efvyl12uA0UUOq1EgRoTcZCWnw+e7A4FWjXqcDjUC1MILzqtRIEaE3uQ6hbtCnTn/bwfZgrhRaeVKFBjrm6Qln+dWZ8UKDzptBIFakxGg1RMSJ0JEnRaiQI1JqNBokARSKeVKFBjsh4kphBedFqJAjUm6iAtD57c/eHPw6XzvJQTUei0EgVqTMxB+qW5iGnxtKtQChRR6LQSBWpMxEE66o9kdq/fpEARhU4rUaDGxBukr+X+586r4+OD6v+b2qRAEYVOK1GgxsQbpKNuz/P0cdegFCii0GklCtSYaIM0uhV99WHdpRQootBpJQrUmPjvynnWNOjtMwoUkei0EgVqzJUUaHcjOwoUUei0EgVqzNUUaHVGafGaAkUcOq1EgRpzFcdAKydFceM9BYoodFqJAjUm6ln426uf3vhXChQx6LQSBWpM3OtA7/86fP5muLeyL6YQXnRaiQI1JvIrkcZ9+YYCRRw6rUSBGhNzkD6svYvxh7lvisQUwotOK1GgxsS9G9PHH1fexXj5ZpcCxeXTaSUK1JisB4kphBedVqJAjcl6kJhCeNFpJQrUmKwHiSmEF51WokCNyXqQmEJ40WklCtSYrAeJKYQXnVaiQI3JepCYQnjRaSUK1JisB4kphBedVqJAjcl6kJhCeNFpJQrUmKwHiSmEF51WokCNyXqQmEJ40WklCtSYrAeJKYQXnVaiQI3JepCYQnjRaSUK1JisB4kphBedVqJAjcl6kJhCeNFpJQrUmKwHiSmEF51WokCNyXqQmEJ40WklCtSYzUFavk0QYxpTCC86rUSBGrM5SN8fFffeJUgygSmEF51WokCNmSzQ0v0cOpQphBedVqJAjZkYpI+P6zcgXtx/f/VxVjGF8KLTShSoMZODtDy403To01+nvnxlmEJ40WklCtQY1yB1HXrz6RfHd1wBphBedFqJAjXmnEH6drBbd+jOq1QdyhTCi04rUaDGnD9I35r90EWi3VCmEF50WokCNebcQfr4smgtXl9VoDGmEF50WokCNcY9SB+ftE/gP79M1aBMIbzotBIFaoxjkD6/LEbP3ZcviuL2VaZqMYXwotNKFKgxU4PUtmcxXAj6dbe48fMVpmoxhfCi00oUqDGuVyKVT91XH6NAkS2dVqJAjZku0PXT7uVjtxKciGcK4UWnlShQY6YKdOI1nMdXkWUDUwgvOq1EgRqT9SAxhfCi00oUqDFZDxJTCC86rUSBGuMYpOX/qw55fv+vf074SngKFJ50WokCNWZykE6fNCfdvz8qFv94xYHGmEJ40WklCtSYqUE62S36Ai2Kh1cdacAUwotOK1GgxkwM0teyPxcP6ufu396kehl8jSmEF51WokCNmRik/WJ00ed+mhdxNphCeNFpJQrUmIl35Xwx3uksd0dTXELfYArhRaeVKFBjJl+JNHrZZqIXcTaYQnjRaSUK1BgKFPp0WokCNWbyKXzxvP/spOApPHKn00oUqDETg3Q0OvNenZFPdx0TUwgvOq1EgRozMUj11Z/3Xx0fH3+qbgyabgeUAoUfnVaiQI2ZGqSvu8Vg28tAl8efDg8P3x6H1DBTCC86rUSBGjP9Us7+zeSK+1vtf35+Oari++9mh2MK4UOnlShQY1w3E/n0x729vR+3e0f408fFqp2Ze7NMIbzotBIFakzEQTqpjwTc3Ws0bzD//OIfG2EK4UWnlShQY+INUv3WIOM3VvrY3aPEG1MILzqtRIEaE2+QjjbqsqrUWddEMYXwotNKFKgx04NUHwHt/Bh0IHT1evzG3KvymUJ40WklCtSYCy9jmvu0uzP1GtC5rwtlCuFFp5UoUGMc9wOlQCFEp5UoUGOmX8pZ3PvpuPdr0IZX74rX4Ck8otBpJQrUmOmbiVzGPZT3N9py9paZQnjRaSUK1JjJ29ldyrt4VEcCbr0fPXD6Yu4LQ5lCeNFpJQrUmIvuB7qFo/rS+b2fDit/a66kn3dnJ6YQXnRaiQI1ZvIp/CXdQvnD2tmoYvFsZjimED50WokCNWb6JNK8V1w6LQ9W7uv0dO4FpUwhvOi0EgVqzPT9QC/vXTyWnw8P9vb2nh6+C7gcnymEF51WokCNcVxIv3h6fPVRJlx5CCjSaSUK1JjJk0iXcSF9QBQKFGF0WokCNSajAt3EFMKLTitRoMZMFOiTu6vuBRfo8uDJ3R/+PBz85KWciEKnlShQY2IO0i+7a2ffKVBEodNKFKgxEQfpqD8I0L2kkwJFFDqtRIEaE2+Qqpdy7rw6Pq6uBd1papMCRRQ6rUSBGuMapG+Hh2+/nC3D7sRUO+r2PKv3lmsalAJFFDqtRIEaMz1IH+40Z9+/P9p5P/kNFxvdkb76sO5SChRR6LQSBWrM5CC96S5f2uLOTOOy7O5jR4EiCp1WokCNmRqk6uzPzj/tll3X7zvOt1KW7dvJUaCIQqeVKFBjHG/p8awsu6rrpt4azs9qWVavDn1NgSIOnVaiQI2ZGKT9+vl2U6DVu3CE3Z5+rXrL7dx4T4EiCp1WokCNmbwfaHXcsy3Qctcx8Dn80Wr1Vm8T/68UKGLQaSUK1BjnHenbAg2/t111JOD+6DKo/szUjHBMIXzotBIFaky8Aq3PRY1/9g0Fijh0WokCNSbeU/j6LT1W+rJ6iw8KFJdPp5UoUGOmTyI97Av0aJv3OF5+/HGlfJdvdilQXD6dVqJAjZkYpJP2Gvqq68qPL+sNkgIwhfCi00oUqDETg1RdgLR4VRXo8l+K4AvpLwNTCC86rUSBGjM1SCv3pA99KedlYArhRaeVKFBjJgep2gdtBd9M5DIwhfCi00oUqDGOQTp9Wd2PaXH/3dWmWcMUwotOK1GgxmQ9SEwhvOi0EgVqTNaDxBTCi04rUaDGZD1ITCG86LQSBWrMxCuR/ri36sdk1zExhfCi00oUqDGTr4VfFfpa+O0xhfCi00oUqDEUKPTptBIFaszEIH077vztZbF4drzFO3NuiSmEF51WokCNuWCQvu4Wz64myBSmEF50WokCNeaiQTpK+VpOphBedFqJAjXmokEqd0HDb2e3LaYQXnRaiQI15qJB2uKO9NtjCuFFp5UoUGM89kApUGROp5UoUGMuPgaa8IagTCG86LQSBWrMuYO0PK7uqMwxUGROp5UoUGMuvpCes/DInU4rUaDGXFigC64DRe50WokCNWaiQJ/cHdx7mu51SBQoPOm0EgVqTNaDxBTCi04rUaDGZD1ITCG86LQSBWpM1oPEFMKLTitRoMZkPUhMIbzotBIFaszEHek/HU55m+ByeqYQXnRaiQI1xuOGyuluq8wUwotOK1GgxlCg0KfTShSoMZNP4Q92i+KHnw4P/1T+/32ewiN3Oq1EgRozNUgnu8WDti6PiuLBleZZwRTCi04rUaDGTAzSyj2U94vi+RXGWcUUwotOK1GgxkwM0v74/iFlm3I7O2ROp5UoUGMmTyKNThhxR3rkT6eVKFBjKFDo0x6TO/QAACAASURBVGklCtSYibPwL8aHPU+4Iz2yp9NKFKgxE4N0NLro8/RRUTy80kBjTCG86LQSBWrM9Fn4YvGq+mj5YTflDigFCj86rUSBGjN5HWjz2qO7zSuQ3l95ph5TCC86rUSBGjM5SB93+1dw3krYnxQo/Oi0EgVqjGOQPv626tCb91PWJwUKTzqtRIEak/UgMYXwotNKFKgxWQ8SUwgvOq1EgRrjGqRv9f2Xlinfk5MChSedVqJAjZkepA93mjuAfn+0cylHQZefDt8GdDFTCC86rUSBGjM5SG+6Wyh/fzS+scg83467yvz4uN7e4sHcK0qZwrQm76ydp9Rt400nKqvPx9QgHZX/IHf+abcs0OplnYEX0vcvol++6f+VL2beGY8pTClVFwZJ3TbedKKy+nw4Xon0rCzAqv9WXxg/R1+g++U/78UPe3tPqn/n87bFFKaks9SFWkkoKqvPx+T9QKsbKjcFWr0q6fbmt3joCrR6WVPz3P30xdx3VmIKU9JZ6kKtJBSV1edj8m5M1XHPtkCDb6jcFej+0MDV7uysO5MwhSnpLHWhVhKKyurz4bwfaFugwfcDbX9w5RjA3HvjMYUp6Sx1oVYSisrq8xG7QFd+fu7GmMKUdJa6UCsJRWX1+Yj9FJ4ClaWz1IVaSSgqq8/H9Emkh32BHm17Emn8FnVlG1OgMnSWulArCUVl9fmYGKST9hr6qutOZl961Kmuwf9Ls7X+xBHHQJXoLHWhVhKKyurzMTFI1XmfxauqQJf/UmxzIX3p5u/e/aHfBf0+9/1BmMKUdJa6UCsJRWX1+ZgapKb7WqEv5RxvpH7evvxll+tAlegsdaFWEorK6vMxOUjVPmhri5uJLD8fPNkdCrRq1JltzBSmpLPUhVpJKCqrz4djkE5fVvdjWtx/t+326xbtCnRuGzOFKeksdaFWEorK6vNxdYO0/OvsnVmmMCWdpS7USkJRWX0+Jgbpzc6rq89xNn33nyRBUNNZ6kKtJBSV1efDeSH91aNA86Kz1IVaSSgqq8+H86WcOWAKU9JZ6kKtJBSV1edjcg+UAgUFGodOVFafj4lBCn715qVjClPSWepCrSQUldXnY2qQPuwWOz8dX3mUTUxhSjpLXaiVhKKy+nxMPIX/495vV07kpHtCzxSmpLPUhVpJKCqrz8fkSaTiEgp0YzMBG2MKU9JZ6kKtJBSV1edjokCf3F11jwK9lnSWulArCUVl9fmIN0injylQaTpLXaiVhKKy+nxEHKTZ7yG3gSlMSWepC7WSUFRWn4+YgxT+pvItpjAlnaUu1EpCUVl9PqIO0rYvamIKU9JZ6kKtJBSV1edjPEiX/yLOk+2exDOFKeksdaFWEorK6vPhKNBvx79exta3fFkoU5iSzlIXaiWhqKw+H9MFemn7ol/39v45/KeZwpR0lrpQKwlFZfX5iFyg22EKU9JZ6kKtJBSV1eeDAoWDzlIXaiWhqKw+HxQoHHSWulArCUVl9fmgQOGgs9SFWkkoKqvPBwUKB52lLtRKQlFZfT4oUDjoLHWhVhKKyurzQYHCQWepC7WSUFRWnw8KFA46S12olYSisvp8UKBw0FnqQq0kFJXV52OtQBc/HVb+ttt9VHr7JVk4pjAhnaUu1EpCUVl9PtYKdOt7IF9uOKYwIZ2lLtRKQlFZfT4oUDjoLHWhVhKKyurzMR6k5afDKTyFv550lrpQKwlFZfX5yHqQmMKUdJa6UCsJRWX1+ch6kJjClHSWulArCUVl9fnIepCYwpR0lrpQKwlFnTwhkqt0qyTZb/ZAgaaks9SFWkkoaupOnCXdKkn2mz1QoCnpLHWhVhKKqpM05dGGrCuKAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUgrUgQJNSWoBpU7gTSeqTlIK1IECTUlqAaVO4E0nqk5SCtSBAk1JagGlTuBNJ6pOUtMFujz+dHh4+Pb4S8DPUqApSS2g1Am86UTVSWq3QD+/LAb33839cQo0JakFlDqBN52oOkmtFujp42LVzut5G6BAU5JaQKkTeNOJqpPUaIGe7FaleXevcaf6ZPF81hYo0JSkFlDqBN50ouoktVmg3x+Vhflq9MDHslBv/DxnExRoSlILKHUCbzpRdZLaLNCjjbqsKvXhnE1QoClJLaDUCbzpRNVJarJAly+KYv0J+0lR3JpzNp4CTUlqAaVO4E0nqk5SkwVa7m5uPF+feuw8FGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZKaLNDyKfxi/aolnsIrkVpAqRN404mqk9RkgZ7tb7RldVj09pxNUKApSS2g1Am86UTVSWqzQL/ulg36fvTAadmfGzul56JAU5JaQKkTeNOJqpPUZoFW1zGVjbn302Hlb82V9LOuYqJAk5JaQKkTeNOJqpPUaIGefdhdeynn4tm8DVCgKUktoNQJvOlE1UlqtUDPlgfjCl08nXtHJgo0JakFlDqBN52oOknNFmhp+fnwYG9v7+nhu4D72VGgKUktoNQJvOlE1UlquUBnKCakznSdSS2g1Am86UTVSUqB1ijQvEgtoNQJvOlE1UlKgTpQoClJLaDUCbzpRNVJSoE6UKApSS2g1Am86UTVSUqBOlCgKUktoNQJvOlE1UlKgTpQoClJLaDUCbzpRNVJSoE6UKApSS2g1Am86UTVSWqyQKvbz0/gdnYypBZQ6gTedKLqJKVAXeEo0ISkFlDqBN50ouokNVmgm29qTIFqkVpAqRN404mqk9Rmgda3/5x396V1FGhKUgsodQJvOlF1khot0Mn3lZuFAk1JagGlTuBNJ6pOUqsFOvs9kNZRoClJLaDUCbzpRNVJarZAqzdB2uZJPAWaktQCSp3Am05UnaR2C7R8Er/NLigFmpLUAkqdwJtOVJ2kdgv07Ove3j+H/zQFmpLUAkqdwJtOVJ2khgt0OxRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZLaL9Dlp8O3v87/MQo0JakFlDqBN52oOkltFui3464yPz4uKosHX2ZuggJNSWoBpU7gTSeqTlKTBfr9UXHj5+qD5Zuis3g+bxsUaEpSCyh1Am86UXWS2i7Q/ao5f9jbe1JV6LwGpUBTklpAqRN404mqk9R0gZ6Utdk8dz99UbSd6osCTUlqAaVO4E0nqk5S0wVa7oDebh9alg36cM42KNCUpBZQ6gTedKLqJLVcoFVp9s/by73RW3NOJFGgKUktoNQJvOlE1UlquUD7Q6Gjx1xRJsRKh4tJLaDUCbzpRNVJSoE2USjQrEgtoNQJvOlE1UlquUDP9ovF6+6xr7vzziJRoClJLaDUCbzpRNVJarVAF385q4979ieOOAaqRGoBpU7gTSeqTlKrBVq6+bt3f+h3QauHOAsvQ2oBpU7gTSeqTlLDBdqon7cvf9nlOlAlUgsodQJvOlF1kpos0LIxPx882R0KtGrU4XCoFwo0JakFlDqBN52oOkmNFmitbtGuQHfez/thCjQlqQWUOoE3nag6SS0X6GD515n1SYGmJbWAUifwphNVJ+n1KNAAFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDhRoSlILKHUCbzpRdZJSoA4UaEpSCyh1Am86UXWSUqAOFGhKUgsodQJvOlF1klKgDjYLdOq2fXlKvS68ETUCnaQUqIPFAk1dinOkXhfeiBqBTlIK1MFmgab+1+ZLJylRY9BJSoE6UKAp6SQlagw6SSlQBwo0JZ2kRI1BJykF6kCBpqSTlKgx6CSlQB0o0JR0khI1Bp2kFKgDBZqSTlKixqCTlAJ1oEBT0klK1Bh0klKgDhRoSjpJiRqDTlIK1IECTUknKVFj0ElKgTpQoCnpJCVqDDpJKVAHCjQlnaREjUEnKQXqQIGmpJOUqDHoJKVAHSjQlHSSEjUGnaQUqMOMcUl946IZUv9r86WTlKgx6CSlQB28xyV1J86S+l+bL52kRI1BJykF6jCjQFNPoTedqDpJiRqDTlIK1IECTUknKVFj0ElKgTpQoCnpJCVqDDpJKVAHCjQlnaREjUEnKQXqQIGmpJOUqDHoJKVAHSjQlHSSEjUGnaQUqAMFmpJOUqLGoJOUAnWgQFPSSUrUGHSSUqAOFGhKOkmJGoNOUgrUgQJNSScpUWPQSUqBOlCgKekkJWoMOkkpUAcKNCWdpESNQScpBepAgaakk5SoMegkpUAdKNCUdJISNQadpBSoAwWakk5Sosagk5QCdaBAU9JJStQYdJJSoA4UaEo6SYkag05SCtSBAk1JJylRY9BJSoE6UKAp6SQlagw6SSlQBwo0JZ2kRI1BJykF6kCBpqSTlKgx6CSlQB0o0JR0khI1Bp2kFKgDBZqSTlKixqCTlAJ1oEBT0klK1Bh0klKgDhRoSjpJiRqDTlIK1IECTUknKVFj0ElKgTpQoCnpJCVqDDpJKVAHCjQlnaREjUEnKQXqQIGmpJOUqDHoJKVAHSjQlHSSEjUGnaQUqAMFmpJOUqLGoJOUAnWgQFPSSUrUGHSSUqAOFGhKOkmJGoNOUgrUgQJNSScpUWPQSUqBOlCgKekkJWoMOkkpUAcKNCWdpESNQScpBepAgaakk5SoMegkpUAdKNCUdJISNQadpKYLdHn86fDw8O3xl4CfpUBT0klK1Bh0ktot0M8vi8H9d3N/nAJNSScpUWPQSWq1QE8fF6t2Xs/bAAWakk5Sosagk9RogZ7sVqV5d69xp/pk8XzWFijQlHSSEjUGnaQ2C/T7o7IwX40e+FgW6o2f52yCAk1JJylRY9BJarNAjzbqsqrUh3M2QYGmpJOUqDHoJDVZoMsXRbH+hP2kKG7NORtPgaakk5SoMegkNVmg5e7mxvP1qcdGUSZ4/rKpHwVwXQT31LYoUADqgntqWzGfwi/Wr1qa+xQeAHIWr7r3N9qyOix6O9rvA4ArFq9Av+6WDfp+9MBp2Z8bO6UAICviwYOj6tjEYu+nw8rfmivpZ13FBABZi3n09cPu2pHexbOIvw0ArljU01fLg3GFLp5yAgmAJbHP/y8/Hx7s7e09PXxHewIwJusbKgNAzihQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQFYK9Gre+w9AjtIVT7LffJlSTx+AlNJVT7LffJkSDuBcOlF1khI1Bp2kKaPqDNJ5mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFOi2mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFOi2mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFOi2mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFOi2mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFOi2mOsIdJISNQadpBTotpjrCHSSEjUGnaQU6LaY6wh0khI1Bp2kFCgACKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgbQL9PujGz93Hy9fFL3nKUNtWB7cLTPdvP9+eOj05W5RLMaPZGEjab6DevbxSRX16ZfhkUwHdTNqxqNa+bo7SpXtoNZGURMNqnSBlmM2FOj3R5n+q/yw28V6sP7Q4h9TBtuwmTTbQe2Xy6KPlemgTkTNdlRrVbrsB7UxjppoUJULdLlfjAr0pMjzX+U41+2Nh3SSZhV1Yncj00G9IGpeWWv7o1S5DmrLEZUC9VL/yxwK9CjPOa7+w7jzrvzg8+Pyv+Ov+4feN48M+ZObSJrroFa5FtVT4n8vo96qnxpnOqhTUbMd1drJqIGyHdTGOGqqQdUt0I/1k4thWvdznOJ6ktu9uarw6w+PupVUPfIwXbQ1E0lzHdQyYNvw5RJvPsp0UKei5jqqteaZcFtFuQ5qYyVqqkFVLdDT8r+Jxf3Hw6CVU3zry7k/ksb+MMVfd+uIw5LqHsnDZtJsB7XM13Z9t+OR66BORM12VCvVaYX/1v1DyHZQaytRkw2qaoFWT4yejU8ilf85un3uT6RXRqzmuP2/yuhfaFa6iAKD2ta+wKD2/4XKeVSrku+fDOc9qCtRkw2qbIEuHnxZOQtfPgF9flpdLnLvVdJg52j/PQ5PlVf2+nLSrZz8B7VMWv8T0BjU5l9rxqNa7mg+HI4mZj2oq1GTDapqgX5rn2H2BXpULH7bnoO7n9lzjU777/FkdDgp09MJJ/3R2rwHdXmw2w5g9oM6RM14VJvnweMCzXZQ16ImG1TVAq2NC3R/dBVDbkdrGt1JhPE/xZMMj82PTnfkPah1usWz+uPMB3UcNeNR3a/n/Who+nwHdS1qskG1UqDVacL6apHTl0VmU93ZH07CZ/vPstElzXxQ6zVz81m9WjIf1HHUfEe1HTiFAl2PmmxQrRTocI1INagZXiUyXPWf8T/L2pA070Fd/v7uk91ufyPvQV2Jmu2odke+BQp0I2qyQbVSoKuP5nW4plL/F3Lz4vS8/lnWRknXHs1uUM+ay9mqveXMB7XSRR3Ja1T31/8Ln++gbkQdudpBNVig1ahmNNe10+HFPRn/s6yMk45lOKi1dtcj70FtjPaSOjmN6mZvZjuokwnHX726qBYLNKu5rn0tn7/tjC64yvbc5mrSsfwGtdUsl6wHtbO5sjMa1eGK/+zPwk9EHbvSQaVAr0A5zcWD/sxgzlfXrSYdy25QOyddgWY7qL3NMcxoVI+KVRkP6kTUMQrUl/spfDZzXTlaneOMX99xtPmvcfSlrAa11yyXjAd1sLmyMxrViVbKdVAvKNArHVQrBTp6djRxqCmpo7WDivm+wng9abaDOn4u3OwaZTuom1EzHdWJVsp1UCeiJhtUKwVaTnD74XJ/42RnUuVux43V+3nneo+bjaTZDmoZbP2ilVwHdTNqtqPaGb+8J89B7fVRkw2qlQKtL76pLlT+7DiLnMrEfw+7G29mdpfFzaTZDmofbLhsOtNBnYia7ah2Vu7QkeWg9lYvpE8xqFYKtD597DgmktTq041mavO8z/dE0lwH9ex09P4Ned/mfyJqtqPaGh1DzHVQO0PUVINqpkDPvj7uln5Ob98yfkOHvkDPfsnwnWYmk+Y5qGft/WBr/UUDOQ5qZTNqtqPaGJ+EyXVQW6OoiQbVToGeLds3P/w1YaIN47e6Ggo0x/c6nE6a5aDWmmACb3U6ETXfUa2snMXOdlBr46hpBlW6QAEgJQoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFisv3dbe49aX/bL8oiof9Z0dFcdtjE98fjTdxVZYvihs/n/sdaXIhVxQoLl/ZMovXo0/GnVnW6XO/TVCgyB4FigjGLXlS9udQS2UBXVBR/fdRoMgeBYoITkZP2veLxd7Qp+Wze59n8BQoJFCgiGB0ELTa5fzfu32fHo2Ph56DAoUCChQRjIqo3Bm9XX7atk750XB09DwUKBRQoIhhOAhaf3TU1ebQP8sPd4uiuPeqb6PVB/pvLDutuP2l//rNp7+u/66NL3w7qB5Y3Hs1bGn54U5R7FQPLA92y29+Vn+pPp5w+qT83gfNDw8FuhHv9GX1bV8oUIxRoIihPwjaVNJJ16f942V3NXben0090BVV35/919cPAWx84aj7vNlCtaW/v+i+4/Rx89Ht9kdvtz/eFHxfoBvx2o3e+g8KFCMUKGLod9Sak0blp82po27PdGi99cZqH2g30PdnfTFU6/nab1r9wtCfTaVWW/pD+/niLy/G31v+0v/UPVA3aFegG/H6jf4DBYoRChQx9LtyR01V7Tefdg9XrVc9oV5+2G12BqceKIuq789qOzvvyv8/fVGsNtj6F6ot1U/IPz8eHqi/5fRRt0v5sf0ldU9WD3S/tc03Ha/9PgoUAwoUUbTF2Z00Oup3+eo90ZO+htpr7jceaI5c7nf9ORxUXT/Ps/6Fk/6q/fKXdW3YbPukGH1UfVAVaL+jXP3WYRuraY5G30eBYkCBIoqvzZVL3fVM7adtj1bXhnbn4pujohsP1AU69GddYe+nfpHzC901+1WBPu8eGM5lVV9qa7NJVP3WtkDX04yuHTiiQDFCgSKK9qhnd9lne0izbabxqex6p3Tjge7I5Y2uG+vXMy1++PNGeTm+8O3TH3eLrkDbXdaNj0aXqzY7rk2BTsXr9npXX+aP644CRRz1Uc9h162uzq6Zxid+6qfVGw/033J72F57smf9OqaNLyw/PunOAV1coN32mw/7At2IN3pdAAWKHgWKOE6qxhz21+oLmbqLmEYnuZuG2nigKbF/eDSccq+v32ysXse0/oXxtmYVaHPSqnx8Kh4FiikUKOKoj3oOL9xsP232RzeeB28+Ma4K9PaXk9FtSM7OPr6cbNDVLzS7jzfv/fjTfzyaV6D9HuhGGvZA4UCBIo6yi26PzsZUr+b8e3cCfeOWTJv3aOoPmq7ee+Tb314Wk6dx+i8c9Re/f/cpUMcxUGc8joFijAJFJEfFjf8zaqLm06YNq8s7V66G33igK9Dq2XR7OVS3pdV6W//C6IT5ic9T+O6Hm6uhmq2dF4+z8BijQBHJSbH402j/sfl0qKEbw2skH0480D1V7gprv3/ivrZ/uPaFoUCr6+YvLtA2YFulbR1PxWtqc7ioFDijQBFN2TV3R3ty9aejncVi8awsom9viu66+Y0H+tfCVwVZXa3Uv8Bo/Kx+/Qv7zVP45tRSu6XzCrS4/354xdHolUgb8aoXM33klUhYQYEilv1i5RRQ9elof3TwcOqB8Yvp613K/eHrqwco174w3pBHgd4cX/HUHxBwx/svnETCCAWKWI6KlX3Fo2J8+vxk/aKktQeGs93tIxCUzgAAAV1JREFU0+dqV7Sxs3pD0fUvvOnK82lz5PKCs/BtNe783G6r+Y6NeB+aB7gbE1ZQoIilOwE0fDq+l/LyYO0unqsPDAVaPX2uW+zzy6rERrfo7Kx94eOTejtf2jPrF13G9PVxf3/Q8f1A1+Odlr+E+4FiDQWK68v3DZoABwoU1xcFii1RoLi+KFBsiQLF9UWBYksUKK4vChRbokBxfVGg2BIFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAIAoUAAJRoAAQiAIFgEAUKAAEokABIBAFCgCBKFAACESBAkAgChQAAlGgABCIAgWAQBQoAASiQAEgEAUKAIEoUAAIRIECQCAKFAACUaAAEIgCBYBAFCgABKJAASAQBQoAgShQAAhEgQJAoP8PNApLh2yU7HgAAAAASUVORK5CYII=" width="672" /></p>
+<p><br></p>
+<p>Now that we have the detection data formatted. It is time to read in
+the covariate data. The <code>autoOcc</code> package can handle
+covariates that vary spatially, temporally, or spatiotemporally. For
+this tutorial we are going to have two spatial covaraites and one
+spatiotemporal covariate. Thes are:</p>
+<ul>
+<li>An urban intensity metric we will generate with a principal
+components analysis</li>
+<li>The distance of each site to a stream or river</li>
+<li>The average weekly temperature of each week of sampling</li>
+</ul>
+<p>One thing that is very important to remember is that unlike the
+detection data, the covariates CANNOT have missing data (i.e.,
+<code>NA</code> values).</p>
+<p>To read in the spatial covariates, copy this code here:</p>
+<pre class="r"><code>covs &lt;- read.csv(
+  &quot;./data/coyote_covariates.csv&quot;
+)
+
+dplyr::glimpse(covs)</code></pre>
+<pre><code>## Rows: 100
+## Columns: 5
+## $ Site            &lt;chr&gt; &quot;C04-MBP1&quot;, &quot;C05-BMP1&quot;, &quot;C05-BMP2&quot;, &quot;C06-HMP1&quot;, &quot;D02-B…
+## $ tree            &lt;dbl&gt; 0.289, 0.123, 0.111, 0.130, 0.105, 0.213, 0.175, 0.166…
+## $ imperv          &lt;dbl&gt; 0.365, 0.087, 0.149, 0.220, 0.723, 0.483, 0.543, 0.605…
+## $ housing_density &lt;dbl&gt; 668.000, 0.295, 1.273, 0.942, 2459.586, 2968.107, 5425…
+## $ dist_stream     &lt;dbl&gt; 2.783, 1.707, 2.730, 0.396, 4.219, 4.544, 4.565, 3.891…</code></pre>
+<p><br></p>
+<p>This dataset has 100 rows (we have 100 sites worth of data) and five
+columns:</p>
+<ul>
+<li><code>Site</code>: The site the covariates are associated to. This
+is ordered exactly the same is the <code>coyote</code> data, and site
+names are identical among the two datasets.</li>
+<li><code>tree</code>: The proportion of tree cover within 1000m of a
+site. To be used for urban intensity PCA.</li>
+<li><code>imperv</code>: The proportion of impervious cover within 1000m
+of a site. To be used for urban intensity PCA.</li>
+<li><code>housing_density</code>: The number of houses per square km
+within 1000m of a site. To be used for urban intensity PCA.</li>
+<li><code>dist_stream</code>: The distance of each site to a stream or
+river in km.</li>
+</ul>
+<p>To generate the urban intensity term, we are going to use
+<code>dplyr</code> to select only the columns we need and then use the
+<code>prcomp()</code> function in base <code>R</code>.</p>
+<pre class="r"><code># make an urbanization metric with tree cover (tree), impervious
+#  cover (imperv), and housing density (housing_density)
+
+urb_pca &lt;- covs %&gt;% 
+  dplyr::select(tree, imperv, housing_density) %&gt;% 
+  prcomp(., center = TRUE, scale = TRUE)
+
+# The first thing we want to see is how much variance each
+#  component explains
+summary(urb_pca)</code></pre>
+<pre><code>## Importance of components:
+##                           PC1    PC2     PC3
+## Standard deviation     1.4514 0.8112 0.48508
+## Proportion of Variance 0.7022 0.2194 0.07843
+## Cumulative Proportion  0.7022 0.9216 1.00000</code></pre>
+<p>The first principal component (PC1) explains about 70% of the
+variation in the data, so we will go ahead and use only that one. We can
+interpret this term by looking at the loadings associated to
+<code>urb_pca</code>. We are going to round them as well as we don’t
+need to see that many significant digits.</p>
+<pre class="r"><code>round(
+  urb_pca$rotation,
+  2
+)</code></pre>
+<pre><code>##                   PC1   PC2   PC3
+## tree            -0.55 -0.70  0.46
+## imperv           0.64  0.01  0.77
+## housing_density  0.54 -0.71 -0.44</code></pre>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="data:image/png;base64,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" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the
-code chunk to prevent printing of the R code that generated the
-plot.</p>
+<div id="challenge-2-interpret-pc1" class="section level3">
+<h3>Challenge 2: Interpret PC1</h3>
+<p>The first principal component can be accessed via
+<code>urb_pca$x[,1]</code>. However, we don’t need to look at those to
+be able to interpret this, we only need the loadings above. What do you
+think they mean?</p>
+<p><br></p>
+<details closed>
+<summary>
+Solution</a>
+</summary>
+For <code>PC1</code> we see that <code>imperv</code> and
+<code>housing_density</code> are both positive, while tree is negative.
+This means that negative values of the urb_pca are locations high in
+tree cover whereas positive values of the urb_pca are locations high in
+impervious cover and housing density. So negative is more forested and
+positive is more urban.
+</details>
+<p><br></p>
+<p>The second covariate we have is the distance of each site to a stream
+or river. We included this one as riparian areas are often used a
+corridors for mammals. However, before we include it into our covariate
+data.frame for analysis we need to scale it (we set scale =
+<code>TRUE</code> when making the principal component term). Why do you
+scale covariates for an analysis? It makes it more likely for the
+statistical algorithms used in <code>autoOcc</code> to converge. Scaling
+also makes it so you can compare the magnitude of slope terms in your
+model. As our occupancy covariates do not have any spatio-temporal data,
+we can assemble our covariates in a <code>data.frame</code>.</p>
+<pre class="r"><code>occ_covs &lt;- data.frame(
+  urb = urb_pca$x[,1], # the PC1 term.
+  dist_stream = as.numeric(
+    scale(
+      covs$dist_stream
+    )
+  )
+)</code></pre>
+<p>In addition to these covariate data, we also have weekly temperature
+data to include as a detection covariate. Since Chicago experiences four
+distinct seasons, coyote may alter their behavior when it’s either hot
+(the summer) or when its cold (the winter). This is also to show how to
+include survey-specific covariates on detection, which is something
+<code>autoOcc</code> can easily handle.</p>
+<pre class="r"><code>week_temp &lt;- read.csv(
+  &quot;./data/weekly_temp_data.csv&quot;
+)
+dplyr::glimpse(week_temp)</code></pre>
+<pre><code>## Rows: 8,100
+## Columns: 4
+## $ Site   &lt;chr&gt; &quot;C04-MBP1&quot;, &quot;C04-MBP1&quot;, &quot;C04-MBP1&quot;, &quot;C04-MBP1&quot;, &quot;C04-MBP1&quot;, &quot;C0…
+## $ Season &lt;chr&gt; &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;, &quot;JA18&quot;,…
+## $ Week   &lt;chr&gt; &quot;Week_1&quot;, &quot;Week_2&quot;, &quot;Week_3&quot;, &quot;Week_4&quot;, &quot;Week_5&quot;, &quot;Week_6&quot;, &quot;We…
+## $ temp   &lt;dbl&gt; 1.9714286, -13.1428571, -14.0285714, -1.1428571, -3.8571429, 3.…</code></pre>
+<p>You want to have the <code>data.frame</code> set up so all the data
+for each site is grouped together, and each grouping is arranged
+temporally from the beginning to the end of the study. Thus, this
+<code>data.frame</code> is set up to vary by week, season, and then
+site.</p>
+<p>Before we arrange the data, let’s query some of the dimensions we are
+going to need to set it up.</p>
+<pre class="r"><code># right now the data are set up so it varies by week, season, and then site. 
+nweek &lt;- dplyr::n_distinct(week_temp$Week)
+nseason &lt;- dplyr::n_distinct(week_temp$Season)
+nsite &lt;- dplyr::n_distinct(week_temp$Site)</code></pre>
+<p>To set up this covariate we are going to need to create a matrix with
+a number of rows equal to <code>nsite</code> and a number of columns
+equal to <code>nweek * nseason</code> the first <code>nweek</code>
+columns will be for the first season, then the next <code>nweek</code>
+are for season 2, etc., etc. So each row is going to hold all the
+temperature data for one site. Because of the way the ordering in
+week_temp (week, season, then site) we can just input the covariate and
+fill the <code>matrix</code> in the correct way by setting the
+<code>byrow</code> argument to <code>TRUE</code>.</p>
+</div>
+</div>
+<div id="challenge-3.-make-the-temperature-matrix." class="section level2">
+<h2>Challenge 3. Make the temperature matrix.</h2>
+<p>The paragraph right above challenge three has all the info you would
+need to correctly generate the <code>matrix</code> in <code>R</code>.
+Give it a go!</p>
+<pre class="r"><code># Solution is below</code></pre>
+<details closed>
+<summary>
+Solution</a>
+</summary>
+<pre class="r"><code>temp_matrix &lt;- matrix(
+  week_temp$temp,
+  ncol = nweek * nseason,
+  nrow = nsite,
+  byrow = TRUE
+)</code></pre>
+</details>
+<p><br></p>
+<p>Now, all columns of this matrix are associated to the same covariate,
+and so to scale this covariate we need to divide each column by the
+global mean and divide by the global standard devation. Since this is a
+matrix this is a bit easier to just do by hand instead of using the
+<code>scale</code> function.</p>
+<pre class="r"><code>temp_matrix &lt;- (
+  temp_matrix - mean(temp_matrix)
+) / sd(temp_matrix)</code></pre>
+<p>Finally, we are also going to include urban intensity as a detection
+covariate. We are doing this because local abundance can influence
+detection probability, and coyote abundance likely covaries with urban
+intensity. Unlike the occupancy covariates, we will have one
+spatio-temporal covariate and one spatial covariate. Thus, we need to
+use a named <code>list</code> object for the detection covariates
+instead of a <code>data.frame</code>. If your detection covariates are
+only spatial in future analyses you can just use a
+<code>data.frame</code>.</p>
+<pre class="r"><code>det_covs &lt;- list(
+  temp = temp_matrix,
+  urb = occ_covs$urb
+)</code></pre>
+<p><a name="models"></a></p>
+</div>
+<div id="fitting-models-1" class="section level2">
+<h2>4. Fitting models</h2>
+<p>The <code>autoOcc</code> package was based on <code>unmarked</code>,
+so if you have any familiarity with <code>unmarked</code> you will find
+that the equation syntax is identically. If you are unfamiliar, for this
+model you need to specify two linear predictors to fit the model
+(detection then occupancy). Spefically, the <code>auto_occ()</code>
+function uses a double-right hand side formula, which means you do not
+need to specify what the response variable in the formula itself. For
+example, the syntax for an intercept only model would be
+<code>~1~1</code>.</p>
+<p>For this workshop we are going to fit five models. There are
+certainly others that could be fitted with the supplied covariates, but
+this is a decent start. You will notice that all of our models include
+the same linear predictors for detection, included both linear and
+quadratic responses to urban intensity and weekly temperature. The main
+reason for this is just because we are not too interested in trying to
+determine the most parsimonious detection model and the AIC of these
+models can be quite sensitive to changes in detection covariates.</p>
+<p>These models we will fit include:</p>
+<ul>
+<li>Occupancy does not covary with any covariates. The null.
+(<code>~1</code>)</li>
+<li>Occupancy is associated with urban intensity
+(<code>~urb</code>)</li>
+<li>Occupancy is associated with distance to a stream or river
+(<code>~dist_stream</code>)</li>
+<li>Occupancy is associated with both spatial covariates
+(<code>urb + dist_stream</code>)</li>
+<li>Occupancy is associated with both spatial covariates, and there is
+an interaction betwen the two (<code>urb * dist_stream</code>)</li>
+</ul>
+<p>To fit an autologistic occupancy model you use the
+<code>autoOcc::auto_occ()</code> function. Go ahead and copy / paste
+this code into your script and run fit them all. Note that if you
+changed the names of any of the objects above you will also need to
+modify them here. Finally, note that I am using 85% confidence intervals
+here instead of the standard 95% most people use. Why? <a href="https://royalsocietypublishing.org/doi/full/10.1098/rspb.2023.1261">It
+aligns more closely with the use of AIC</a>.</p>
+<p>But before we fit all the models, let’s fit the simplest and look at
+a summary of the output.</p>
+<pre class="r"><code># the null model
+null &lt;- auto_occ(
+  ~temp + I(temp^2) + urb + I(urb^2)
+  ~1, # detection linear predictor first, then occupancy
+  y = coyote,
+  occ_covs = occ_covs,
+  det_covs = det_covs,
+  level = 0.85 # Using 85% CI because it aligns more with the use of AIC
+)
+
+summary(null)</code></pre>
+<pre><code>## 
+## Call:
+## auto_occ(formula = ~temp + I(temp^2) + urb + I(urb^2) ~ 1, y = coyote, 
+##     det_covs = det_covs, occ_covs = occ_covs, level = 0.85)
+## 
+## 
+## optim convergence code: 0
+## optim iterations: 48 
+## 
+## Occupancy estimates:
+## 
+##           parameter    Est    SE lower  upper        p
+## 1 psi - (Intercept) -0.839 0.151 -1.06 -0.622 2.54e-08
+## 2       psi - theta  2.244 0.309  1.80  2.689 3.83e-13
+## 
+## Note: psi - theta is the autologistic term
+## 
+## Detection estimates:
+## 
+##           parameter     Est     SE   lower   upper        p
+## 3 rho - (Intercept) -0.7927 0.0953 -0.9299 -0.6556 8.82e-17
+## 4        rho - temp -0.1181 0.0533 -0.1948 -0.0414 2.67e-02
+## 5   rho - I(temp^2)  0.0862 0.0464  0.0195  0.1529 6.29e-02
+## 6         rho - urb -0.2476 0.0560 -0.3282 -0.1671 9.63e-06
+## 7    rho - I(urb^2) -0.0750 0.0265 -0.1131 -0.0368 4.65e-03
+## 
+## AIC: 2827.861</code></pre>
+<pre class="r"><code># urban intensity model
+urb &lt;- auto_occ(
+  ~temp + I(temp^2) + urb + I(urb^2)
+  ~ urb,
+  y = coyote,
+  occ_covs = occ_covs,
+  det_covs = det_covs,
+  level = 0.85
+)
+
+# stream model
+stream &lt;- auto_occ(
+  ~temp + I(temp^2) + urb + I(urb^2)
+  ~ dist_stream,
+  y = coyote,
+  occ_covs = occ_covs,
+  det_covs = det_covs,
+  level = 0.85
+)
+
+# urban + stream
+urb_stream &lt;- auto_occ(
+  ~temp + I(temp^2) + urb + I(urb^2)
+  ~ urb + dist_stream,
+  y = coyote,
+  occ_covs = occ_covs,
+  det_covs = det_covs,
+  level = 0.85
+)
+
+# urban * stream (interaction model)
+urb_stream_inxs &lt;- auto_occ(
+  ~temp + I(temp^2) + urb + I(urb^2)
+  ~ urb*dist_stream,
+  y = coyote,
+  occ_covs = occ_covs,
+  det_covs = det_covs,
+  level = 0.85
+)</code></pre>
 </div>
 
 
