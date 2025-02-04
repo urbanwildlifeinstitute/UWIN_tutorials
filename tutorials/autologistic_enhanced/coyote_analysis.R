@@ -161,7 +161,7 @@ det_covs <- list(
 # step three: fit some models
 
 null <- autoOcc::auto_occ(
-  ~1~1, # detection linear predictor first, then occupancy
+  ~temp + I(temp^2) + urb + I(urb^2)~1, # detection linear predictor first, then occupancy
   y = coyote,
   occ_covs = occ_covs,
   det_covs = det_covs,
