@@ -267,6 +267,14 @@ build_80 <- st_transform(build_80, st_crs(pol_feat))
 # format data to be cohesive with pol_feat dataset
 build_80$building <-rep("yes", nrow(build_80))
 build_80 <- rename(build_80, geometry = geom)
+
+# view building data plotted alongside pol_feat_agg
+tmap_mode("view")
+tm_shape(pol_feat_agg)+
+  tm_fill(size = 0.01, col = "red")+
+tm_shape(build_80)+
+  tm_fill(size = 0.01, col = "blue") 
+
 ```
 
 We can easily combine our data using `rbind`, however we need to match our columns for each dataset. We can do this by adding all missing columns to each dataset and populating them with NA's.
