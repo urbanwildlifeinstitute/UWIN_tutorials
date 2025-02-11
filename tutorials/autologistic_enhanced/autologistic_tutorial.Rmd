@@ -662,7 +662,6 @@ model. Let's take a peek.
 
 best_model <- summary(urb)
 
-best_model
 ```
 
 ## Challenge 5 Interpret the model output:

@@ -1090,35 +1090,6 @@ model. Let’s take a peek.</p>
 ## 8    rho - I(urb^2) -0.0644 0.0275 -0.104 -0.0249 1.91e-02
 ## 
 ## AIC: 2818.954</code></pre>
-<pre class="r"><code>best_model</code></pre>
-<pre><code>## 
-## Call:
-## auto_occ(formula = ~temp + I(temp^2) + urb + I(urb^2) ~ urb, 
-##     y = coyote, det_covs = det_covs, occ_covs = occ_covs, level = 0.85)
-## 
-## 
-## optim convergence code: 0
-## optim iterations: 50 
-## 
-## Occupancy estimates:
-## 
-##           parameter    Est     SE  lower  upper        p
-## 1 psi - (Intercept) -0.834 0.1414 -1.037 -0.630 3.74e-09
-## 2         psi - urb -0.248 0.0764 -0.358 -0.138 1.17e-03
-## 3       psi - theta  2.033 0.3003  1.601  2.465 1.30e-11
-## 
-## Note: psi - theta is the autologistic term
-## 
-## Detection estimates:
-## 
-##           parameter     Est     SE  lower   upper        p
-## 4 rho - (Intercept) -0.7182 0.0973 -0.858 -0.5782 1.53e-13
-## 5        rho - temp -0.1085 0.0538 -0.186 -0.0310 4.37e-02
-## 6   rho - I(temp^2)  0.0800 0.0465  0.013  0.1470 8.55e-02
-## 7         rho - urb -0.1494 0.0624 -0.239 -0.0595 1.67e-02
-## 8    rho - I(urb^2) -0.0644 0.0275 -0.104 -0.0249 1.91e-02
-## 
-## AIC: 2818.954</code></pre>
 </div>
 <div id="challenge-5-interpret-the-model-output" class="section level2">
 <h2>Challenge 5 Interpret the model output:</h2>
