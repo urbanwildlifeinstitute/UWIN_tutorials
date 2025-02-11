@@ -245,6 +245,12 @@ write_sf(building_df, "./data/Argentina_buildings.gpkg") # save as geopackage
 # read in .gpkg file
 build <- st_read("./data/Argentina_buildings.gpkg")
 ```
+
+If `build` is loading too slowly, read in `build.rds`.
+```R
+build <- readRDS("./data/build.rds")
+```
+
 Note that these data come with confidence values for each building's probable existence. For our example, we will limit our dataset to buildings with greater than 80% confidence of existing. Next, we will format the data to easily bind it with our existing polygon data e.g. `pol_data`.
 
 ```R
@@ -553,8 +559,10 @@ plot(rlayers[[14]], col = "black") # 14 = building list
 
 </p>
 
+We can visually see that we have lost data in our buidlings layer due to the decrease in our spatial resolution. 
+
 ### Merging rasters
-It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
+It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in the rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features are built over water features to maintain bridges in the landscape.
 
 ```R
 
