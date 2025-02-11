@@ -304,7 +304,7 @@ vlayers <- OSMtoLULC_vlayers(
 plot(vlayers[[14]][1]) # This is the building layer
 ```
 <p float="center">
-  <img src="./figures/vlayers_building.png" alt="A plot of the different buildings in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+  <img src="./figures/vlayers_building.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
 
 </p>
 
@@ -548,7 +548,10 @@ rlayers <- OSMtoLULC_rlayers(
 # Test this worked by plotting our building layer 
 plot(rlayers[[14]], col = "black") # 14 = building list
 ```
-## ADD PLOT HERE
+<p float="center">
+  <img src="./figures/rlayers_building.png" alt="A plot of the buildings layers in the rlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+
+</p>
 
 ### Merging rasters
 It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
