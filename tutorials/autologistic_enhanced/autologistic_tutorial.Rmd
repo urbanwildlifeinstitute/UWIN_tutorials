@@ -3,8 +3,8 @@ title: "Autologistic occupancy modeling"
 output:
   html_document:
     toc: false
-  #md_document:
-   # toc: false
+  md_document:
+    toc: false
 date: "`r Sys.Date()`"
 knit: (function(inputFile,encoding) {
   rmarkdown::render(inputFile, encoding = encoding,
@@ -29,6 +29,7 @@ double-click on `UWIN_tutorials.Rproj` on your computer a new window of
 Rstudio will open up and you can enter `setwd("./tutorials/autologistic_enhanced")`
 into your R console.
 
+<a name="my-toc"></a>
 
 ### Tutorial Aims:
 
@@ -40,7 +41,9 @@ into your R console.
 
 #### <a href="#models"> 4. Fitting models</a>
 
-#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
+#### <a href="#compare"> 5. Compare models</a>
+
+#### <a href="#plots"> 6. Predicting & plotting model outputs</a>
 
 
 
@@ -51,6 +54,8 @@ into your R console.
 
 Though static occupancy models can be a useful tool to study a species distribution at a single point in time they are limited to a 'static' system, meaning we cannot account for temporal changes in the environment or species occupancy. By considering a dynamic system (i.e., one that can change over time), we can account for things like changing environmental conditions (such as climate or fire), impacts of management interventions, or variations in sampling methodologies. Often, scientists are interested in modeling temporal dynamics or how a species' habitat use changes across time. There are [a variety of ways we can model](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12100) such a dynamic system. Some common ways to account for temporal changes include dynamic occupancy models, multi-state occupancy models, or with random effects. However, all these methods require large amounts of data to estimate all affiliated parameters. An alternative to these methods is to add a temporal autologistic parameter to the model so that the occupancy status of a species at one time point depends in part on the occupancy status in the previous timestep. Unlike the other methods listed above, autologistic occupancy models only introduce one new parameter. To get into the nitty gritty of the equations, please review [this blog post](https://masonfidino.com/autologistic_occupancy_model/) (also listed in references above) or check out the help file for fitting autologistic occupancy models (
 i.e., `?autoOcc::auto_occ`).
+
+[Back to table of contents ⤒](#my-toc)
 
 <a name="packages"></a>
 
@@ -86,6 +91,8 @@ if("ggplot2" %in% installed.packages()){
 }
 
 ```
+
+[Back to table of contents ⤒](#my-toc)
 
 <a name="formatting"></a>
 
@@ -436,6 +443,8 @@ det_covs <- list(
 ```
 
 
+[Back to table of contents ⤒](#my-toc)
+
 <a name="models"></a>
 
 ## 4. Fitting models
@@ -491,7 +500,7 @@ null <- auto_occ(
   level = 0.85 # Using 85% CI because it aligns more with the use of AIC
 )
 
-(my_summary <- summary(null))
+my_summary <- summary(null)
 
 
 ```
@@ -605,7 +614,11 @@ urb_stream_inxs <- auto_occ(
 
 ```
 
-## Compare models ####
+[Back to table of contents ⤒](#my-toc)
+
+<a name="compare"></a>
+
+## 5.  Compare models
 
 After fitting our models, it is time to compare their relative fit using AIC.
 As a reminder, information theoretic approaches like AIC do not ensure you
@@ -687,59 +700,15 @@ higher at intermediate levels of urban intensity).
 
 </details>
 
+
 <br>
 
 
+[Back to table of contents ⤒](#my-toc)
 
+<a name="plots"></a>
 
-```{r plot_stuff}
-range(week_temp$temp)
-
-nice_temps <- seq(-15, 25, length.out = 300)
-temp_pred_df <- data.frame(
-  temp = nice_temps,
-  urb = 0
-)
-
-# scale the temperature data like we did for our model
-temp_pred_df$temp <- (temp_pred_df$temp - mean(week_temp$temp)) / sd(week_temp$temp)
-
-
-
-det_temp_preds <- predict(
-  object = urb,
-  type = "rho",
-  newdata = temp_pred_df,
-  level = 0.85,
-  seed = 154
-)
-
-det_temp_plot <- data.frame(
-  temp = nice_temps,
-  det_temp_preds
-)
-
-# An expression to get the degrees symbol
-xlab_expression <- expression(
-  Temperature~(degree*C)
-)
-# and plot this out with ggplot
-ggplot(det_temp_plot, aes(x = temp, y = estimate)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
-  geom_path(linewidth = 1) + # adds line
-  labs(x = xlab_expression, y = "Detection probability") +
-  scale_x_continuous(limits = range(nice_temps)) +
-  ylim(0,1)+
-  theme_classic()+ # drops gray background and grid
-  theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
-        axis.text.x = element_text(size = 12, color = "black"),    
-        axis.text.y = element_text(size = 12, color = "black"),
-        axis.title = element_text(size = 18)) 
-
-
-
-```
-## Plotting out the results
+## 6. Predicting & plotting model outputs
  
 To do this, we need to generate a new data.frame with all the
 associated covariates tied to a given level of the model (i.e.,
@@ -863,6 +832,9 @@ ggplot(det_temp_plot, aes(x = temp, y = estimate)) +
 
 
 ```
+
+
+
 ## Challenge 6: Make the urban intensity detection figure
 
 Hint: You should be able to piece together the code to do this from the last two
@@ -909,3 +881,6 @@ ggplot(det_urb_plot, aes(x = urb, y = estimate)) +
 </details>
 
 <br>
+
+
+[Back to table of contents ⤒](#my-toc)

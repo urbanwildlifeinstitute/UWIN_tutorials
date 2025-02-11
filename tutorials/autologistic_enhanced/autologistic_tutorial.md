@@ -5,6 +5,8 @@ double-click on `UWIN_tutorials.Rproj` on your computer a new window of
 Rstudio will open up and you can enter
 `setwd("./tutorials/autologistic_enhanced")` into your R console.
 
+<a name="my-toc"></a>
+
 ### Tutorial Aims:
 
 #### <a href="#occupancy"> 1. What are Autologistic occupancy models?</a>
@@ -15,7 +17,9 @@ Rstudio will open up and you can enter
 
 #### <a href="#models"> 4. Fitting models</a>
 
-#### <a href="#plots"> 5. Predicting & plotting model outputs</a>
+#### <a href="#compare"> 5. Compare models</a>
+
+#### <a href="#plots"> 6. Predicting & plotting model outputs</a>
 
 <a name="occupancy"></a>
 
@@ -44,6 +48,8 @@ parameter. To get into the nitty gritty of the equations, please review
 [this blog post](https://masonfidino.com/autologistic_occupancy_model/)
 (also listed in references above) or check out the help file for fitting
 autologistic occupancy models ( i.e., `?autoOcc::auto_occ`).
+
+[Back to table of contents ⤒](#my-toc)
 
 <a name="packages"></a>
 
@@ -77,6 +83,8 @@ will download them for you.
       install.packages("ggplot2")
       library(ggplot2)
     }
+
+[Back to table of contents ⤒](#my-toc)
 
 <a name="formatting"></a>
 
@@ -511,6 +519,8 @@ analyses you can just use a `data.frame`.
       urb = occ_covs$urb
     )
 
+[Back to table of contents ⤒](#my-toc)
+
 <a name="models"></a>
 
 ## 4. Fitting models
@@ -565,7 +575,7 @@ summary of the output.
       level = 0.85 # Using 85% CI because it aligns more with the use of AIC
     )
 
-    summary(null)
+    my_summary <- summary(null)
 
     ## 
     ## Call:
@@ -594,6 +604,68 @@ summary of the output.
     ## 7    rho - I(urb^2) -0.0750 0.0265 -0.1131 -0.0368 4.65e-03
     ## 
     ## AIC: 2827.861
+
+You can see above that we have summaries for both levels of the model
+here, and they are labeled. Furthermore, even though we specified no
+covariates for occupancy, it has two parameters associated to it: the
+intercept and this theta term. That second one is the temporal
+autologistic term which is always included in this model. Specifically,
+this model estimates that the model intercept is `-0.839` and the theta
+term is `2.245`, which is STRONGLY positive.
+
+## Challenge 4. Have these numbers make sense.
+
+These estimates are on the logit-scale. Calculate three things with
+these values
+
+-   Coyote occupancy if they were not present in the previous timestep
+-   Coyote occupancy if they were present in the previous timestep
+-   The expected occupancy over time
+
+As a hint, the help file for the `auto_occ` function may have some
+information that is relevant.
+
+<details closed>
+<summary>
+Solution</a>
+</summary>
+
+    # If you want to hard code it
+    b0 <- -0.839
+    theta <- 2.245
+
+    # occupancy if not present at t-1
+    coy_occ <- plogis(b0)
+
+    # Occupancy if present at t
+    coy_occ_theta <- plogis(b0 + theta)
+
+    # Expected occupancy
+    coy_ex_occ <- coy_occ / (coy_occ + (1 - coy_occ_theta))
+
+    # Or, if you wanted to query the parameters from the summary output, which
+    #  is an s4 class in R.
+    psi_parms <- my_summary@psi
+
+    b0 <- my_summary@psi$Est[1]
+    theta <- my_summary@psi$Est[2]
+
+
+    # occupancy if not present at t-1
+    coy_occ <- plogis(b0)
+
+    # Occupancy if present at t
+    coy_occ_theta <- plogis(b0 + theta)
+
+    # Expected occupancy
+    coy_ex_occ <- coy_occ / (coy_occ + (1 - coy_occ_theta))
+
+</details>
+
+<br>
+
+From here, let’s fit the remaining models. Go ahead and copy this code
+over to your R script and run them.
 
     # urban intensity model
     urb <- auto_occ(
@@ -634,3 +706,326 @@ summary of the output.
       det_covs = det_covs,
       level = 0.85
     )
+
+[Back to table of contents ⤒](#my-toc)
+
+<a name="compare"></a>
+
+## 5. Compare models
+
+After fitting our models, it is time to compare their relative fit using
+AIC. As a reminder, information theoretic approaches like AIC do not
+ensure you top model is good, it just has a better relative fit than the
+other models in your model set. If you are interested in further reading
+about AIC, I would greatly encourage looking up [Arnold
+(2010)](https://wildlife.onlinelibrary.wiley.com/doi/abs/10.1111/j.1937-2817.2010.tb01236.x)
+and [Sutherland et
+al. (2024)](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2023.1261).
+
+To compare our models, we just need to use the `compare_models()`
+function in `autoOcc`. This function requires a list object that
+contains all the models in our model set. If the list is named, then
+those names will transfer over to the AIC table.
+
+    coyote_models <- list(
+      null = null,
+      urb = urb,
+      stream = stream,
+      urb_stream = urb_stream,
+      urb_stream_inxs = urb_stream_inxs
+    )
+
+    # digits = 2 to set number of significant digits
+    coyote_aic <- compare_models(
+      model_list = coyote_models,
+      digits = 2
+    )
+
+    # check out the results
+    coyote_aic
+
+    ##             model npar     AIC delta AICwt cumltvWt
+    ## 1             urb    8 2818.95  0.00  0.65     0.65
+    ## 2      urb_stream    9 2820.95  2.00  0.24     0.89
+    ## 3 urb_stream_inxs   10 2822.88  3.93  0.09     0.98
+    ## 4          stream    8 2827.28  8.33  0.01     0.99
+    ## 5            null    7 2827.86  8.91  0.01     1.00
+
+Using 2 delta AIC is a cutoff, it appears that there is essentially one
+competitive model. If we wanted to entertain the `urb_stream` model,
+note that it is exactly 2 AIC from the best-fit model. As AIC goes up by
+2 for each parameter in the model, the inclusion of the stream variable
+actually did nothing to further explain the data. Thus, the stream
+covariate is likely an uninformative parameter, meaning we may as well
+focus on just the `urb` model. Let’s take a peek.
+
+    best_model <- summary(urb)
+
+    ## 
+    ## Call:
+    ## auto_occ(formula = ~temp + I(temp^2) + urb + I(urb^2) ~ urb, 
+    ##     y = coyote, det_covs = det_covs, occ_covs = occ_covs, level = 0.85)
+    ## 
+    ## 
+    ## optim convergence code: 0
+    ## optim iterations: 50 
+    ## 
+    ## Occupancy estimates:
+    ## 
+    ##           parameter    Est     SE  lower  upper        p
+    ## 1 psi - (Intercept) -0.834 0.1414 -1.037 -0.630 3.74e-09
+    ## 2         psi - urb -0.248 0.0764 -0.358 -0.138 1.17e-03
+    ## 3       psi - theta  2.033 0.3003  1.601  2.465 1.30e-11
+    ## 
+    ## Note: psi - theta is the autologistic term
+    ## 
+    ## Detection estimates:
+    ## 
+    ##           parameter     Est     SE  lower   upper        p
+    ## 4 rho - (Intercept) -0.7182 0.0973 -0.858 -0.5782 1.53e-13
+    ## 5        rho - temp -0.1085 0.0538 -0.186 -0.0310 4.37e-02
+    ## 6   rho - I(temp^2)  0.0800 0.0465  0.013  0.1470 8.55e-02
+    ## 7         rho - urb -0.1494 0.0624 -0.239 -0.0595 1.67e-02
+    ## 8    rho - I(urb^2) -0.0644 0.0275 -0.104 -0.0249 1.91e-02
+    ## 
+    ## AIC: 2818.954
+
+    best_model
+
+    ## 
+    ## Call:
+    ## auto_occ(formula = ~temp + I(temp^2) + urb + I(urb^2) ~ urb, 
+    ##     y = coyote, det_covs = det_covs, occ_covs = occ_covs, level = 0.85)
+    ## 
+    ## 
+    ## optim convergence code: 0
+    ## optim iterations: 50 
+    ## 
+    ## Occupancy estimates:
+    ## 
+    ##           parameter    Est     SE  lower  upper        p
+    ## 1 psi - (Intercept) -0.834 0.1414 -1.037 -0.630 3.74e-09
+    ## 2         psi - urb -0.248 0.0764 -0.358 -0.138 1.17e-03
+    ## 3       psi - theta  2.033 0.3003  1.601  2.465 1.30e-11
+    ## 
+    ## Note: psi - theta is the autologistic term
+    ## 
+    ## Detection estimates:
+    ## 
+    ##           parameter     Est     SE  lower   upper        p
+    ## 4 rho - (Intercept) -0.7182 0.0973 -0.858 -0.5782 1.53e-13
+    ## 5        rho - temp -0.1085 0.0538 -0.186 -0.0310 4.37e-02
+    ## 6   rho - I(temp^2)  0.0800 0.0465  0.013  0.1470 8.55e-02
+    ## 7         rho - urb -0.1494 0.0624 -0.239 -0.0595 1.67e-02
+    ## 8    rho - I(urb^2) -0.0644 0.0275 -0.104 -0.0249 1.91e-02
+    ## 
+    ## AIC: 2818.954
+
+## Challenge 5 Interpret the model output:
+
+1.  As urban intensity goes up, what happens with coyote occupancy?
+2.  What had a greater effect on detection probability? Temperature or
+    urban intensity?
+3.  Given the non-linear terms in the detection model, what do you think
+    the relationship between temperature and detection looks like? What
+    about with urban intensity and detection?
+
+<details closed>
+<summary>
+Solution</a>
+</summary>
+
+1.  As urban intensity goes up, coyote occupancy goes down because the
+    slope term is negative (-0.248).
+
+2.  Urban intensity likely had a greater influence on detection
+    probability because the slope term `rho-urb` is more negative than
+    `rho - temp`. However, there is some uncertainty here as the
+    quadratic terms differ a lot. Chances are the only way we’ll really
+    be able to figure this out is to plot the relationships.
+
+3.  Temperature has a negative linear term and a positive quadratic
+    term. Thus, this relationship is negative but convex (goes up at the
+    very low and high temperatures). Urban intensity has a negative
+    linear term and a negative quadratic term. Thus, this relationship
+    is negative but concave (slightly higher at intermediate levels of
+    urban intensity).
+
+</details>
+
+<br>
+
+[Back to table of contents ⤒](#my-toc)
+
+<a name="plots"></a>
+
+## 6. Predicting & plotting model outputs
+
+To do this, we need to generate a new data.frame with all the associated
+covariates tied to a given level of the model (i.e., occupancy or
+detection). However, we scaled our covariates, and to generate our
+predictions they need to be scaled EXACTLY as the data we supplied to
+the model. In our case, this is pretty easy. The urban intensity
+covariate is already kind of abstract, so we just need to generate a
+sequence of values from around the same extent as the data we supplied.
+Following this, `autoOcc` has it’s own predict function, and it’s help
+file can be looked up with `?predict.auto_occ_fit`.
+
+One unique aspect with making these model predictions is that this
+function derives the expected occupancy (see `?auto_occ` for more
+details). It does so through some simulations, and so if you want to
+return the exact same values each time it is a good idea to set a seed.
+The output of `predict` returns a data.frame with three columns:
+`estimate`, `lower`, and `upper` which respectively represent the mean
+estimate and the lower and upper confidence intervals.
+
+    # Look up the range 
+    range(occ_covs$urb)
+
+    ## [1] -3.417673  4.558160
+
+    # great data.frame for new predictions
+    occ_pred_df <- data.frame(
+      urb = seq(-3, 4.5, length.out = 300)
+    )
+
+    # for help, see ?autoOcc::predict.auto_occ_fit
+    occ_preds <- predict(
+      object = urb,
+      type = "psi",
+      newdata = occ_pred_df,
+      level = 0.85,
+      seed = 153
+    )
+
+    # add the urbanization covariate onto the predicions.
+    urb_plot <- data.frame(
+      urb = occ_pred_df$urb,
+      occ_preds
+    )
+
+    # and plot this out with ggplot
+    ggplot(urb_plot, aes(x = urb, y = estimate)) +
+      geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
+      geom_path(linewidth = 1) + # adds line
+      labs(x = "Urban Intensity", y = "Occupancy") +
+      scale_x_continuous(limits = c(-3,4.5)) +
+      ylim(0,1)+
+      theme_classic()+ # drops gray background and grid
+      theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+            axis.text.x = element_text(size = 12, color = "black"),    
+            axis.text.y = element_text(size = 12, color = "black"),
+            axis.title = element_text(size = 18)) 
+
+![](autologistic_tutorial_files/figure-markdown_strict/plot_psi_urb-1.png)
+
+Plotting out the results for the detection part of the model is just a
+little more complex because this level of the model contains two
+covariates. To plot these out we are going to have to assess the
+marginal effect of each, which means we will vary one of the covariates
+while keeping the other at a constant value (the mean of that
+covariate). Because we have centered and scaled our continuous
+covaraites, their means are zero (which effectively removes them from
+the model prediction). Let’s plot out the temperature results, and then
+leave the urban intensity plot as the last challenge.
+
+    # What is the range of temperatures?
+    range(week_temp$temp)
+
+    ## [1] -16.42857  27.37143
+
+    # seems like somewhere between -15C and 25C is good for making
+    #  a 'pretty' x-axis
+    nice_temps <- seq(-15, 25, length.out = 300)
+    temp_pred_df <- data.frame(
+      temp = nice_temps,
+      urb = 0 # don't forget to include urb here!
+    )
+
+    # scale the temperature data like we did for our model
+    temp_pred_df$temp <- (temp_pred_df$temp - mean(week_temp$temp)) / sd(week_temp$temp)
+
+
+    # Generate predictions, this time switching type to 'rho' because it
+    #  is for detection probability.
+    det_temp_preds <- predict(
+      object = urb,
+      type = "rho",
+      newdata = temp_pred_df,
+      level = 0.85,
+      seed = 154
+    )
+
+    # add temps into the data.frame for plotting purposes
+    det_temp_plot <- data.frame(
+      temp = nice_temps,
+      det_temp_preds
+    )
+
+    # An expression to get the degrees symbol for the x-axis
+    xlab_expression <- expression(
+      Temperature~(degree*C)
+    )
+    # and plot this out with ggplot
+    ggplot(det_temp_plot, aes(x = temp, y = estimate)) +
+      geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
+      geom_path(linewidth = 1) + # adds line
+      labs(x = xlab_expression, y = "Detection probability") +
+      scale_x_continuous(limits = range(nice_temps)) +
+      ylim(0,1)+
+      theme_classic()+ # drops gray background and grid
+      theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+            axis.text.x = element_text(size = 12, color = "black"),    
+            axis.text.y = element_text(size = 12, color = "black"),
+            axis.title = element_text(size = 18)) 
+
+![](autologistic_tutorial_files/figure-markdown_strict/rho_temperature-1.png)
+
+## Challenge 6: Make the urban intensity detection figure
+
+Hint: You should be able to piece together the code to do this from the
+last two figures.
+
+<details closed>
+<summary>
+Solution</a>
+</summary>
+
+    urb_pred_df <- data.frame(
+      temp = 0,
+      urb = occ_pred_df$urb
+    )
+
+    det_urb_preds <- predict(
+      object = urb,
+      type = "rho",
+      newdata = urb_pred_df,
+      level = 0.85,
+      seed = 154
+    )
+
+    det_urb_plot <- data.frame(
+      urb = urb_pred_df$urb,
+      det_urb_preds
+    )
+
+
+    # and plot this out with ggplot
+    ggplot(det_urb_plot, aes(x = urb, y = estimate)) +
+      geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#72AD8F", alpha = 0.5) +
+      geom_path(linewidth = 1) + # adds line
+      labs(x = "Urban Intensity", y = "Detection probability") +
+      scale_x_continuous(limits = range(det_urb_plot$urb)) +
+      ylim(0,1)+
+      theme_classic()+ # drops gray background and grid
+      theme(plot.title=element_text(size = 16, hjust=0.5), # centers titles
+            axis.text.x = element_text(size = 12, color = "black"),    
+            axis.text.y = element_text(size = 12, color = "black"),
+            axis.title = element_text(size = 18)) 
+
+![](autologistic_tutorial_files/figure-markdown_strict/rho_urb_plot-1.png)
+</details>
+
+<br>
+
+[Back to table of contents ⤒](#my-toc)
