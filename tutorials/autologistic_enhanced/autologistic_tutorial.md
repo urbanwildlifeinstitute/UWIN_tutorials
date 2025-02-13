@@ -1,9 +1,9 @@
 NOTE: For this code to work as intended, your working directory should
-be set to `"./tutorials/autologistic_enhanced"` where the `.` represents
+be set to `"./autologistic_enhanced"` where the `.` represents
 the location of the `UWIN_tutorials.Rproj` file on your computer. If you
 double-click on `UWIN_tutorials.Rproj` on your computer a new window of
 Rstudio will open up and you can enter
-`setwd("./tutorials/autologistic_enhanced")` into your R console.
+`setwd("./autologistic_enhanced")` into your R console.
 
 <a name="my-toc"></a>
 
