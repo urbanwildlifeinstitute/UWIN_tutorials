@@ -1,4 +1,4 @@
-NOTE: For this code to work as intended, your working directory should be set to "./enhancing_maps" where the . represents the location of the UWIN_tutorials.Rproj file on your computer. If you double-click on UWIN_tutorials.Rproj on your computer a new window of Rstudio will open up and you can enter setwd("./tutorials/enhancing_maps") into your R console.
+NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `UWIN_tutorials.Rproj` file on your computer. If you double-click on `UWIN_tutorials.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./tutorials/enhancing_maps")` into your R console.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated December 2024*
@@ -64,6 +64,13 @@ library(geos)
 # Load in functions
 source("OSM_to_LULC_functions_Bariloche.R") 
 ```
+## Download spatial data
+GitHub is limited to hosting file sizes <2GB on the cloud repository. For this tutorial, we will need a handful of large datasets which can be downloaded [here](https://drive.google.com/drive/folders/1UH2470MteHTJ82Pb3s9lRIdm5LGBNEPC?usp=sharing).
+
+These include:
+1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
+2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
+
 ### OSM data
 OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
 
@@ -122,7 +129,7 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
 ```
 If `pol_feat`is loading slowly, read in `pol_feat.rds`.
 ```R
-pol_feat <- readRDS("./data/pole_feat.rds")
+pol_feat <- readRDS("./data/pol_feat.rds")
 ```
 
 Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
@@ -226,8 +233,6 @@ lin_feat <- readRDS("./data/lin_feat.rds")
 ```
 ### Integrating Open Building Data
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
-
-Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the converted geopackage directly. These files are too large to store in GitHub, so please download the `961_buildings.csv.gz` and `build.rds` files and add them to your local `data` folder from [here](https://drive.google.com/drive/folders/1Cp-in4UnfguYfWlVI_KfhES9g3XwEVly?usp=drive_link).
 
 <details closed><summary> See code to convert data here </a></summary>
   
@@ -523,7 +528,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
 
 Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
 
-<details closed><summary> Read in .00001 resolution rlayers </a></summary>
+<details closed><summary> To read in .00001 resolution rlayers </a></summary>
 
 ```R
 # List all .RDS files in the directory
@@ -580,8 +585,10 @@ OSM_only_map <- merge_OSM_LULC_layers(
   OSM_raster_layers = rlayers
 )
 ```
-<details closed><summary> See the OSM_only_map function function</a></summary>
-  ```R
+
+<details closed><summary> See the OSM_only_map function </a></summary>
+  
+```R
   merge_OSM_LULC_layers <- function(OSM_raster_layers){ 
   classL2 <- OSM_raster_layers
   classL2 <- Filter(Negate(is.null), classL2)
@@ -589,8 +596,9 @@ OSM_only_map <- merge_OSM_LULC_layers(
   r3 <- terra::app(rast(classL2), fun='first', na.rm=TRUE)
   return(r3)
 }
-  ```
-</details>
+```
+
+  </details>
 
 Let's have a quick view of our final OSM map using `ggplot()`
 ```R
@@ -638,7 +646,7 @@ To integrate these maps, we need to reclassify the CDS data to be cohesive with 
 
 ```R
 # read in global dataset
-my_map = rast("./global_landcover_maps/CCS-Map-300m-P1Y-2022-Argentina.nc")
+my_map = rast("./data/CCS-Map-300m-P1Y-2022-Argentina.nc")
 
 # subset raster to just the landcover data
 my_map <- my_map$lccs_class
@@ -705,6 +713,10 @@ ggplot(data = as.factor(my_map_crop)) +
   theme_void() +
   theme(legend.position = "right")+
   coord_equal()
+
+# To save map as a .png
+# ggsave("./figures/CDS_LULC_map.png", dpi = 300, scale = 1.5, width = 10, height = 8.5, units = "in")
+
 ```
 <p float="center">
   <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1000" height="auto" />
