@@ -1,0 +1,38 @@
+﻿cds,cds_value,mcsc,mcsc_value
+no data,0,no data,0
+"cropland, rainfed",10,resourceful_area,8
+herbaceous cover,11,heterogenous_green,9
+tree or shrub cover,12,heterogenous_green,9
+"cropland, irrigates, or post-flooding",20,resourceful_area,8
+mosaic cropland >50%,30,resourceful_area,8
+mosaic natural vegetation >50%,40,heterogenous_green,9
+"tree cover, evergreen >15%",50,dense_green,11
+"tree cover, deciduous >15%",60,dense_green,11
+"tree cover, deciduous, closed >40%",61,dense_green,11
+"tree cover, deciduous, open 15-40%",62,dense_green,11
+"tree cover, needleleaved, evergreen, >15%",70,dense_green,11
+"tree cover, needleleaved, evergreen >40%",71,dense_green,11
+"tree cover, needleleaved, evergreen, 15-40%",72,dense_green,11
+"tree cover, needleleaved, deciduous, >15%",80,dense_green,11
+"tree cover, needleleaved, deciduous >40%",81,dense_green,11
+"tree cover, needleleaved, deciduous, 15-40%",82,dense_green,11
+"tree cover, mixed leaf",90,dense_green,11
+mosaic tree and shrub,100,heterogenous_green,9
+mosaic herbaceous cover,110,heterogenous_green,9
+shrubland,120,shrubland,120
+evergreen shrubland,121,evergreen shrubland,121
+deciduous shrubland,122,deciduous shrubland,122
+grassland,130,heterogenous_green,9
+lichens and moses,140,lichens and moses,140
+"sparse vegetation (tree, shrub, herbaceous cover)",150,"sparse vegetation (tree, shrub, herbaceous cover)",150
+spare shrub <15%,152,"sparse vegetation (tree, shrub, herbaceous cover)",150
+sparse herbaceous cover <15%,153,"sparse vegetation (tree, shrub, herbaceous cover)",150
+"tree cover, flooded, fresh or brakish water",160,"tree cover, flooded",160
+"tree cover, flooded, saline water",170,"tree cover, flooded",160
+"shrub or herbaceous cover, flooded, fresh/saline/brakish",180,"herbaceous, flooded",180
+urban areas,190,building,14
+bare areas,200,barren_soil,10
+consolidated bare areas,201,barren_soil,10
+unconcolidates bare areas,202,barren_soil,10
+water bodies,210,water,12
+permanent snow and ice,220,permanent snow and ice,220
