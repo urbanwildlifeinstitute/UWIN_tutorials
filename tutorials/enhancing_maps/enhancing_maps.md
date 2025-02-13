@@ -585,7 +585,8 @@ OSM_only_map <- merge_OSM_LULC_layers(
   OSM_raster_layers = rlayers
 )
 ```
-<details closed><summary> See the OSM_only_map function function</a></summary>
+
+<details closed><summary> See the OSM_only_map function </a></summary>
   ```R
   merge_OSM_LULC_layers <- function(OSM_raster_layers){ 
   classL2 <- OSM_raster_layers
@@ -595,7 +596,8 @@ OSM_only_map <- merge_OSM_LULC_layers(
   return(r3)
 }
   ```
-</details>
+
+  </details>
 
 Let's have a quick view of our final OSM map using `ggplot()`
 ```R
