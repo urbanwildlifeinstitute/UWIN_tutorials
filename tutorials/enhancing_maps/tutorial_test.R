@@ -35,6 +35,7 @@ study_area_bbox <- sf::st_bbox(c(xmin=-71.900000,ymin=-41.262600,xmax=-70.650000
 # Confirm the box is the correct coordinates for you study area 
 plot(study_area_bbox, axes = TRUE)
 
+options(timeout = 300) 
 pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
                                boundary_type = c("spat","clipsrc"),
@@ -45,8 +46,8 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                force_download = TRUE,
                                extra_tags=keys)
 
-saveRDS(pol_feat, "./data/pole_feat.rds")
-pol_feat <- readRDS("./data/pole_feat.rds")
+saveRDS(pol_feat, "./data/pol_feat.rds")
+#pol_feat <- readRDS("./data/pol_feat.rds")
                                
 # This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
 # the barriers we want to grab OSM data. Grabbing the smaller municipalities lets us limit our boundary to the city area more specifically. Then we will use 
@@ -118,11 +119,16 @@ lin_feat <- osmextract::oe_get("Argentina",
                                stringsAsFactors = FALSE, 
                                extra_tags=keys)
 
-saveRDS(pol_feat, "./data/lin_feat.rds")
-lin_feat <- readRDS("./data/lin_feat.rds")
+saveRDS(lin_feat, "./data/lin_feat.rds")
+#lin_feat <- readRDS("./data/lin_feat.rds")
+plot(lin_feat[20]) # This will plot all linear features with color representing each linear 'id'
 
 # read in .gpkg file
 build <- st_read("./data/Argentina_buildings.gpkg")
+
+#saveRDS(build, "./data/build.rds")
+build <- readRDS("./data/build.rds")
+
 
 # filter to buildings with >80% confidence
 build_80 <- build %>% 
@@ -137,6 +143,9 @@ build_80 <- st_transform(build_80, st_crs(pol_feat))
 # format data to be cohesive with pol_feat dataset
 build_80$building <-rep("yes", nrow(build_80))
 build_80 <- rename(build_80, geometry = geom)
+
+#saveRDS(build_80, "./data/build_80.rds")
+#build_80 <- readRDS("./data/build_80.rds")
 
 # Step 1: Make sure columns in both data.frames are the same
 all_columns <- union(names(build_80), names(pol_feat_agg))  # Combine all unique columns from both
@@ -157,10 +166,19 @@ for (col in missing_pol_feat) {
 combined <- rbind(build_80, pol_feat_agg)
 combined <- st_as_sf(combined)
 
+tmap_mode("view")
+tm_shape(pol_feat_agg)+
+  tm_fill(size = 0.01, col = "red")+
+  tm_shape(build_80)+
+  tm_fill(size = 0.01, col = "blue") 
+
 vlayers <- OSMtoLULC_vlayers(
   OSM_polygon_layer = combined, 
   OSM_line_layer = lin_feat
 )
+
+test <- lin_feat %>% filter(highway	 %in% c("services","service","turning_loop","living_street"))
+
 
 # plot a layer to see if this worked as expected
 plot(vlayers[[14]][1]) # This is the building layer
@@ -175,3 +193,31 @@ rlayers <- OSMtoLULC_rlayers(
 
 # Test this worked by plotting our building layer 
 plot(rlayers[[14]], col = "black") # 14 = building list
+
+OSM_only_map <- merge_OSM_LULC_layers(
+  OSM_raster_layers = rlayers
+)
+
+ggplot() +
+  geom_spatraster(data = as.factor(OSM_only_map), aes(fill = first)) +
+  # You can use coord_sf
+  coord_sf(crs = 4326) +
+  scale_fill_manual(values = viridis::viridis(27), breaks = 1:27,
+                    labels = c("industrial", 
+                               "commercial", "institutional",
+                               "residential","landuse_railway", "open green",
+                               "protected area", "resourceful area","heterogeneous green area",
+                               "barren soil","dense green area", "water",
+                               "parking surface", "buildings",
+                               "roads (v.h. traffic)", 
+                               "sidewalks", "roads_na",
+                               "roads (v.l. traffic)", "roads (l. traffic)", "roads (m. traffic)",
+                               "roads (h.t.l.s)", "roads (h.t.h.s)", 
+                               "trams/streetcars",
+                               "walking trails", "railways", "unused linear feature",
+                               "barriers"),
+                    na.value = "white")
+
+tmap_mode("view")
+tm_shape(as.factor(OSM_only_map))+
+  tm_raster(breaks= 1:27)
