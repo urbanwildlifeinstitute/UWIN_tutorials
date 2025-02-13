@@ -614,6 +614,11 @@ ggplot() +
                                "barriers"),
                     na.value = "white")
 ```
+<p float="center">
+  <img src="./figures/OSM_only_map.png" alt="A plot of the OSM_only_map where white indicates NA values for missing landcover" width="500" height="auto" />
+
+</p>
+
 We can also interact with our map using `tmap` and get a closer look at our featured lines and polygons
 ```R
 tmap_mode("view")
