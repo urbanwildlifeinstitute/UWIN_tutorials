@@ -227,7 +227,7 @@ lin_feat <- readRDS("./data/lin_feat.rds")
 ### Integrating Open Building Data
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
-Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the converted geopackage directly. These files are too large to store in GitHub, so please download at least the `961_buildings.csv.gz` file and add to your `data` folder from [here](https://drive.google.com/drive/folders/1Cp-in4UnfguYfWlVI_KfhES9g3XwEVly?usp=drive_link).
+Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the converted geopackage directly. These files are too large to store in GitHub, so please download the `961_buildings.csv.gz` and `build.rds` files and add them to your local `data` folder from [here](https://drive.google.com/drive/folders/1Cp-in4UnfguYfWlVI_KfhES9g3XwEVly?usp=drive_link).
 
 <details closed><summary> See code to convert data here </a></summary>
   
