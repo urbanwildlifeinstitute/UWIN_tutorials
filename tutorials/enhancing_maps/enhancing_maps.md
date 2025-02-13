@@ -528,7 +528,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
 
 Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
 
-<details closed><summary> Read in .00001 resolution rlayers </a></summary>
+<details closed><summary> To read in .00001 resolution rlayers </a></summary>
 
 ```R
 # List all .RDS files in the directory
