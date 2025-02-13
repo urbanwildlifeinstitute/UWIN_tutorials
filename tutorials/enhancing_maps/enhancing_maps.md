@@ -728,7 +728,7 @@ When integrating global or local spatial data, we must create a reclassification
 
 ```R
 # Read in reclassification dictionary
-reclass_values <- read_csv("D:/GitHub/OSM_for_Ecology/reclass_tables/reclass_cds_2_mcsc.csv")
+reclass_values <- read_csv("./data/reclass_cds_2_mcsc.csv")
 
 # Select classification values only
 CDS_to_OSM_table <- reclass_values %>% 
@@ -840,4 +840,8 @@ OSM_enahnced_LULC_plot
 ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height = 8.5, units = "in")
 ```
 
-ADD PLOT HERE
+<p float="center">
+  <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto" />
+
+</p>
+
