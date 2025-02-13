@@ -129,7 +129,7 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
 ```
 If `pol_feat`is loading slowly, read in `pol_feat.rds`.
 ```R
-pol_feat <- readRDS("./data/pole_feat.rds")
+pol_feat <- readRDS("./data/pol_feat.rds")
 ```
 
 Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
@@ -646,7 +646,7 @@ To integrate these maps, we need to reclassify the CDS data to be cohesive with 
 
 ```R
 # read in global dataset
-my_map = rast("./global_landcover_maps/CCS-Map-300m-P1Y-2022-Argentina.nc")
+my_map = rast("./data/CCS-Map-300m-P1Y-2022-Argentina.nc")
 
 # subset raster to just the landcover data
 my_map <- my_map$lccs_class
@@ -713,6 +713,10 @@ ggplot(data = as.factor(my_map_crop)) +
   theme_void() +
   theme(legend.position = "right")+
   coord_equal()
+
+# To save map as a .png
+# ggsave("./figures/CDS_LULC_map.png", dpi = 300, scale = 1.5, width = 10, height = 8.5, units = "in")
+
 ```
 <p float="center">
   <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1000" height="auto" />
