@@ -403,11 +403,13 @@ only need the loadings above. What do you think they mean?
 <summary>
 Solution</a>
 </summary>
+    
 For `PC1` we see that `imperv` and `housing_density` are both positive,
-while tree is negative. This means that negative values of the urb\_pca
-are locations high in tree cover whereas positive values of the urb\_pca
+while tree is negative. This means that negative values of the urb_pca
+are locations high in tree cover whereas positive values of the urb_pca
 are locations high in impervious cover and housing density. So negative
 is more forested and positive is more urban.
+
 </details>
 
 <br>
