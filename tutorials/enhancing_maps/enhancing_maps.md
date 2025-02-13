@@ -587,7 +587,8 @@ OSM_only_map <- merge_OSM_LULC_layers(
 ```
 
 <details closed><summary> See the OSM_only_map function </a></summary>
-  ```R
+  
+```R
   merge_OSM_LULC_layers <- function(OSM_raster_layers){ 
   classL2 <- OSM_raster_layers
   classL2 <- Filter(Negate(is.null), classL2)
@@ -595,7 +596,7 @@ OSM_only_map <- merge_OSM_LULC_layers(
   r3 <- terra::app(rast(classL2), fun='first', na.rm=TRUE)
   return(r3)
 }
-  ```
+```
 
   </details>
 
