@@ -225,7 +225,7 @@ lin_feat <- readRDS("./data/lin_feat.rds")
 ### Integrating Open Building Data
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
-Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the converted geopackage directly.
+Data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file. Converting a `.csv.gz` to a geopackage can be computationally heavy, therefore, we will read in the converted geopackage directly. These files are too large to store in GitHub, so please download at least the `961_buildings.csv.gz` file and add to your `data` folder from [here](https://drive.google.com/drive/folders/1Cp-in4UnfguYfWlVI_KfhES9g3XwEVly?usp=drive_link).
 
 <details closed><summary> See code to convert data here </a></summary>
   
@@ -245,6 +245,12 @@ write_sf(building_df, "./data/Argentina_buildings.gpkg") # save as geopackage
 # read in .gpkg file
 build <- st_read("./data/Argentina_buildings.gpkg")
 ```
+
+If `build` is loading too slowly, read in `build.rds`.
+```R
+build <- readRDS("./data/build.rds")
+```
+
 Note that these data come with confidence values for each building's probable existence. For our example, we will limit our dataset to buildings with greater than 80% confidence of existing. Next, we will format the data to easily bind it with our existing polygon data e.g. `pol_data`.
 
 ```R
@@ -261,6 +267,14 @@ build_80 <- st_transform(build_80, st_crs(pol_feat))
 # format data to be cohesive with pol_feat dataset
 build_80$building <-rep("yes", nrow(build_80))
 build_80 <- rename(build_80, geometry = geom)
+
+# view building data plotted alongside pol_feat_agg
+tmap_mode("view")
+tm_shape(pol_feat_agg)+
+  tm_fill(size = 0.01, col = "red")+
+tm_shape(build_80)+
+  tm_fill(size = 0.01, col = "blue") 
+
 ```
 
 We can easily combine our data using `rbind`, however we need to match our columns for each dataset. We can do this by adding all missing columns to each dataset and populating them with NA's.
@@ -304,7 +318,7 @@ vlayers <- OSMtoLULC_vlayers(
 plot(vlayers[[14]][1]) # This is the building layer
 ```
 <p float="center">
-  <img src="./figures/vlayers_building.png" alt="A plot of the different buildings in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+  <img src="./figures/vlayers_building.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
 
 </p>
 
@@ -505,9 +519,9 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
 ```
 </details>
 
-Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. We have included the output .tif files from the `rlayers()` function with a resolution of .00001 in the data folder of this tutorial for your use and comparison later in the tutorial. To read in the .tifs files, use the code below.  
+Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
 
-<details closed><summary> See the rlayers function</a></summary>
+<details closed><summary> Read in .00001 resolution rlayers </a></summary>
 
 ```R
 # List all .RDS files in the directory
@@ -548,10 +562,15 @@ rlayers <- OSMtoLULC_rlayers(
 # Test this worked by plotting our building layer 
 plot(rlayers[[14]], col = "black") # 14 = building list
 ```
-## ADD PLOT HERE
+<p float="center">
+  <img src="./figures/rlayers_building.png" alt="A plot of the buildings layers in the rlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+
+</p>
+
+We can visually see that we have lost data in our buidlings layer due to the decrease in our spatial resolution. 
 
 ### Merging rasters
-It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features over water features to maintain bridges in the landscape.
+It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in the rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features are built over water features to maintain bridges in the landscape.
 
 ```R
 
