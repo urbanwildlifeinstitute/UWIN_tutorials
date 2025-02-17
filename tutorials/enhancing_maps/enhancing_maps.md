@@ -839,7 +839,6 @@ OSM_enahnced_LULC_plot
 
 ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height = 8.5, units = "in")
 ```
-
 <p float="center">
   <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto" />
 
