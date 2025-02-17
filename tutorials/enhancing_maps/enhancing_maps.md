@@ -780,7 +780,7 @@ terra::writeRaster(
 
 # To save raster as a shapefile
 # Convert SpatRaster to raster
-raster_data <- rast(OSM_enhanced_LULC_map)
+raster_data <- rast("./data/Bariloche_enhanced_lcover.tif")
 
 # Convert raster to polygons
 polygon_data <- as.polygons(raster_data)
