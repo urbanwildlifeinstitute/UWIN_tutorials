@@ -322,7 +322,7 @@ vlayers <- OSMtoLULC_vlayers(
 )
 
 # plot a layer to see if this worked as expected
-plot(vlayers[[14]][1]) # This is the building layer
+plot(st_geometry(vlayers[[14]])) # This is the building layer
 ```
 <p float="center">
   <img src="./figures/vlayers_building.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
@@ -631,7 +631,7 @@ We can also interact with our map using `tmap` and get a closer look at our feat
 ```R
 tmap_mode("view")
 tm_shape(as.factor(OSM_only_map))+
-  tm_raster(breaks= 1:27)
+  tm_raster(col.scale= tm_scale(1:27))
 ```
 
 <a name="integrating"></a>
