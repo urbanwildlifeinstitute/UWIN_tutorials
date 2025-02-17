@@ -654,3 +654,195 @@ my_map <- my_map$lccs_class
 # crop map to OSM map extent
 my_map_crop <- crop(my_map, ext(OSM_only_map))
 
+# view the global landcover map
+ggplot(data = as.factor(my_map_crop)) +
+  geom_raster(aes(x = x, y = y, fill = lccs_class)) +
+  theme(
+    legend.title = element_text(size=11), #change legend title font size
+    legend.text = element_text(size=8)) + #change legend text font size
+  scale_fill_manual(name = "Landcover Class", 
+                    #values= viridis::viridis(36),
+                    values = c("#BFAE15", "#84D982", "#84D982",
+                      "#BFAE15", "#BFAE15", "#84D982",
+                      "#144F28", "#144F28", "#144F28", 
+                      "#144F28", "#144F28", "#144F28", 
+                      "#144F28", "#144F28", "#144F28",
+                      "#144F28", "#144F28", "#84D982", 
+                      "#84D982", "#768A5E", "#29612C", 
+                      "#43993D", "#84D982", "#64B39B", 
+                      "#B6C49A", "#B6C49A", "#B6C49A",
+                      "#31635E", "#31635E", "#5A967A",
+                      "#000000", "#A68964", "#A68964",
+                      "#A68964", "#088da5", "#6CF7EE"),
+                    breaks = c(10:12, 20, 30, 40, 50, 60:62, 70:72,
+                               80:82, 90, 100, 110, 120:122, 130, 140, 150:152, 160, 170,
+                               180, 190, 200:202, 210, 220), # to match map values
+                    labels=c("cropland, rainfed", "herbaceous cover", "tree or shrub cover",
+                             "cropland, irrigates, or post-flooding",
+                             "mosaic cropland >50%",
+                             "mosaic natural vegetation >50%", "tree cover, evergreen >15%",
+                             "tree cover, deciduous >15%",
+                             "tree cover, deciduous, closed >40%",
+                             "tree cover, deciduous, open 15-40%",
+                             "tree cover, needleleaved, evergreen, >15%",
+                             "tree cover, needleleaved, evergreen >40%",
+                             "tree cover, needleleaved, evergreen, 15-40%",
+                             "tree cover, needleleaved, deciduous, >15%",
+                             "tree cover, needleleaved, deciduous >40%",
+                             "tree cover, needleleaved, deciduous, 15-40%",
+                             "tree cover, mixed leaf",
+                             "mosaic tree and shrub",
+                             "mosaic herbaceous cover",
+                             "shrubland",
+                             "evergreen shrubland",
+                             "deciduous shrubland",
+                             "grassland",
+                             "lichens and moses",
+                             "sparse vegetation (tree, shrub, herbaceous cover)",
+                             "spare shrub <15%",
+                             "sparse herbaceous cover <15%",
+                             "tree cover, flooded, fresh or brakish water",
+                             "tree cover, flooded, saline water",
+                             "shrub or herbaceous cover, flooded, fresh/saline/brakish",
+                             "urban areas",
+                             "bare areas",
+                             "consolidated bare areas",
+                             "unconcolidates bare areas",
+                             "water bodies",
+                             "permanent snow and ice")) +
+  theme_void() +
+  theme(legend.position = "right")+
+  coord_equal()
+
+# To save map as a .png
+# ggsave("./figures/CDS_LULC_map.png", dpi = 300, scale = 1.5, width = 10, height = 8.5, units = "in")
+
+```
+<p float="center">
+  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1001" height="auto" />
+
+</p>
+
+### Reclassify Data
+When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data, here CDS, will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the CDS classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf). We have prepped this dictionary for this example. We will read in the .csv and extract just the numeric values.
+
+```R
+# Read in reclassification dictionary
+reclass_values <- read_csv("./data/reclass_cds_2_mcsc.csv")
+
+# Select classification values only
+CDS_to_OSM_table <- reclass_values %>% 
+  dplyr::select(cds_value, mcsc_value)
+```
+### Integrate Data
+Now we are ready to create our final product, our integrated OSM and global landcover map!
+
+<details closed><summary> See the integrate_OSM_to_globalLULC() function</a></summary>
+  
+integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_table){
+  
+  #load global lulc raster that will work as a background layer to cover any missing data in the OSM_database
+  r5 <-  global_lulc_map
+  r3 <-  OSM_lulc_map
+
+  r3p <- project(r3, crs(r5)) #reproject OSM-only raster to global LULC raster to crop the global LULC
+  r5 <- crop(r5, r3p) #crop
+  
+  #reproject cropped global LULC to our frameworks projection
+  r6 <- terra::project(r5, r3, method="near", align=TRUE)
+
+  # crop again after reprojection to ensure rasters have the same extent
+  r6 <- terra::crop(r6, r3)
+  r6 <- terra::extend(r6, r3) # this is to ensure the rasters line up before masking.
+  r7 <- classify(r6, reclass_table)
+  r4 <- ifel(is.na(r3), r7, r3)
+ 
+  return(as.factor(r4))
+} 
+
+</details>
+
+```R
+sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
+OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
+                                                     global_lulc_map = my_map, 
+                                                     reclass_table = CDS_to_OSM_table)
+```
+Voilà! We now have a new and improved integrated OSM land use land cover map! Our object, `OSM_enhanced_LULC_map`, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened here or in ArcGIS or other mapping programs.
+
+```R
+# To save SpatRaster as .tif
+terra::writeRaster(
+  OSM_enhanced_LULC_map,
+  "Bariloche_enhanced_lcover.tif",
+  overwrite=TRUE
+)
+
+# To save raster as a shapefile
+# Convert SpatRaster to raster
+raster_data <- rast(OSM_enhanced_LULC_map)
+
+# Convert raster to polygons
+polygon_data <- as.polygons(raster_data)
+
+# Create a new column which adds classification levels and can be used as an attribute table in ArcGIS
+polygon_data$landuse_class <- values(raster_data)
+
+# Save shapefile
+writeVector(polygon_data, "Bariloche_enhanced_lcover.shp", overwrite = TRUE)
+```
+We can also use `ggplot2` to view our map in R and export as a .png, .tif, etc.
+
+```R
+OSM_enahnced_LULC_plot <- ggplot(data = OSM_enhanced_LULC_map) +
+   geom_raster(aes(x = x, y = y, fill = first)) +
+   theme( #change legend key size
+  #       legend.key.height = unit(1, 'cm'), #change legend key height
+  #       legend.key.width = unit(1, 'cm'), #change legend key width
+        legend.title = element_text(size=11), #change legend title font size
+        legend.text = element_text(size=8)) + #change legend text font size
+    scale_fill_manual(name = "Landcover Class", 
+                      values=c("#843438","#df919a", "#B5605E",
+                             "#A37279", "#F7D200","#D4ED88",
+                             "#AFDC70", "#BFAE15", "#84D982",
+                             "#A68964", "#144F28","#088da5",
+                             "#C2C2C2", "#000000",
+                             "#F00400", "#6B6666",
+                             "#ffce00","#F2C3A2", "#FCAC74",
+                             "#ED9026", "#F25250", "#9C0300",
+                             "#E8DBDA", "#783F04",
+                             "#FFDA61", "#400000", 
+                             "#BA0A07", "#518F77",
+                             "#768A5E", "#29612C", "#43993D",
+                             "#64B39B","#B6C49A", "#31635E",
+                             "#5A967A", "#6CF7EE"),
+                    breaks = c(c(1:27), 110, 120, 121, 122, 140, 150, 160, 180, 220), # to match map values
+                    labels=c("industrial", "commercial", "institutional",
+                             "residential","landuse_railway", "open green",
+                             "protected area", "resourceful area","heterogeneous green area",
+                             "barren soil","dense green area", "water",
+                             "parking surface", "buildings",
+                             "roads (v.h. traffic)", "sidewalks", "roads_na",
+                             "roads (v.l. traffic)", "roads (l. traffic)", "roads (m. traffic)",
+                             "roads (h.t.l.s)", "roads (h.t.h.s)", "trams/streetcars",
+                             "walking trails", "railways", "unused linear feature",
+                             "barriers", "mosaic herbaceous cover",
+                             "shrubland", "evergreen shrubland","deciduous shrubland",
+                             "lichens and moses", "sparse vegetation (tree, shrub, herbaceous cover)", 
+                             "tree cover, flooded",
+                             "herbaceous, flooded", "permanent snow and ice")) +
+  theme_void() +
+  theme(legend.position = "right")+
+  coord_equal()
+
+OSM_enahnced_LULC_plot
+
+ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height = 8.5, units = "in")
+```
+
+<p float="center">
+  <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto" />
+
+</p>
+
+
