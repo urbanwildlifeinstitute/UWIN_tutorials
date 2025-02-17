@@ -65,7 +65,7 @@ library(geos)
 source("OSM_to_LULC_functions_Bariloche.R") 
 ```
 ## Download spatial data
-GitHub is limited to hosting file sizes <2GB on the cloud repository. For this tutorial, we will need a handful of large datasets which can be downloaded [here](https://drive.google.com/drive/folders/1UH2470MteHTJ82Pb3s9lRIdm5LGBNEPC?usp=sharing).
+GitHub is limited to hosting file sizes <2GB on the cloud repository. For this tutorial, we will need a handful of large datasets which can be downloaded from a google drive folder called 'tutorial data' [here](https://drive.google.com/drive/folders/1UH2470MteHTJ82Pb3s9lRIdm5LGBNEPC?usp=sharing).
 
 These include:
 1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
