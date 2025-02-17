@@ -278,9 +278,9 @@ build_80 <- rename(build_80, geometry = geom)
 # view building data plotted alongside pol_feat_agg
 tmap_mode("view")
 tm_shape(pol_feat_agg)+
-  tm_fill(size = 0.01, col = "red")+
+  tm_fill(col = "red")+
 tm_shape(build_80)+
-  tm_fill(size = 0.01, col = "blue") 
+  tm_fill(col = "blue") 
 
 ```
 
