@@ -719,7 +719,7 @@ ggplot(data = as.factor(my_map_crop)) +
 
 ```
 <p float="center">
-  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1000" height="auto" />
+  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1001" height="auto" />
 
 </p>
 
@@ -793,7 +793,6 @@ writeVector(polygon_data, "Bariloche_enhanced_lcover.shp", overwrite = TRUE)
 ```
 We can also use `ggplot2` to view our map in R and export as a .png, .tif, etc.
 
-
 ```R
 OSM_enahnced_LULC_plot <- ggplot(data = OSM_enhanced_LULC_map) +
    geom_raster(aes(x = x, y = y, fill = first)) +
@@ -842,7 +841,7 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 ```
 
 <p float="center">
-  <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="900" height="auto" />
+  <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto" />
 
 </p>
 
