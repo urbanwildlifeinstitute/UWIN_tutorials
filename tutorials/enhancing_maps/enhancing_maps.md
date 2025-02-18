@@ -46,6 +46,29 @@ We will be working through an example study area in northern Patagonia, Argentin
 There are a handful of libraries we will want to install and load into our console, including `osmextract` which was specifically created to easily extract data from OpenStreetMaps. We will also be loading in some custom functions which we will break down later in this tutorial. 
 
 ```R
+# package_load:
+# A general function to load packages, and if not on a computer
+# to download them first
+package_load<-function(packages = NA, quiet=TRUE, verbose=FALSE, warn.conflicts=FALSE){
+  
+  # download required packages if they're not already
+  pkgsToDownload<- packages[!(packages  %in% installed.packages()[,"Package"])]
+  if(length(pkgsToDownload)>0)
+    install.packages(pkgsToDownload, repos="http://cran.us.r-project.org", quiet=quiet, verbose=verbose)
+  
+  # then load them
+  for(i in 1:length(packages))
+    require(packages[i], character.only=T, quietly=quiet, warn.conflicts=warn.conflicts)
+}
+
+package_load(
+  c(
+    "osmextract","tidyterra", "dplyr", "terra", "sf",
+    "readr", "devtools", "ggplot2", "googledrive",
+    "colourpicker", "tmap", "smoothr", "geos"
+  )
+)
+
 # Load in libraries
 library(osmextract)
 library(tidyterra)
