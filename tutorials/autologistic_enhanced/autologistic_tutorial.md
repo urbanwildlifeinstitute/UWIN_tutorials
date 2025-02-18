@@ -1,7 +1,7 @@
 NOTE: For this code to work as intended, your working directory should
-be set to `"./autologistic_enhanced"` where the `.` represents
-the location of the `UWIN_tutorials.Rproj` file on your computer. If you
-double-click on `UWIN_tutorials.Rproj` on your computer a new window of
+be set to `"./autologistic_enhanced"` where the `.` represents the
+location of the `tutorials.Rproj` file on your computer. If you
+double-click on `tutorials.Rproj` on your computer a new window of
 Rstudio will open up and you can enter
 `setwd("./autologistic_enhanced")` into your R console.
 
@@ -393,9 +393,11 @@ significant digits.
 
 ### Challenge 2: Interpret PC1
 
-The first principal component can be accessed via `urb_pca$x[,1]`.
-However, we don’t need to look at those to be able to interpret this, we
-only need the loadings above. What do you think they mean?
+The first principal component, which has one urban intensity value for
+each site, can be accessed via `urb_pca$x[,1]`. However, we don’t need
+to look at those to be able to interpret this, we only need the loadings
+above. What do you think they mean? In other words, what do positive
+values of `urb_pca$x[,1]` mean? What about negative values?
 
 <br>
 
@@ -403,12 +405,13 @@ only need the loadings above. What do you think they mean?
 <summary>
 Solution</a>
 </summary>
-    
-For `PC1` we see that `imperv` and `housing_density` are both positive,
-while tree is negative. This means that negative values of the urb_pca
-are locations high in tree cover whereas positive values of the urb_pca
-are locations high in impervious cover and housing density. So negative
-is more forested and positive is more urban.
+
+For `PC1` we see that the loadings, which are used to
+construct`urb_pca$x[,1]`, for `imperv` and `housing_density` are both
+positive, while `tree` is negative. This means that negative values of
+the `urb_pca` are locations high in tree cover whereas positive values
+of the `urb_pca` are locations high in impervious cover and housing
+density. So negative is more forested and positive is more urban.
 
 </details>
 

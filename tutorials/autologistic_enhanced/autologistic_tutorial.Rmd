@@ -23,10 +23,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 
 NOTE: For this code to work as intended, your working directory should be set to
-`"./tutorials/autologistic_enhanced"` where the `.` represents
-the location of the `UWIN_tutorials.Rproj` file on your computer. If you 
-double-click on `UWIN_tutorials.Rproj` on your computer a new window of
-Rstudio will open up and you can enter `setwd("./tutorials/autologistic_enhanced")`
+`"./autologistic_enhanced"` where the `.` represents
+the location of the `tutorials.Rproj` file on your computer. If you 
+double-click on `tutorials.Rproj` on your computer a new window of
+Rstudio will open up and you can enter `setwd("./autologistic_enhanced")`
 into your R console.
 
 <a name="my-toc"></a>
@@ -302,9 +302,11 @@ round(
 
 ### Challenge 2: Interpret PC1
 
-The first principal component can be accessed via `urb_pca$x[,1]`. However,
+The first principal component, which has one urban intensity value for each
+site, can be accessed via `urb_pca$x[,1]`. However,
 we don't need to look at those to be able to interpret this, we only need
-the loadings above. What do you think they mean?
+the loadings above. What do you think they mean? In other words, what do
+positive values of `urb_pca$x[,1]` mean? What about negative values?
 
 
 <br>
@@ -313,11 +315,14 @@ the loadings above. What do you think they mean?
 <summary>
 Solution</a>
 </summary>
- For `PC1` we see that `imperv` and `housing_density` are both positive, while
-  tree is negative. This means that negative values of the urb_pca are
-  locations high in tree cover whereas positive values of the urb_pca
+
+ For `PC1` we see that the loadings, which are used to construct`urb_pca$x[,1]`, 
+  for `imperv` and `housing_density` are both positive, while
+  `tree` is negative. This means that negative values of the `urb_pca` are
+  locations high in tree cover whereas positive values of the `urb_pca`
   are locations high in impervious cover and housing density. So negative
   is more forested and positive is more urban.
+  
 </details>
 
 <br>
@@ -401,6 +406,7 @@ to correctly generate the `matrix` in `R`. Give it a go!
 <summary>
 Solution</a>
 </summary>
+
 ```{r, make_temp_matrix}
 temp_matrix <- matrix(
   week_temp$temp,
@@ -409,6 +415,7 @@ temp_matrix <- matrix(
   byrow = TRUE
 )
 ```
+
 </details>
 
 <br>
@@ -527,6 +534,7 @@ that is relevant.
 <summary>
 Solution</a>
 </summary>
+
 ```{r, occ_calc}
 # If you want to hard code it
 b0 <- -0.839
@@ -560,6 +568,7 @@ coy_ex_occ <- coy_occ / (coy_occ + (1 - coy_occ_theta))
 
 
 ```
+
 </details>
 
 <br>
