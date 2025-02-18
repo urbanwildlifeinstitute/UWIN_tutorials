@@ -474,7 +474,7 @@ Next, we will convert all the filtered OSM features into raster layers. We will 
 ```R
 OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   classL1 <- OSM_LULC_vlayers
-  rtemplate <- rast(res=0.00001, ext = study_area_extent, crs= "EPSG:4326") #PR
+  rtemplate <- rast(res=0.001, ext = study_area_extent, crs= "EPSG:4326") #PR
   # rtemplate5 <- terra::project(rtemplate, "EPSG:5070")
   classL1  <- Filter(Negate(is.null), classL1) #eliminates any nulls
   
