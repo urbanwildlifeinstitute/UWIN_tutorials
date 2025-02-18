@@ -2,3 +2,15 @@
 .Rhistory
 .RData
 .Ruserdata
+tutorials/enhancing_maps/tutorial_test.R
+tutorials/enhancing_maps/data/961_buildings.csv.gz
+tutorials/enhancing_maps/data/Argentina_buildings.gpkg
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.cpg
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.dbf
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.prj
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.shp
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.shx
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.tif
+tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.tif.aux.xml
+tutorials/enhancing_maps/data/build.rds
+tutorials/enhancing_maps/tutorial_test.R
