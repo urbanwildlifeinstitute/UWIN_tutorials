@@ -474,9 +474,9 @@ Next, we will convert all the filtered OSM features into raster layers. We will 
 ```R
 OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   classL1 <- OSM_LULC_vlayers
-  rtemplate <- rast(res=0.001, ext = study_area_extent, crs= "EPSG:4326") #PR
+  rtemplate <- rast(res=0.001, ext = study_area_extent, crs= "EPSG:4326") 
   # rtemplate5 <- terra::project(rtemplate, "EPSG:5070")
-  classL1  <- Filter(Negate(is.null), classL1) #eliminates any nulls
+  classL1  <- Filter(Negate(is.null), classL1) # eliminates any nulls
   
   refTable <- cbind.data.frame( # creates dataframe for each landcover class (or layer)
     "rid"=c(1:27), 
@@ -499,7 +499,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
       if(nrow(temp1)>0){ # checks that layer is not empty
         temp1 <- st_make_valid(temp1) # check geometries are valid
         temp1 <- temp1 %>%  filter(!st_is_empty(.)) # removes empty geometries
-        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- st_make_valid(temp1) 
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
         temp1$priority <- refTable$priority[i]
         classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") # converts temp1 to a raster
@@ -508,9 +508,9 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
     }else{ # if the data is linear
       temp1 <- classL1[[i]]
       if(!is.null(temp1)){
-        temp1 <- st_make_valid(temp1) #PR
-        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
-        temp1 <- st_make_valid(temp1) # PR
+        temp1 <- st_make_valid(temp1) 
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) 
+        temp1 <- st_make_valid(temp1) 
         temp1 <- st_transform(temp1, "EPSG:5070")
         temp1 <- st_buffer(temp1, dist=refTable$buffer[i]) # buffers are set in the refTable above
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
