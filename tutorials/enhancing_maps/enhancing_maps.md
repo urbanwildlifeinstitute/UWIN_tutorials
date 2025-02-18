@@ -630,8 +630,8 @@ ggplot() +
 We can also interact with our map using `tmap` and get a closer look at our featured lines and polygons
 ```R
 tmap_mode("view")
-tm_shape(as.factor(OSM_only_map))+
-  tm_raster(col.scale= tm_scale(1:27))
+tm_shape(as.factor(OSM_only_map)) +
+  tm_raster(col.scale = tm_scale_categorical(values = terrain.colors(27)))
 ```
 
 <a name="integrating"></a>
