@@ -478,7 +478,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   # rtemplate5 <- terra::project(rtemplate, "EPSG:5070")
   classL1  <- Filter(Negate(is.null), classL1) #eliminates any nulls
   
-  refTable <- cbind.data.frame(
+  refTable <- cbind.data.frame( # creates dataframe for each landcover class (or layer)
     "rid"=c(1:27), 
     "feature"=c("industrial", "commercial", "institutional", "residential", "landuse_railway",
                 "open_green","protected area", "resourceful_area", "heterogenous_green", "barren_soil",
@@ -495,24 +495,24 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   
   for(i in 1:27){
     if(as.character(st_geometry_type(classL1[[i]], by_geometry = FALSE)) %in% c("POLYGON","MULTIPOLYGON", "GEOMETRY")){
-      temp1 <- classL1[[i]]
-      if(nrow(temp1)>0){
-        temp1 <- st_make_valid(temp1) #PR
-        temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+      temp1 <- classL1[[i]] #stores vector layers
+      if(nrow(temp1)>0){ # checks that layer is not empty
+        temp1 <- st_make_valid(temp1) # check geometries are valid
+        temp1 <- temp1 %>%  filter(!st_is_empty(.)) # removes empty geometries
         temp1 <- st_make_valid(temp1) # PR
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
         temp1$priority <- refTable$priority[i]
-        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") 
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") # converts temp1 to a raster
         print(paste0("layer ", i, "/27 ready"))
       }
-    }else{
+    }else{ # if the data is linear
       temp1 <- classL1[[i]]
       if(!is.null(temp1)){
         temp1 <- st_make_valid(temp1) #PR
         temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
         temp1 <- st_make_valid(temp1) # PR
         temp1 <- st_transform(temp1, "EPSG:5070")
-        temp1 <- st_buffer(temp1, dist=refTable$buffer[i])
+        temp1 <- st_buffer(temp1, dist=refTable$buffer[i]) # buffers are set in the refTable above
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
         temp1$priority <- refTable$priority[i]
         classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority")
