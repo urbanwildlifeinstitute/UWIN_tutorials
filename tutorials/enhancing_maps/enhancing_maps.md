@@ -325,7 +325,7 @@ vlayers <- OSMtoLULC_vlayers(
 plot(st_geometry(vlayers[[14]])) # This is the building layer
 ```
 <p float="center">
-  <img src="./figures/vlayers_build.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+  <img src="./figures/vlayers_build.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="700" height="auto" />
 
 </p>
 
