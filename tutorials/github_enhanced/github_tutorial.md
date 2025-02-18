@@ -79,13 +79,8 @@ Do you see the “read me” panel at the bottom of the page? Ideally, this woul
 </div>
 
 
-Let’s add a bit of further text to this read me - and see what this does. Add text to your `README.md` to look like this:
+Do you see the “read me” panel at the bottom of the page? Ideally, this would provide relevant documentation about the repository itself. Instead, we just have a title - so let’s change that! Click on the pencil icon at the top of the this panel to begin editing this read me file. Note that you usually do not want to edit most files directly on your remote repository, but doing so with the read me file is okay. After clicking that pencil icon there should be a text box you can type in. Add this text to your `README.md` :
 
-<div align="center">
-<img src="./images/github-read-me-filled.png" width=100%/>
-</div>
-
-Here is a code block with that text, in case the above is a bit tricky to see:
 
 ```
 # uwin_github_tutorial
@@ -101,6 +96,8 @@ In this section, we will have some **bold text**.
 In this section, we will have some *italicized* text. 
 
 I will also bold this to make it stand out: **see https://www.markdownguide.org/cheat-sheet/ for more markdown tips and tricks!**
+
+
 ```
 
 Then click the “commit changes…” button at the top. GitHub should ask if you want to make a commit called “Update README.md”. Go ahead and click “commit changes” again.
