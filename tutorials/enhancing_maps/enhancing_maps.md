@@ -1,4 +1,4 @@
-NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `UWIN_tutorials.Rproj` file on your computer. If you double-click on `UWIN_tutorials.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./tutorials/enhancing_maps")` into your R console.
+NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `UWIN_tutorials.Rproj` file on your computer. If you double-click on `UWIN_tutorials.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./enhancing_maps")` into your R console.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated December 2024*
