@@ -345,13 +345,14 @@ Now we are ready to categorize OSM features using the `vlayers()` function. We w
 
 ```R
 vlayers <- OSMtoLULC_vlayers(
-  OSM_polygon_layer = combined, 
+  OSM_polygon_layer = pol_feat, 
   OSM_line_layer = lin_feat
 )
 
 # plot a layer to see if this worked as expected
 plot(st_geometry(vlayers[[14]])) # This is the building layer
 ```
+Example from Argentina:
 <p float="center">
   <img src="./figures/vlayers_build.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="700" height="auto" />
 
@@ -488,7 +489,6 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
 </details>
 
 
-
 ### Converting OSM features to rasters
 Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using coordinate values. We will not use a sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
@@ -556,7 +556,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
 ```
 </details>
 
-Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
+Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution for the Argentina example, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
 
 <details closed><summary> To read in .00001 resolution rlayers </a></summary>
 
@@ -570,7 +570,6 @@ loaded_rlayers <- lapply(rlayer_files, terra::rast)
 # Add in null list items where data was missing to keep order cohesive with remaining code
 loaded_rlayers <- append(loaded_rlayers, "NULL", after = 14)
 loaded_rlayers <- append(loaded_rlayers, "NULL", after = 22)
-
 
 # Check the data is working as expected and plot the buildings layer 
 plot(loaded_rlayers[[14]], col = "black") # building polygons
@@ -586,19 +585,20 @@ names(loaded_rlayers) <- c("industrial", "commercial", "institutional", "residen
 ```
 </details>
 
-
+Example from Argentina:
 ```R
 extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
 
-# this function which assigns each landcover class information such as its geometry or a buffer
+# this function assigns each landcover class information such as its geometry or a buffer
 rlayers <- OSMtoLULC_rlayers(
   OSM_LULC_vlayers = vlayers,
   study_area_extent = extent
 )
 
-# Test this worked by plotting our building layer 
+# Test this worked by plotting our building layer again 
 plot(rlayers[[14]], col = "black") # 14 = building list
 ```
+
 <p float="center">
   <img src="./figures/rlayers_building.png" alt="A plot of the buildings layers in the rlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
 
@@ -630,7 +630,7 @@ OSM_only_map <- merge_OSM_LULC_layers(
 
   </details>
 
-Let's have a quick view of our final OSM map using `ggplot()`
+Let's have a quick view of our final OSM map using `ggplot()`. Below if an example from Argentina.
 ```R
 ggplot() +
   geom_spatraster(data = as.factor(OSM_only_map), aes(fill = first)) +
@@ -668,9 +668,11 @@ tm_shape(as.factor(OSM_only_map)) +
 ## 4. Integrating maps
 As a reminder, the OSM database is primarily populated by community contributions, thus there are likely gaps of information. To enhance our map and to ensure we don’t have any gaps in the final output of the framework we will integrate the `OSM_only_map` onto a global or continental land cover map (depending on your region of interest). 
 
-For our example, we will be overlaying OSM data on top of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
+For our Argentina example, we will be overlaying OSM data on top of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
 
 To integrate these maps, we need to reclassify the CDS data to be cohesive with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided in the reclassified CDS map. 
+
+Based on your study area, we have pre-downloaded a global landcover dataset of your region to underlay the OSM layer. Next we will read in your unique global raster which can be found in the `./data/` folder.
 
 ### Read in and view data
 
@@ -754,7 +756,7 @@ ggplot(data = as.factor(my_map_crop)) +
 </p>
 
 ### Reclassify Data
-When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data, here CDS, will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the CDS classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf). We have prepped this dictionary for this example. We will read in the .csv and extract just the numeric values.
+When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data (in our example, CDS) will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf). We have prepped an example dictionary for CDR. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values.
 
 ```R
 # Read in reclassification dictionary
