@@ -154,13 +154,15 @@ pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                quiet = FALSE,
                                force_download = TRUE,
                                extra_tags=keys)
-# For Argentina example
+# for Argentina example read in:
 pol_feat <- readRDS("./data/pol_feat.rds")
 ```
 
 Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
 
-We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. For our purposes, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
+We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. Examine your study area on [OpenStreetMap.com](www.openstreetmap.org) and determine if there are any polygons or boundary you want to limit pulling OSM data from. Remember, OSM functions best in urban regions so if your study area abuts a large natural or protected area, you may want to exclude that from your OSM data layer.
+
+For our example in Argentina, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
 
 ```R
 # This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
@@ -236,15 +238,16 @@ angostura_poly <- pol_feat %>%
   <img src="./figures/angostura_boundary.png" alt="A plot of Angostura's munipality boundary" width="400" height="auto" />
 </p>
 
-Now we are ready to join our datasets and pull OSM linear data. We will not filter linear features soley within our city boundaries as these data will be useful to overlay on the greater landcover map of Argentina. This may take a few minutes to load, thus we can read `lin_feat` in from our `./data` folder if needed (see code chunk below).
+Now we are ready to join our datasets and pull OSM linear data. As a rule of thumb, we do not filter linear features soley within our urban boundaries for OSM data as these will be useful to overlay on our global landcover map which may not capture linear features well.  
+
+This may take a few minutes to load. If you are following the Argentina example, you can read in `lin_feat` in from our `./data` folder (see code chunk below).
 
 ```R
 # Join our two cities into one data.frame of polygons
 pol_feat_agg <- rbind(bariloche_poly, angostura_poly)
 
 # We're ready to grab out linear data from our study area region
-
-lin_feat <- osmextract::oe_get("Argentina",
+lin_feat <- osmextract::oe_get(place = place,
                                layer = "lines", 
                                boundary = study_area_bbox,
                                boundary_type = 'clipsrc',
@@ -252,9 +255,7 @@ lin_feat <- osmextract::oe_get("Argentina",
                                force_download = TRUE,
                                stringsAsFactors = FALSE, 
                                extra_tags=keys)
-```
-If `lin_feat`is loading slowly, read in `lin_feat.rds`.
-```R
+# for Argentina example read in:
 lin_feat <- readRDS("./data/lin_feat.rds")
 ```
 ### Integrating Open Building Data
