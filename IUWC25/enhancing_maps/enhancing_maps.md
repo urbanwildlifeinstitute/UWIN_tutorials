@@ -258,10 +258,10 @@ lin_feat <- osmextract::oe_get(place = place,
 # for Argentina example read in:
 lin_feat <- readRDS("./data/lin_feat.rds")
 ```
-### Integrating Open Building Data
+### Integrating Additional Data Sources
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
-For this tutorial, we will not cover additional integration but code example is available below for Argentina follow-thorugh. 
+For this tutorial, we will not cover additional data integration, but a code example is available below for Argentina. 
 
 <details closed><summary> See code to convert data here </a></summary>
   
@@ -330,9 +330,11 @@ for (col in missing_pol_feat) {
 Now we are ready to row bind our datasets and save as a `sf` object.
 ```R
 combined <- rbind(build_80, pol_feat_agg)
-combined <- st_as_sf(combined)
+pol_feat <- st_as_sf(combined)
 ```
 Note that other data sources can be used to bolster existing OSM data (like we have done here with the OSM `building` column) or be used to create new sources or columns of data (for example, vacant lots). However, any new columns that are added to the OSM data.frame, or `pol_data`, will need to be added as new layers in our next steps.
+
+</details>
 
 <a name="building"></a>
 ## 3. Building landcover classes
@@ -484,7 +486,6 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
 </details>
 
 
-</details>
 
 ### Converting OSM features to rasters
 Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using coordinate values. We will not use a sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
