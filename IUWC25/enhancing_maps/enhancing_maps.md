@@ -117,17 +117,23 @@ keys <- unique(osm_kv$key)
 
 Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
-Let's start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
+For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
 
 ```R
 # Set our first query
+# Replace with your study area country
 place <- "Argentina" 
 
-# Narrow down our first query to a bounding box using latitude/longitude coordinates which wil help load data faster
+# Narrow down our first query to a bounding box using latitude/longitude coordinates which will help load data faster
 study_area_bbox <- sf::st_bbox(c(xmin=-71.900000,ymin=-41.262600,xmax=-70.650000,ymax=-40.490000), 
                          crs = "epsg:4326") %>% 
   st_as_sfc() 
+```
 
+Start with your study area country and filter to your study city or a bounding box. You can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
+
+It can be helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! 
+```R
 # Confirm the box is the correct coordinates for you study area 
 plot(study_area_bbox, axes = TRUE)
 ```
@@ -136,10 +142,10 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-It's helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! Now we are ready to pull OSM data. This may take a few minutes to load, thus we can read `pol_feat` in from our `./data` folder if needed (see code chunk below).
+Now we are ready to pull OSM data. This may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
 
 ```R
-pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
+pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
                                boundary_type = c("spat","clipsrc"),
                                provider ="geofabrik",
@@ -148,9 +154,7 @@ pol_feat <- osmextract::oe_get(place = "Argentina", # place we defined above
                                quiet = FALSE,
                                force_download = TRUE,
                                extra_tags=keys)
-```
-If `pol_feat`is loading slowly, read in `pol_feat.rds`.
-```R
+# For Argentina example
 pol_feat <- readRDS("./data/pol_feat.rds")
 ```
 
