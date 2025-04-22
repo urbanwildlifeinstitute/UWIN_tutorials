@@ -261,6 +261,8 @@ lin_feat <- readRDS("./data/lin_feat.rds")
 ### Integrating Open Building Data
 In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
+For this tutorial, we will not cover additional integration but code example is available below for Argentina follow-thorugh. 
+
 <details closed><summary> See code to convert data here </a></summary>
   
 ```R
@@ -270,12 +272,7 @@ head(buildings)
 
 building_df = st_as_sf(buildings, crs = "EPSG:4326", wkt = "geometry") # convert to spatial object
 write_sf(building_df, "./data/Argentina_buildings.gpkg") # save as geopackage
-```
 
-</details>
-
-
-```R
 # read in .gpkg file
 build <- st_read("./data/Argentina_buildings.gpkg")
 ```
@@ -484,6 +481,9 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
 
 ```
              
+</details>
+
+
 </details>
 
 ### Converting OSM features to rasters
