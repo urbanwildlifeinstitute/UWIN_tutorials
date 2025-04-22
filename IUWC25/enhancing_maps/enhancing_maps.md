@@ -1,7 +1,7 @@
-NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `UWIN_tutorials.Rproj` file on your computer. If you double-click on `UWIN_tutorials.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./enhancing_maps")` into your R console.
+NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `IUWC25.Rproj` file you will create on your computer. If you double-click on `IUWC25.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./enhancing_maps")` into your R console.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
-*Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated December 2024*
+*Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated April 2025*
 
 This tutorial is aimed at those interested in (1) advancing their spatial mapping skills and (2) integrating OpenStreetMap and other data sources to enhance existing spatial datasets.
 This tutorial builds on work described in the manuscript, 
@@ -88,11 +88,10 @@ library(geos)
 source("OSM_to_LULC_functions_Bariloche.R") 
 ```
 ## Download spatial data
-GitHub is limited to hosting file sizes <2GB on the cloud repository. For this tutorial, we will need a handful of large datasets which can be downloaded from a google drive folder called 'tutorial data' [here](https://drive.google.com/drive/folders/1UH2470MteHTJ82Pb3s9lRIdm5LGBNEPC?usp=sharing).
+GitHub is limited to hosting file sizes <2GB on the cloud repository. If you want to run through the example in this tutorial, we will need to download and add a large spatial dataset to our `./data` folder which can be downloaded from a google drive folder called 'IUWC data' [here](https://drive.google.com/drive/folders/11vCMMX4MrSd8RKDwcl29XENN5T0tnsSB?usp=drive_link).
 
-These include:
-1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
-2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
+- Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map
+   
 
 ### OSM data
 OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
