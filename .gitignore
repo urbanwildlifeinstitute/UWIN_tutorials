@@ -15,3 +15,5 @@ tutorials/enhancing_maps/data/Bariloche_enhanced_lcover.tif.aux.xml
 tutorials/enhancing_maps/data/build.rds
 tutorials/enhancing_maps/tutorial_test.R
 tutorials/enhancing_maps/data/occ_maps.tiff
+tutorials/enhancing_maps/data/CCS-Map-300m-P1Y-2022-Argentina.nc
+tutorials/enhancing_maps/pol_feat_practice.RDS
