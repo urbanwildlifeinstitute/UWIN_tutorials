@@ -1,10 +1,6 @@
-# Introduction to Data Manipulation in R using the Tidyverse
+# Introduction to Data Manipulation and Cleaning in R using the Tidyverse
 
-*Authors: Gabriela Palomo & Hannah Griebling*
-
-## link to the presentation
-
-[You can find the presentation following this link](https://gabspalomo.github.io/slides/data_manipulation/ppt/ppt_data_manipulation.html#/title-slide)
+*Authors: Gabriela Palomo, Hannah Griebling, & Kimberly Rivera*
 
 ## Learning objectives
 
@@ -12,7 +8,7 @@
 
     -   Understand the structure of tidy data
     -   Understand the main tidy verbs in dplyr to help tidy data
-    -   Organize and clean data downloaded from UWIN to run a single species single season occupancy analysis
+    -   Organize and clean commonly seen ecological data 
 
 ## Packages
 
@@ -28,7 +24,7 @@ library(janitor) # to clean names of variables
 
 ## Organize the project and directory
 
-Perhaps you are used to starting by setting your directory using `setwd()`. However, I highly recommend you use RStudio Projects. RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents.
+Perhaps you are used to starting by setting your directory using `setwd()`. However, we highly recommend you use RStudio Projects. RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents.
 
 We are going to start by creating a Project in RStudio. A Project is essentially a directory which will contain all the files you need for a specific project. It will have a `*.RProj` file associated with it to begin with.
 
@@ -45,11 +41,11 @@ Now you see three options:
 -   **Existing directory**: use this option if you already created a folder which will contain all the subdirectories and files for this particular project. Choose that folder here.
 -   **Version Control**: choose this option if you are going to work with a repository already stored in GitHub.
 
-For our own project, let's go ahead and choose 'New Directory' and let's name our project: '2024-data-manipulation-UWIN'
+For our own project, let's go ahead and choose 'New Directory' and let's name our project: '2025_data_cleaning'
 
 ### Other files inside the main directory
 
-You will have a series of directories inside your project, depending on the type of work that you'll be working on. Some people recommend following the same structure that you would use if creating an r package. However, I think that at a minimum, you could have the following structure:
+You will have a series of directories inside your project, depending on the type of work that you'll be working on. Some people recommend following the same structure that you would use if creating an r package. However, we think that at a minimum, you could have the following structure:
 
 <p float="center">
   <img src="./images/dir_str.png" width="500" height="auto" />
@@ -66,9 +62,9 @@ You will have a series of directories inside your project, depending on the type
 
 ## Naming files
 
-Now we should discuss a very important topic which is **naming files**.\
-1. File names should be **machine readable**: avoid spaces, symbols, and special characters. Don't rely on case sensitivity to distinguish files.\
-2. File names should be **human readable**: use file names to describe what's in the file.\
+Now we should discuss a very important topic which is **naming files**.
+1. File names should be **machine readable**: avoid spaces, symbols, and special characters. Don't rely on case sensitivity to distinguish files.
+2. File names should be **human readable**: use file names to describe what's in the file.
 3. File names should play well with default ordering: start file names with numbers so that alphabetical sorting puts them in the order they get used.
 
 Here are a few examples of **bad names**:
