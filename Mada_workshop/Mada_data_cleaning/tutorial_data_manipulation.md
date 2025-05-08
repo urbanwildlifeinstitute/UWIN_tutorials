@@ -208,11 +208,34 @@ KameleonData %>% dplyr::distinct(SpeciesName)
 ```
 
 We will cover a few common mistakes we frequently see in data entry that have the potential to influence and negativley impact our data. These include:
-1. Duplicate naming (for example: Male and male)
-2. Spelling errors (for example: Female and femal)
-3. Adding spaces before or after data
+1. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct differences. Therefore, 'Male' and 'male' will be treated as two different names in R.
+2. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
+3. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female' we need to correct this in our data to conduct our analyses.
 
-Even though as humans, we believe 'Male' and 'male' to be the same, R treats captials and lowercase letters as distinct differences. Therefore, 'Male' and 'male' will be treated as two different names in R. Check out this example:
+Let's check out some useful tools in R to correct for these mistakes.
 
-``
+```R
+# see unique sexes found by R
+unique(KameleonData$Sex)
+```
+In this example, we had five different kinds of sexes recorded, *female*, *male*, *unknown*, *Male*, and *Female*. However, we only want to analyze three types, *female*, *male*, and *unknown*. We can use the function `tolower()` which will turn all uppercase letters into lowercase letters.
+
+```R
+# lowercase all letters
+KameleonData <- KameleonData %>% 
+  mutate(Sex = tolower(Sex))
+```
+In this code, we use the `mutate()` function to modify our Sex column using `tolower()`. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell is that Sex is the column we want it to write our corrected values in. 
+
+`Mutate()` is a very useful function. It can also help us apply functions not just on one column, like we jusr did, but multiple. Let's use mutate to apply a function called `trimws()` across all of our columns containing characters (as we glimpsed in our data earlier). We can use `trimws()` to get rid of any trailing spaces before or after our data. 
+
+```R
+# get rid of spaces before and after character data
+KameleonData <- KameleonData %>% 
+  mutate(across(SpecimenCode:Site, ~ trimws(.))) 
+```
+Here, our code is saying, mutate columns that fall between SpecimenCode and Site AND apply the function `trimws()` across all of them. 
+
+
+
 ## END
