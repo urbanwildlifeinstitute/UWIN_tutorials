@@ -236,6 +236,30 @@ KameleonData <- KameleonData %>%
 ```
 Here, our code is saying, mutate columns that fall between SpecimenCode and Site AND apply the function `trimws()` across all of them. 
 
+When glimpsing our data, we also noticed that the Alive column was a bit confusing. Some data entries have an X, others xx, and others are empty! We want to make sure to be consistent with our data entry but can use R to help us find and correct mistakes. Let's look at all the different entry types for this column. 
+
+```R
+unique(KameleonData$Alive)
+```
+Using `mutate()` again, we can apply a new function called `case_when()`. This function allows us to target specific columns and instances of data entry we want to change. We can use different opertors to tell R how we want to change our columns. 
+
+| Operator     | Description                       |
+|--------------|-----------------------------------|
+| `>`          | greater than                      |
+| `>=`         | greater than or equal to          |
+| `<`          | less than                         |
+| `<=`         | less than or equal to             |
+| `==`         | exactly equal to                  |
+| `!=`         | not equal to                      |
+| `a | b`      | logical OR (either `a` or `b`)    |
+| `xor(a, b)`  | exclusive OR (only `a` or only `b`) |
+| `a & b`      | logical AND (both `a` and `b`)    |
+| `is.na()`    | detects missing (`NA`) values     |
+| `!is.na()`   | filters out missing values        |
+| `%in%`       | checks if a value is in a set     |
+
+In our case, we want to change the Alive column to be yes, no, or NA. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
+
 
 
 ## END
