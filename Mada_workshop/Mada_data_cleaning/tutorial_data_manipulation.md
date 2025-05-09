@@ -161,11 +161,10 @@ KameleonData <- read_csv("KameleonData.csv")
 dplyr::glimpse(KameleonData)
 ```
 ### What is CSV and why do we use it?
-CSV, or Comma-Separate Values, is a simple and adaptable data format used widley in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file to .csv. Depending on how your data is formated, R may read your data in a less useful way and may require some extra cleaning. More on this at the end of the tutorial!
+CSV, or Comma-Separate Values, are a simple and adaptable data format used widley in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file as a .csv. Depending on how your data is formated, R may read your data in a less legible way and may require some extra cleaning to *tidy* the data. More on this at the end of the tutorial!
 
 ### Note!
-
-Let's look at the column names. They start with a capital letter and some are separated by a space. R does not like spaces in file or column names and will likley cause strange formatting later. Lets upate these names to a more readable format. 
+R does not like spaces in file or column names and will likley cause strange formatting later. Some of our column names start with a capital letter and others are separated by a space. Lets upate these names to a more R-friendly format. 
 
 Frist let's review some common naming conventions:
 
@@ -195,7 +194,7 @@ KameleonData <- janitor::clean_names(dat = KameleonData,
 glimpse(occ.KameleonData)
 ```
 
-If you wanted to edit a specif column name, we can also use the function `rename()`.
+If you wanted to edit a specific column name, we can also use the function `rename()`.
 
 ```R
 KameleonData <- KameleonData %>% 
@@ -203,14 +202,14 @@ KameleonData <- KameleonData %>%
 
 # distinct keeps only unique rows from a data frame 
 # .keep_all = TRUE let's us keep all the columns in the data frame 
-# .keep_all = FALSE to only keep the column we specified in distinct. Deletes the rest. 
+# .keep_all = FALSE to only keep the column we specified in distinct and deletes the rest. 
 KameleonData %>% dplyr::distinct(SpeciesName)
 ```
 
-We will cover a few common mistakes we frequently see in data entry that have the potential to influence and negativley impact our data. These include:
-1. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct differences. Therefore, 'Male' and 'male' will be treated as two different names in R.
+We will cover a few common mistakes we find in data entry that have the potential to influence and cause errors in our data analyses. These include:
+1. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
 2. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
-3. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female' we need to correct this in our data to conduct our analyses.
+3. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female', we need to correct this in our data to conduct our analyses.
 
 Let's check out some useful tools in R to correct for these mistakes.
 
@@ -225,9 +224,9 @@ In this example, we had five different kinds of sexes recorded, *female*, *male*
 KameleonData <- KameleonData %>% 
   mutate(Sex = tolower(Sex))
 ```
-In this code, we use the `mutate()` function to modify our Sex column using `tolower()`. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell is that Sex is the column we want it to write our corrected values in. 
+In this code, we use the `mutate()` function to modify our Sex column using `tolower()`. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell R that Sex is the column we want it to write our corrected values into. 
 
-`Mutate()` is a very useful function. It can also help us apply functions not just on one column, like we jusr did, but multiple. Let's use mutate to apply a function called `trimws()` across all of our columns containing characters (as we glimpsed in our data earlier). We can use `trimws()` to get rid of any trailing spaces before or after our data. 
+`Mutate()` is a very useful function. It can also help us apply functions not just on one column, like we just did, but multiple. Let's use mutate to apply a function called `trimws()` across all of our columns containing characters (as we glimpsed in our data earlier). We can use `trimws()` to get rid of any trailing spaces before or after our data, for example ' male'. 
 
 ```R
 # get rid of spaces before and after character data
@@ -236,7 +235,7 @@ KameleonData <- KameleonData %>%
 ```
 Here, our code is saying, mutate columns that fall between SpecimenCode and Site AND apply the function `trimws()` across all of them. 
 
-When glimpsing our data, we also noticed that the Alive column was a bit confusing. Some data entries have an X, others xx, and others are empty! We want to make sure to be consistent with our data entry but can use R to help us find and correct mistakes. Let's look at all the different entry types for this column. 
+When glimpsing our data, we also noticed that the Alive column was a bit confusing. Some data entries have an X, others xx, and others are empty! We want to make sure to be consistent with our data entry but when we find mistakes, we can use R to help us find and correct them. Let's look at all the different entry types for this column. 
 
 ```R
 unique(KameleonData$Alive)
@@ -260,6 +259,18 @@ Using `mutate()` again, we can apply a new function called `case_when()`. This f
 
 In our case, we want to change the Alive column to be yes, no, or NA. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
 
+For our data, we talk to our field team and determine that empty columns under 'Alive' mean that the field recorder observed the animal to be dead. So in this case, we want to change NA's to 'no'. Note that R will always read in empty data cells as NA so it is important to complete the cells with numbers, characters, or NA's as appropriate. 
+
+```R
+# Note '==' is for single values and '%in%' is for multiple values
+KameleonData <- KameleonData %>% 
+  mutate(Alive = case_when(
+    Alive %in% c("x", "xx", "X") ~ "yes",
+    is.na(Alive) ~ "no", # Note R will usually populate empty cells with NA's
+    TRUE ~ Alive))
+
+unique(KameleonData$Alive)
+```
 
 
 ## END
