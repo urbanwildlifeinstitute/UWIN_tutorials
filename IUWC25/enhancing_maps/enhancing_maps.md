@@ -94,6 +94,16 @@ These include:
 1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
 2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
 
+## INSTRUCTIONS TO DOWNLOAD ESA DATA FOR THEIR STUDY AREA
+-make login
+-click download
+-extract and keep map tif (terascope)
+-can download OSM ahead for each state - helps speed data download: https://download.geofabrik.de/north-america/us.html
+-download by country: https://download.geofabrik.de
+-when finish map, show them how to add other dtaa sources, vlayer function changes, classification table changes, etc.
+-add golf course exampl to end 
+
+## WRITE CODE TO STITCH SPATIAL TIF 
 
 ### OSM data
 OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
