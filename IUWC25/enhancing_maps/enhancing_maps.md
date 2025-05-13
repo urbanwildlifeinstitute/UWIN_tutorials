@@ -1,4 +1,4 @@
-NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `IUWC25.Rproj` file you will create on your computer. If you double-click on `IUWC25.Rproj` on your computer a new window of Rstudio will open up and you can enter `setwd("./enhancing_maps")` into your R console.
+NOTE: For this code to work as intended, your working directory should be set to `"./enhancing_maps"` where the `.` represents the location of the `IUWC25.Rproj` file you will create on your computer. If you double-click on `IUWC25.Rproj` on your computer a new window of Rstudio will open up and you can create a new R script.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated April 2025*
