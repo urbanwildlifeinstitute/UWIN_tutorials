@@ -143,9 +143,13 @@ osm_kv <- osm_kv %>%
 keys <- unique(osm_kv$key)
 ```
 #### Extracting OSM Data
-We can use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
+We can use `osmextract::oe_get` (to download directly in R from online) or `osmextract::oe_read` (to read in downloaded OSM spatial file) to extract OSM data limited to our keys and study area. 
 
-For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
+Using `osmextract::oe_get`, we will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
+
+For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/. 
+
+To define your study city or a bounding box more specifically, you can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
 
 ```R
 # Set our first query
@@ -153,26 +157,12 @@ For our example, we can start by setting a larger query location for Argentina a
 place <- "Argentina" 
 
 # Narrow down our first query to a bounding box using latitude/longitude coordinates which will help load data faster
+# Argentina example
 study_area_bbox <- sf::st_bbox(c(xmin=-71.900000,ymin=-41.262600,xmax=-70.650000,ymax=-40.490000), 
-                         crs = "epsg:4326") %>% 
+                               crs = "epsg:4326") %>% 
   st_as_sfc() 
-```
 
-Start with your study area country and filter to your study city or a bounding box. You can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
-
-It can be helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! 
-```R
-# Confirm the box is the correct coordinates for you study area 
-plot(study_area_bbox, axes = TRUE)
-```
-<p float="center">
-  <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
-
-</p>
-
-Now we are ready to pull OSM data. This may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
-
-```R
+# Download data directly from online
 pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
                                boundary_type = c("spat","clipsrc"),
@@ -182,8 +172,47 @@ pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                quiet = FALSE,
                                force_download = TRUE,
                                extra_tags=keys)
+
+# Read in downloaded OSM data
+pol_feat <- oe_read("./data/argentina-latest.osm",
+                   boundary = study_area_bbox, 
+                   boundary_type = c("spat","clipsrc"),
+                   layer = "multipolygons",
+                   stringsAsFactors = FALSE,
+                   quiet = FALSE,
+                   force_download = TRUE,
+                   extra_tags=keys)
+```
+
+It can be helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! 
+
+```R
+# Confirm the box is the correct coordinates for you study area 
+plot(study_area_bbox, axes = TRUE)
+```
+<p float="center">
+  <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
+
+</p>
+
+Now we are ready to download or read in OSM data. Downloading may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
+
+```R
+# Download data directly in R
+pol_feat <- osmextract::oe_get(place = place, # place we defined above
+                               boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
+                               boundary_type = c("spat","clipsrc"),
+                               provider ="geofabrik",
+                               layer = "multipolygons",
+                               stringsAsFactors = FALSE,
+                               quiet = FALSE,
+                               force_download = TRUE,
+                               extra_tags=keys)
+
 # for Argentina example read in:
 pol_feat <- readRDS("./data/pol_feat.rds")
+
+#
 ```
 #### Downloading OSM data
 Depending on your connection, it may be faster to download OSM directly from their Geofabrik website. Data from each USA state can be downloaded [here](https://download.geofabrik.de/north-america/us.html) and continent or country data can be downloaded [here](https://download.geofabrik.de/). 
