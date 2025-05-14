@@ -101,19 +101,17 @@ For constructing your own custom map, we will integrate ESA Worldcover data with
 
 </p>
 
-Once you click *Next*, a Download tab will popup. You only need to download **ESA_WORLDCOVER_10M_Map** files
+Once you click *Next*, a Download tab will popup. You only need to download **ESA_WORLDCOVER_10M_Map** files. 
 
 <p float="center">
-  <img src="./figures/ESA_download.png" alt="ESA Worldcover viewer." width="1000" height="auto" />
+  <img src="./figures/ESA_results.png" alt="ESA Worldcover viewer download tab." width="1000" height="auto" />
 
 </p>
 
-Extract the downloaded zip files and add spatial tiles to your data folder.
+Once downloaded, extract the downloaded zip files and add spatial .tif files to your data folder.
 
 ## INSTRUCTIONS TO DOWNLOAD ESA DATA FOR THEIR STUDY AREA
--make login
--click download
--extract and keep map tif (terascope)
+
 -can download OSM ahead for each state - helps speed data download: https://download.geofabrik.de/north-america/us.html
 -download by country: https://download.geofabrik.de
 -when finish map, show them how to add other dtaa sources, vlayer function changes, classification table changes, etc.
