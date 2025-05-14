@@ -88,12 +88,14 @@ library(geos)
 source("OSM_to_LULC_functions_Bariloche.R") 
 ```
 ## Download spatial data
+### Example data
 GitHub is limited to hosting file sizes <2GB on the cloud repository. If you want to run through the example in this tutorial, we will need to download and add some large spatial datasets to our `./data` folder which can be downloaded from a google drive folder called 'enhancing_maps' [here](https://drive.google.com/drive/folders/1DkQkxmcbfXyEAb35bzoJrjVHREy6UHOL?usp=drive_link).
 
 These include:
 1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
 2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
 
+### Custom data
 For constructing your own custom map, we will integrate ESA Worldcover data with OSM. You can access and download data from [esa-worldover.org](https://esa-worldcover.org/en) > [Explore](https://viewer.esa-worldcover.org/worldcover/?language=en&bbox=-295.3125,-82.51774853061981,295.3125,82.51774853061983&overlay=false&bgLayer=OSM&date=2025-05-14&layer=WORLDCOVER_2021_MAP) and Login or Register for a free TERRASCOPE account. This will allow you to download data from the *DOWNLOAD* tab where you can search for a specific region at the top of the viewer website and Ctrl + click on the spatial tiles you want to download or use the *Extent* to draw and download an area of interest (double click to exit polygon drawing). Depending on your study region, you may need to download 1 or many spatial tiles. 
 
 <p float="center">
