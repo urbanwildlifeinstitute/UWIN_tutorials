@@ -1,4 +1,4 @@
-**NOTE:** You may be used to starting by setting your directory using `setwd()`. However, we highly recommend using RStudio Projects. RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents. A R Project is essentially a directory which will contain all the files you need for a specific project. Go to RStudio and click on *File > New Project > Exisiting Directory* and locate your *UWIN_tutorials/IUWC25_OSM/* folder.
+**NOTE:** You may be used to starting by setting your directory using `setwd()`. However, we highly recommend using RStudio Projects. RStudio Projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents. A Project is essentially a directory which will contain all the files you need for a specific project. Go to RStudio and click on *File > New Project > Exisiting Directory* and locate your *UWIN_tutorials/IUWC25_OSM/* folder.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 *Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated April 2025*
@@ -94,13 +94,21 @@ These include:
 1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
 2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
 
-For constructing your own custom map, we will integrate ESA Worldcover data behind OSM. You can access and download data from [esa-worldover.org](https://esa-worldcover.org/en) > [Explore](https://viewer.esa-worldcover.org/worldcover/?language=en&bbox=-295.3125,-82.51774853061981,295.3125,82.51774853061983&overlay=false&bgLayer=OSM&date=2025-05-14&layer=WORLDCOVER_2021_MAP) and Login or Register for a free TERRASCOPE account. This will allow you to download data from *DOWNLOAD* tab where you can search for a specific region at the top of the viewer website or use the *Extent* to draw area of interest. 
+For constructing your own custom map, we will integrate ESA Worldcover data with OSM. You can access and download data from [esa-worldover.org](https://esa-worldcover.org/en) > [Explore](https://viewer.esa-worldcover.org/worldcover/?language=en&bbox=-295.3125,-82.51774853061981,295.3125,82.51774853061983&overlay=false&bgLayer=OSM&date=2025-05-14&layer=WORLDCOVER_2021_MAP) and Login or Register for a free TERRASCOPE account. This will allow you to download data from the *DOWNLOAD* tab where you can search for a specific region at the top of the viewer website and Ctrl + click on the spatial tiles you want to download or use the *Extent* to draw and download an area of interest (double click to exit polygon drawing). Depending on your study region, you may need to download 1 or many spatial tiles. 
 
 <p float="center">
   <img src="./figures/ESA_download.png" alt="ESA Worldcover viewer." width="1000" height="auto" />
 
 </p>
 
+Once you click *Next*, a Download tab will popup. You only need to download **ESA_WORLDCOVER_10M_Map** files
+
+<p float="center">
+  <img src="./figures/ESA_download.png" alt="ESA Worldcover viewer." width="1000" height="auto" />
+
+</p>
+
+Extract the downloaded zip files and add spatial tiles to your data folder.
 
 ## INSTRUCTIONS TO DOWNLOAD ESA DATA FOR THEIR STUDY AREA
 -make login
