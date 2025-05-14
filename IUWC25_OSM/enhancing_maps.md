@@ -112,15 +112,6 @@ Once you click *Next*, a Download tab will popup. You only need to download **ES
 
 Once downloaded, extract the downloaded zip files and add spatial .tif files to your data folder.
 
-## INSTRUCTIONS TO DOWNLOAD ESA DATA FOR THEIR STUDY AREA
-
--can download OSM ahead for each state - helps speed data download: https://download.geofabrik.de/north-america/us.html
--download by country: https://download.geofabrik.de
--when finish map, show them how to add other dtaa sources, vlayer function changes, classification table changes, etc.
--add golf course exampl to end 
-
-## WRITE CODE TO STITCH SPATIAL TIF 
-
 ### OSM data
 OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
 
@@ -736,6 +727,8 @@ To integrate these maps, we need to reclassify the CDS data to be cohesive with 
 
 Based on your study area, we have pre-downloaded a global landcover dataset of your region to underlay the OSM layer. Next we will read in your unique global raster which can be found in the `./data/` folder.
 
+## WRITE CODE TO STITCH SPATIAL TIFFS HERE - TIZIANA
+
 ### Read in and view data
 
 ```R
@@ -939,4 +932,8 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 
 </p>
 
+
+# EXTRAS
+-when finish map, show them how to add other dtaa sources, vlayer function changes, classification table changes, etc.
+-add golf course exampl to end 
 
