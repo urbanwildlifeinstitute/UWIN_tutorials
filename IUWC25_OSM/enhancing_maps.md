@@ -133,18 +133,28 @@ osm_kv <- osm_kv %>%
   filter(!is.na(key))
 keys <- unique(osm_kv$key)
 ```
-#### Extracting OSM Data
 We can use `osmextract::oe_get` (to download directly in R from online) or `osmextract::oe_read` (to read in downloaded OSM spatial file) to extract OSM data limited to our keys and study area. 
 
+#### Extracting OSM Data
 Using `osmextract::oe_get`, we will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
-For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/. 
+For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/. To define your study city or a bounding box more specifically, you can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
 
-To define your study city or a bounding box more specifically, you can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
+Downloading may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
+
+```R
+# for Argentina example read in:
+pol_feat <- readRDS("./data/pol_feat.rds")
+```
+
+#### Downloading OSM data
+Depending on your connection, it may be faster to download OSM directly from their Geofabrik website. Data from each USA state can be downloaded [here](https://download.geofabrik.de/north-america/us.html) and continent or country data can be downloaded [here](https://download.geofabrik.de/). 
+
+Once you locate your state or region of interest, download the .osm.pbf file and add it to your data folder. 
 
 ```R
 # Set our first query
-# Replace with your study area country
+# Replace with your study area country or region based on names listed on OSM's Geofabrik website: https://download.geofabrik.de/
 place <- "Argentina" 
 
 # Narrow down our first query to a bounding box using latitude/longitude coordinates which will help load data faster
@@ -165,7 +175,7 @@ pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                extra_tags=keys)
 
 # Read in downloaded OSM data
-pol_feat <- oe_read("./data/argentina-latest.osm",
+pol_feat <- oe_read("./data/argentina-latest.osm.pbf",
                    boundary = study_area_bbox, 
                    boundary_type = c("spat","clipsrc"),
                    layer = "multipolygons",
@@ -186,32 +196,6 @@ plot(study_area_bbox, axes = TRUE)
 
 </p>
 
-Now we are ready to download or read in OSM data. Downloading may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
-
-```R
-# Download data directly in R
-pol_feat <- osmextract::oe_get(place = place, # place we defined above
-                               boundary = study_area_bbox, # more specific study area boundary (this helps speed up processing)
-                               boundary_type = c("spat","clipsrc"),
-                               provider ="geofabrik",
-                               layer = "multipolygons",
-                               stringsAsFactors = FALSE,
-                               quiet = FALSE,
-                               force_download = TRUE,
-                               extra_tags=keys)
-
-# for Argentina example read in:
-pol_feat <- readRDS("./data/pol_feat.rds")
-
-#
-```
-#### Downloading OSM data
-Depending on your connection, it may be faster to download OSM directly from their Geofabrik website. Data from each USA state can be downloaded [here](https://download.geofabrik.de/north-america/us.html) and continent or country data can be downloaded [here](https://download.geofabrik.de/). 
-
-Once you locate your state or region of interest, download the .osm.pbf file and add it to your data folder. To read in the spatial data, use the code below.
-
-```R
-```
 
 Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
 
@@ -267,7 +251,6 @@ bariloche_poly <- pol_feat %>%
   <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="400" height="auto" />
   <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="400" height="auto" /> 
 </p>
-
 
 We do not need to buffer or smooth Villa Angostura like we did for Bariloche as the OSM boundary captures the urban region quite well. Therefore we can just filter to the city's *osm_id* and convert our boundary data.frame to a multipolygon. If we wanted to buffer or smooth our data, we can use the same functions as above.
 
