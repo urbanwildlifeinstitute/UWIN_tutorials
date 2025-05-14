@@ -142,8 +142,8 @@ osm_kv <- osm_kv %>%
   filter(!is.na(key))
 keys <- unique(osm_kv$key)
 ```
-
-Now, we will use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
+#### Extracting OSM Data
+We can use `osmextract::oe_get` to extract OSM data limited to our keys and study area. We will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to is start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
 For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/
 
@@ -184,6 +184,13 @@ pol_feat <- osmextract::oe_get(place = place, # place we defined above
                                extra_tags=keys)
 # for Argentina example read in:
 pol_feat <- readRDS("./data/pol_feat.rds")
+```
+#### Downloading OSM data
+Depending on your connection, it may be faster to download OSM directly from their Geofabrik website. Data from each USA state can be downloaded [here](https://download.geofabrik.de/north-america/us.html) and continent or country data can be downloaded [here](https://download.geofabrik.de/). 
+
+Once you locate your state or region of interest, download the .osm.pbf file and add it to your data folder. To read in the spatial data, use the code below.
+
+```R
 ```
 
 Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
