@@ -811,7 +811,7 @@ my_map_crop <- crop(my_map, ext(OSM_only_map))
 plot(my_map_crop)
 ```
 <p float="center">
-  <img src="./figures/ESA_map_Argentina.png" alt="Plot of ESA map of Argentina cropped to study region" width="1001" height="auto" />
+  <img src="./figures/ESA_map_Argentina.png" alt="Plot of European Space Agency (ESA) landcover data of Argentina cropped to study region" width="1000" height="auto" />
 
 </p>
 
