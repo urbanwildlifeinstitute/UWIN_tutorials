@@ -807,6 +807,11 @@ For this tutorial, we will overlay OSM data on top of a global landcover dataset
 my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif") 
 plot(my_map)
 ```
+<p float="center">
+  <img src="./figures/ESA_map_Argentina.png" alt="Plot of ESA map of Argentina study region" width="1001" height="auto" />
+
+</p>
+
 ## WRITE CODE TO STITCH SPATIAL TIFFS HERE - TIZIANA
 
 ### Reclassify Data
