@@ -805,10 +805,13 @@ For this tutorial, we will overlay OSM data on top of a global landcover dataset
 # read in ESA raster data
 # change file name to your study area .tif
 my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif") 
-plot(my_map)
+
+# crop map to OSM map extent
+my_map_crop <- crop(my_map, ext(OSM_only_map))
+plot(my_map_crop)
 ```
 <p float="center">
-  <img src="./figures/ESA_map_Argentina.png" alt="Plot of ESA map of Argentina study region" width="1001" height="auto" />
+  <img src="./figures/ESA_map_Argentina.png" alt="Plot of ESA map of Argentina cropped to study region" width="1001" height="auto" />
 
 </p>
 
