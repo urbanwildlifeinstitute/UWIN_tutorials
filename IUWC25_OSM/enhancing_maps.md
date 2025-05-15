@@ -293,6 +293,16 @@ lin_feat <- osmextract::oe_get(place = place,
                                force_download = TRUE,
                                stringsAsFactors = FALSE, 
                                extra_tags=keys)
+# Read in downloaded OSM data
+lin_feat <- oe_read("./data/argentina-latest.osm.pbf",
+                    layer = "lines",
+                    boundary = study_area_bbox, 
+                    boundary_type = "clipsrc",
+                    stringsAsFactors = FALSE,
+                    quiet = FALSE,
+                    force_download = TRUE,
+                    extra_tags=keys)
+
 # for Argentina example read in:
 lin_feat <- readRDS("./data/lin_feat.rds")
 ```
@@ -377,7 +387,7 @@ Note that other data sources can be used to bolster existing OSM data (like we h
 <a name="building"></a>
 ## 3. Building landcover classes
 ### Categorizing OSM features
-Now we are ready to categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map.
+Now we are ready to categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map. These layers can easily be edited to add new, remove, and update landcover classes. 
 
 ```R
 vlayers <- OSMtoLULC_vlayers(
@@ -526,7 +536,7 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
 
 
 ### Converting OSM features to rasters
-Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a buffer function and the specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the study area downloaded in the `osmextract::oe_get` function. We will define the extent of study area again using coordinate values. We will not use a sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
+Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the downloaded study area. We will define the extent of study area again using coordinate values. We will not use a sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
 | variable  | coordinate |
 |---------|------|
@@ -704,15 +714,10 @@ tm_shape(as.factor(OSM_only_map)) +
 ## 4. Integrating maps
 As a reminder, the OSM database is primarily populated by community contributions, thus there are likely gaps of information. To enhance our map and to ensure we don’t have any gaps in the final output of the framework we will integrate the `OSM_only_map` onto a global or continental land cover map (depending on your region of interest). 
 
-For our Argentina example, we will be overlaying OSM data on top of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
+### Example data
+For Argentina, we will be overlaying OSM data on top of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
 
-To integrate these maps, we need to reclassify the CDS data to be cohesive with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided in the reclassified CDS map. 
-
-Based on your study area, we have pre-downloaded a global landcover dataset of your region to underlay the OSM layer. Next we will read in your unique global raster which can be found in the `./data/` folder.
-
-## WRITE CODE TO STITCH SPATIAL TIFFS HERE - TIZIANA
-
-### Read in and view data
+#### Read in and view data
 
 ```R
 # read in global dataset
@@ -793,8 +798,21 @@ ggplot(data = as.factor(my_map_crop)) +
 
 </p>
 
+### Custom data
+For this tutorial, we will overlay OSM data on top of a global landcover dataset from the [European Space Agency - WorldCover](https://esa-worldcover.org/en), a set of yearly median and percentiles composites at 10m resolution, derived from the Copernicus Sentinel-1 and Sentinel-2 archives, for the years 2020 and 2021. More information on this data can be found in the [Worldcover Product User Manual](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf), including mapping classification values which we will need later tutorial. 
+
+```R
+# read in ESA raster data
+# change file name to your study area .tif
+my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif") 
+plot(my_map)
+```
+## WRITE CODE TO STITCH SPATIAL TIFFS HERE - TIZIANA
+
 ### Reclassify Data
-When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data (in our example, CDS) will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf). We have prepped an example dictionary for CDR. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values.
+To integrate these maps, we need to reclassify our global data to be cohesive with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided from our global dataset. 
+
+When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf) and ESA can be found [here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf). We have prepped an example dictionary for CDS and ESA. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values.
 
 ```R
 # Read in reclassification dictionary
