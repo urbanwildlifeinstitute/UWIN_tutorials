@@ -163,7 +163,35 @@ lin_feat <- oe_read("./data/argentina-latest.osm.pbf",
 # for Argentina example read in:
 lin_feat <- readRDS("./data/lin_feat.rds")
 
+vlayers <- OSMtoLULC_vlayers(
+  OSM_polygon_layer = pol_feat, 
+  OSM_line_layer = lin_feat
+)
+
+# plot a layer to see if this worked as expected
+plot(st_geometry(vlayers[[14]])) # This is the building layer
+
+extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
+
+# this function assigns each landcover class information such as its geometry or a buffer
+rlayers <- OSMtoLULC_rlayers(
+  OSM_LULC_vlayers = vlayers,
+  study_area_extent = extent
+)
+
+# Test this worked by plotting our building layer again 
+plot(rlayers[[14]], col = "black") # 14 = building list
+
+
+OSM_only_map <- merge_OSM_LULC_layers(
+  OSM_raster_layers = rlayers
+)
+
 # read in ESA raster data
 # change file name to your study area .tif
 my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif") 
+
+# crop map to OSM map extent
+my_map_crop <- crop(my_map, ext(OSM_only_map))
+plot(my_map_crop)
 
