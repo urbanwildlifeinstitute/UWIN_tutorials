@@ -811,7 +811,7 @@ my_map_crop <- crop(my_map, ext(OSM_only_map))
 plot(my_map_crop)
 ```
 <p float="center">
-  <img src="./figures/ESA_map_Argentina.png" alt="Plot of European Space Agency (ESA) landcover data of Argentina cropped to study region" width="600" height="auto" />
+  <img src="./figures/ESA_map_Argentina.png" alt="Plot of European Space Agency (ESA) landcover data from Argentina cropped to study region" width="600" height="auto" />
 
 </p>
 
@@ -823,7 +823,7 @@ To integrate these maps, we need to reclassify our global data to be cohesive wi
 When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf) and ESA can be found [here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf). 
 
 <p float="center">
-  <img src="./figures/worldcover_code_classes.png" alt="ESA Worldcover landcover class coding example" width="1000" height="auto" />
+  <img src="./figures/worldcover_code_classes.png" alt="ESA Worldcover landcover class coding example" width="600" height="auto" />
 
 </p>
 
