@@ -812,7 +812,14 @@ plot(my_map)
 ### Reclassify Data
 To integrate these maps, we need to reclassify our global data to be cohesive with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided from our global dataset. 
 
-When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf) and ESA can be found [here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf). We have prepped an example dictionary for CDS and ESA. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values.
+When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial datasets documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf) and ESA can be found [here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf). 
+
+<p float="center">
+  <img src="./figures/worldcover_code_classes.png" alt="ESA Worldcover landcover class coding example" width="1000" height="auto" />
+
+</p>
+
+We have prepped an example dictionary for CDS and ESA. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values. 
 
 ```R
 # Read in reclassification dictionary
