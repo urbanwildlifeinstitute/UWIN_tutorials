@@ -828,14 +828,24 @@ When integrating global or local spatial data, we must create a reclassification
 </p>
 
 We have prepped an example dictionary for CDS and ESA. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values. 
-
+#### Example data
 ```R
-# Read in reclassification dictionary
+# Read in reclassification dictionary for example data
 reclass_values <- read_csv("./data/reclass_cds_2_mcsc.csv")
 
 # Select classification values only
 CDS_to_OSM_table <- reclass_values %>% 
   dplyr::select(cds_value, mcsc_value)
+```
+#### Custom data
+```R
+# Read in reclassification dictionary for custom data
+reclass_values <- read_csv("./data/reclass_esa_2_mcsc.csv")
+
+# Select classification values only
+ESA_to_OSM_table <- reclass_values %>% 
+  dplyr::select(esa_value, mcsc_value)
+
 ```
 ### Integrate Data
 Now we are ready to create our final product, our integrated OSM and global landcover map!
