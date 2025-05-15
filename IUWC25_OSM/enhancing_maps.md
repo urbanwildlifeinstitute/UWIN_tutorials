@@ -851,7 +851,8 @@ ESA_to_OSM_table <- reclass_values %>%
 Now we are ready to create our final product, our integrated OSM and global landcover map!
 
 <details closed><summary> See the integrate_OSM_to_globalLULC() function</a></summary>
-  
+
+```R  
 integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_table){
   
   #load global lulc raster that will work as a background layer to cover any missing data in the OSM_database
@@ -872,7 +873,7 @@ integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_t
  
   return(as.factor(r4))
 } 
-
+```
 </details>
 
 #### Example Data
