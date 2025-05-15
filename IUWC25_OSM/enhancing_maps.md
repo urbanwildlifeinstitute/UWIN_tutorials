@@ -197,7 +197,7 @@ plot(study_area_bbox, axes = TRUE)
 </p>
 
 
-Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and use CDS data to describe the surrounding natural landscape (more on this later). 
+Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and another global or national dataset to describe the surrounding natural landscape (more on this later). 
 
 We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. Examine your study area on [OpenStreetMap.com](www.openstreetmap.org) and determine if there are any polygons or boundary you want to limit pulling OSM data from. Remember, OSM functions best in urban regions so if your study area abuts a large natural or protected area, you may want to exclude that from your OSM data layer.
 
