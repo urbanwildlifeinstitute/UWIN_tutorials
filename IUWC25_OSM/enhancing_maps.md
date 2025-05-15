@@ -875,12 +875,22 @@ integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_t
 
 </details>
 
+#### Example Data
+
 ```R
 sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
 OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
                                                      global_lulc_map = my_map, 
                                                      reclass_table = CDS_to_OSM_table)
 ```
+#### Custom Data
+```R
+sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
+OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
+                                                     global_lulc_map = my_map, 
+                                                     reclass_table = ESA_to_OSM_table)
+```
+
 Voilà! We now have a new and improved integrated OSM land use land cover map! Our object, `OSM_enhanced_LULC_map`, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened here or in ArcGIS or other mapping programs.
 
 ```R
