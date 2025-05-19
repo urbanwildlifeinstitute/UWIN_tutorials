@@ -971,6 +971,7 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 
 
 # EXTRAS
--when finish map, show them how to add other dtaa sources, vlayer function changes, classification table changes, etc.
--add golf course exampl to end 
+1. when finish map, show them how to add other extract other OSM features (e.g. golf courses) and how to update vlayer function
+2. show them how to edit and incoerpate differt data dictionaries (e.g. edit ESA dictionary) 
+
 
