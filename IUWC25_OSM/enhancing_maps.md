@@ -799,7 +799,7 @@ ggplot(data = as.factor(my_map_crop)) +
 </p>
 
 ### Custom data
-For this tutorial, we will overlay OSM data on top of a global landcover dataset from the [European Space Agency - WorldCover](https://esa-worldcover.org/en), a set of yearly median and percentiles composites at 10m resolution, derived from the Copernicus Sentinel-1 and Sentinel-2 archives, for the years 2020 and 2021. More information on this data can be found in the [Worldcover Product User Manual](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf), including mapping classification values which we will need later tutorial. 
+For this tutorial, we will overlay OSM data on top of a global landcover dataset from the [European Space Agency - WorldCover](https://esa-worldcover.org/en), a set of yearly median and percentiles composites at 10m resolution, derived from the Copernicus Sentinel-1 and Sentinel-2 archives, for the years 2020 and 2021. More information on this data can be found in the [Worldcover Product User Manual](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf), including mapping classification values which we will need later in this tutorial. 
 
 ```R
 # read in ESA raster data
