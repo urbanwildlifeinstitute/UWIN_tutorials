@@ -1,17 +1,43 @@
-**NOTE:** You may be used to starting by setting your directory using `setwd()`. However, we highly recommend using RStudio Projects. RStudio Projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents. A Project is essentially a directory which will contain all the files you need for a specific project. Go to RStudio and click on *File > New Project > Exisiting Directory* and locate your *UWIN_tutorials/IUWC25_OSM/* folder.
+---
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+**NOTE:** You may be used to starting by setting your directory using
+`setwd()`. However, we highly recommend using RStudio Projects. RStudio
+Projects make it straightforward to divide your work into multiple
+contexts, each with their own working directory, workspace, history, and
+source documents. A Project is essentially a directory which will
+contain all the files you need for a specific project. Go to RStudio and
+click on *File \> New Project \> Exisiting Directory* and locate your
+*UWIN_tutorials/IUWC25_OSM/* folder.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
-*Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated April 2025*
 
-This tutorial is aimed at those interested in (1) advancing their spatial mapping skills and (2) integrating OpenStreetMap and other data sources to enhance existing spatial datasets.
-This tutorial builds on work described in the manuscript, 
-['Leveraging Open-Source Geographic Databases to Enhance the Representation of Landscape Heterogeneity in Ecological Models' (2024)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.70402) by Gelmi-Candusso T., Rodriguez P., Fidino, M., Rivera, K., Lehrer, E.W., Magle, S., & Fortin M. 
+*Created by Kim Rivera and Tiziana Gelmi-Candusso - last updated April
+2025*
+
+This tutorial is aimed at those interested in (1) advancing their
+spatial mapping skills and (2) integrating OpenStreetMap and other data
+sources to enhance existing spatial datasets. This tutorial builds on
+work described in the manuscript, ['Leveraging Open-Source Geographic
+Databases to Enhance the Representation of Landscape Heterogeneity in
+Ecological Models'
+(2024)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.70402) by
+Gelmi-Candusso T., Rodriguez P., Fidino, M., Rivera, K., Lehrer, E.W.,
+Magle, S., & Fortin M.
 
 ### Some helpful references:
-1. [Manuscript GitHub Repository](https://github.com/tgelmi-candusso/OSM_for_Ecology.git) - Tiziana Gelmi-Candusso 
-2. [OpenStreetMap](https://www.openstreetmap.org/export#map=15/-41.15840/-71.31170)
-3. [Open Buildings](https://sites.research.google/gr/open-buildings/)
-4. [Introduction to spatial mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) - Tiziana Gelmi-Candusso and Mark Jordan 
+
+1.  [Manuscript GitHub
+    Repository](https://github.com/tgelmi-candusso/OSM_for_Ecology.git) -
+    Tiziana Gelmi-Candusso
+2.  [OpenStreetMap](https://www.openstreetmap.org/export#map=15/-41.15840/-71.31170)
+3.  [Open Buildings](https://sites.research.google/gr/open-buildings/)
+4.  [Introduction to spatial
+    mapping](https://github.com/urbanwildlifeinstitute/UWIN_tutorials/blob/main/tutorials/week6_spatial_mapping/spatial-mapping.md) -
+    Tiziana Gelmi-Candusso and Mark Jordan
 
 ### Tutorial Aims:
 
@@ -23,29 +49,60 @@ This tutorial builds on work described in the manuscript,
 
 #### <a href="#integrating"> 4. Integrating Maps</a>
 
-
 <a name="OpenStreetMaps"></a>
 
 ## 1. What is OpenStreetMap and why should we use these data?
-Wildlife ecology and behavior are strongly driven by landscape characteristics, especially in urban regions. Cities are among the world's most heterogeneous landscapes however, global land cover maps often represent urban areas as a single, homogeneous class therefore limiting our ability to build useful spatial ecological models over large scales. However, we can use community-based geographic databases, such as OpenStreetMap (OSM), to improve the quality and spatial resolution of urban land cover data. OSM is an open-source mapping platform storing landscape information in the form of geographic polygon features identified by a series of attributes. 
 
-Take the below example of Chicago, Illinois (USA). On the left we see a relatively homogenous landscape of 'urban' land cover (in red) from the Commission for Environmental Cooperation Land Use Land Cover data. On the right we have the same dataset overlaid by spatial data collected from OSM. We can see OSM greatly improves our ability to asses heterogeneity in the urban landscape and therefore improve our understanding of urban wildlife ecology.
+Wildlife ecology and behavior are strongly driven by landscape
+characteristics, especially in urban regions. Cities are among the
+world's most heterogeneous landscapes however, global land cover maps
+often represent urban areas as a single, homogeneous class therefore
+limiting our ability to build useful spatial ecological models over
+large scales. However, we can use community-based geographic databases,
+such as OpenStreetMap (OSM), to improve the quality and spatial
+resolution of urban land cover data. OSM is an open-source mapping
+platform storing landscape information in the form of geographic polygon
+features identified by a series of attributes.
+
+Take the below example of Chicago, Illinois (USA). On the left we see a
+relatively homogenous landscape of 'urban' land cover (in red) from the
+Commission for Environmental Cooperation Land Use Land Cover data. On
+the right we have the same dataset overlaid by spatial data collected
+from OSM. We can see OSM greatly improves our ability to asses
+heterogeneity in the urban landscape and therefore improve our
+understanding of urban wildlife ecology.
 
 <p float="center">
-  <img src="./figures/visual_comparison.png" alt="Visual comparison of the global land cover used in this study (Commission for Environmental Cooperation (CEC) LULC map, 30 m resolution, left), and the final output of our workflow, the OSM-enhanced land cover map (30 m resolution, right) at the same location, in Chicago, Illinois, USA. Vegetation areas are represented in green shades, barren soil in brown, built environment or land use areas are represented in red shades, different road types are represented in yellow shades, and building footprints are represented in black." width="1000" height="auto" />
+
+<img src="./figures/visual_comparison.png" alt="Visual comparison of the global land cover used in this study (Commission for Environmental Cooperation (CEC) LULC map, 30 m resolution, left), and the final output of our workflow, the OSM-enhanced land cover map (30 m resolution, right) at the same location, in Chicago, Illinois, USA. Vegetation areas are represented in green shades, barren soil in brown, built environment or land use areas are represented in red shades, different road types are represented in yellow shades, and building footprints are represented in black." width="1000" height="auto"/>
 
 </p>
 
-OSM data generated by community members are supplemented with information from governmental and non-governmental agencies around the globe and these data have been reliably used in diverse ecological research studies. Extracting a few features from the OSM database for small areas can be done directly online, however, extracting larger study areas, or extracting the full database is much more difficult. Therefore, we outline the framework to integrate OSM data as described in [Gelmi-Candusso et al., 2024](https://github.com/tgelmi-candusso/OSM_for_Ecology.git). 
+OSM data generated by community members are supplemented with
+information from governmental and non-governmental agencies around the
+globe and these data have been reliably used in diverse ecological
+research studies. Extracting a few features from the OSM database for
+small areas can be done directly online, however, extracting larger
+study areas, or extracting the full database is much more difficult.
+Therefore, we outline the framework to integrate OSM data as described
+in [Gelmi-Candusso et al.,
+2024](https://github.com/tgelmi-candusso/OSM_for_Ecology.git).
 
-<a name="pullingandfiltering"></a>
-## 2. Pulling and filtering data
-We will be working through an example study area in northern Patagonia, Argentina. Collaborating UWIN partners here are based in the Centro Científico Tecnológico Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET) in San Carlos de Bariloche in the province of Río Negro, Argentina. 
+<a name="pullingandfiltering"></a> \## 2. Pulling and filtering data We
+will be working through an example study area in northern Patagonia,
+Argentina. Collaborating UWIN partners here are based in the Centro
+Científico Tecnológico Consejo Nacional de Investigaciones Científicas y
+Técnicas (CONICET) in San Carlos de Bariloche in the province of Río
+Negro, Argentina.
 
 ### Libraries
-There are a handful of libraries we will want to install and load into our console, including `osmextract` which was specifically created to easily extract data from OpenStreetMaps. We will also be loading in some custom functions which we will break down later in this tutorial. 
 
-```R
+There are a handful of libraries we will want to install and load into
+our console, including `osmextract` which was specifically created to
+easily extract data from OpenStreetMaps. We will also be loading in some
+custom functions which we will break down later in this tutorial.
+
+``` r
 # package_load:
 # A general function to load packages, and if not on a computer
 # to download them first
@@ -85,46 +142,90 @@ library(smoothr)
 library(geos)
 
 # Load in functions
-source("OSM_to_LULC_functions_Bariloche.R") 
+setwd("./IUWC25_OSM")
+source("./OSM_to_LULC_functions_Bariloche.R")  
 ```
-## Download spatial data
-### Example data
-GitHub is limited to hosting file sizes <2GB on the cloud repository. If you want to run through the example in this tutorial, we will need to download and add some large spatial datasets to our `./data` folder which can be downloaded from a google drive folder called 'enhancing_maps' [here](https://drive.google.com/drive/folders/1DkQkxmcbfXyEAb35bzoJrjVHREy6UHOL?usp=drive_link).
 
-These include:
-1. Open Buildings data (`Argentina_buildings.gpkg` and `build.rds`) - This data can be downloaded directly from [Open Buildings](https://sites.research.google/gr/open-buildings/) as a `.csv.gz` file (also included in this folder). However, converting a `.csv.gz` to a geopackage (to use more easily in R) can be computationally heavy, therefore, we will read in the converted geopackage directly and download an .rds file which will load in even faster if needed. 
-2. Landcover map of Argentina (`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the Climate Data Store Data for Argentina we will use as the background of our OSM map 
+## Download spatial data
+
+### Example data
+
+GitHub is limited to hosting file sizes \<2GB on the cloud repository.
+If you want to run through the example in this tutorial, we will need to
+download and add some large spatial datasets to our `./data` folder
+which can be downloaded from a google drive folder called
+'enhancing_maps'
+[here](https://drive.google.com/drive/folders/1DkQkxmcbfXyEAb35bzoJrjVHREy6UHOL?usp=drive_link).
+
+These include: 1. Open Buildings data (`Argentina_buildings.gpkg` and
+`build.rds`) - This data can be downloaded directly from [Open
+Buildings](https://sites.research.google/gr/open-buildings/) as a
+`.csv.gz` file (also included in this folder). However, converting a
+`.csv.gz` to a geopackage (to use more easily in R) can be
+computationally heavy, therefore, we will read in the converted
+geopackage directly and download an .rds file which will load in even
+faster if needed. 2. Landcover map of Argentina
+(`CCS-Map-300m-P1Y-2022-Argentina.nc`) - This is landcover data from the
+Climate Data Store Data for Argentina we will use as the background of
+our OSM map
 
 ### Custom data
-For constructing your own custom map, we will integrate ESA Worldcover data with OSM. You can access and download data from [esa-worldover.org](https://esa-worldcover.org/en) > [Explore](https://viewer.esa-worldcover.org/worldcover/?language=en&bbox=-295.3125,-82.51774853061981,295.3125,82.51774853061983&overlay=false&bgLayer=OSM&date=2025-05-14&layer=WORLDCOVER_2021_MAP) and Login or Register for a free TERRASCOPE account. This will allow you to download data from the *DOWNLOAD* tab where you can search for a specific region at the top of the viewer website and Ctrl + click on the spatial tiles you want to download or use the *Extent* to draw and download an area of interest (double click to exit polygon drawing). Depending on your study region, you may need to download 1 or many spatial tiles. 
+
+For constructing your own custom map, we will integrate ESA Worldcover
+data with OSM. You can access and download data from
+[esa-worldover.org](https://esa-worldcover.org/en) \>
+[Explore](https://viewer.esa-worldcover.org/worldcover/?language=en&bbox=-295.3125,-82.51774853061981,295.3125,82.51774853061983&overlay=false&bgLayer=OSM&date=2025-05-14&layer=WORLDCOVER_2021_MAP)
+and Login or Register for a free TERRASCOPE account. This will allow you
+to download data from the *DOWNLOAD* tab where you can search for a
+specific region at the top of the viewer website and Ctrl + click on the
+spatial tiles you want to download or use the *Extent* to draw and
+download an area of interest (double click to exit polygon drawing).
+Depending on your study region, you may need to download 1 or many
+spatial tiles.
 
 <p float="center">
-  <img src="./figures/ESA_download.png" alt="ESA Worldcover viewer." width="1000" height="auto" />
+
+<img src="./figures/ESA_download.png" alt="ESA Worldcover viewer." width="1000" height="auto"/>
 
 </p>
 
-Once you click *Next*, a Download tab will popup. You only need to download **ESA_WORLDCOVER_10M_Map** files. 
+Once you click *Next*, a Download tab will popup. You only need to
+download **ESA_WORLDCOVER_10M_Map** files.
 
 <p float="center">
-  <img src="./figures/ESA_results.png" alt="ESA Worldcover viewer download tab." width="1000" height="auto" />
+
+<img src="./figures/ESA_results.png" alt="ESA Worldcover viewer download tab." width="1000" height="auto"/>
 
 </p>
 
-Once downloaded, extract the downloaded zip files and add spatial .tif files to your data folder.
+Once downloaded, extract the downloaded zip files and add spatial .tif
+files to your data folder.
 
 ### OSM data
-OSM data is made up of various features which include linear (e.g. a river or road) and polygon data (e.g. a building or lake). Additionally, features can be assigned **keys** and keys are assigned **values**. **Keys** are generally related to the classification of a landscape feature while **values** are further descriptors of a key. For example, there may be a feature called 'building', with the keys *building* and *parking*. Note a feature may have multiple keys. Then, each of these keys will also have an assigned value. The values may be described as a *school* or a simple *yes* (as in yes this is a building). See examples below.
 
-| feature  | key | value | 
-|---------|------|-------|
-|Institutional|amenity|school|
-|Building|building    |school, hospital, commerical|
-|          |parking    |multi-storey| 
-|Water          | natural    |spring| 
-|          | landuse    |basin| 
+OSM data is made up of various features which include linear (e.g. a
+river or road) and polygon data (e.g. a building or lake). Additionally,
+features can be assigned **keys** and keys are assigned **values**.
+**Keys** are generally related to the classification of a landscape
+feature while **values** are further descriptors of a key. For example,
+there may be a feature called 'building', with the keys *building* and
+*parking*. Note a feature may have multiple keys. Then, each of these
+keys will also have an assigned value. The values may be described as a
+*school* or a simple *yes* (as in yes this is a building). See examples
+below.
 
-We will load in common feature keys and values which have been organized and described in Gelmi-Candusso et al., 2024.  
-```R
+| feature       | key      | value                        |
+|---------------|----------|------------------------------|
+| Institutional | amenity  | school                       |
+| Building      | building | school, hospital, commerical |
+|               | parking  | multi-storey                 |
+| Water         | natural  | spring                       |
+|               | landuse  | basin                        |
+
+We will load in common feature keys and values which have been organized
+and described in Gelmi-Candusso et al., 2024.
+
+``` r
 #table with the key-value pairs to be extracted 
 osm_kv <- read_csv(
   "https://raw.githubusercontent.com/tgelmi-candusso/OSM_for_Ecology/main/urban_features/osm_key_values.csv"
@@ -133,26 +234,52 @@ osm_kv <- osm_kv %>%
   filter(!is.na(key))
 keys <- unique(osm_kv$key)
 ```
-We can use `osmextract::oe_get` (to download directly in R from online) or `osmextract::oe_read` (to read in downloaded OSM spatial file) to extract OSM data limited to our keys and study area. 
+
+We can use `osmextract::oe_get` (to download directly in R from online)
+or `osmextract::oe_read` (to read in downloaded OSM spatial file) to
+extract OSM data limited to our keys and study area.
 
 #### Extracting OSM Data
-Using `osmextract::oe_get`, we will want to limit our query to the smallest geofrabrik (OSM) data which includes our study area. Our first query pass may be the city level, state level or country level. To find your region (not all cities are able to be queried), it's helpful to start by querying at the smallest level, e.g. city and see if it matches. If that query is unsuccessful, move on to state and if not available, then to the country. It is also possible to set a boundary, by clipping an extent, around your first query pass.
 
-For our example, we can start by setting a larger query location for Argentina and subset to a smaller bounding box based on our unique study region. To find the best query for your data, you can try searching on: https://www.openstreetmap.org/. To define your study city or a bounding box more specifically, you can go to **[OpenStreetMap.com](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273) > export > manually select a different area** to find your boundary box coordinates of interest. 
+Using `osmextract::oe_get`, we will want to limit our query to the
+smallest geofrabrik (OSM) data which includes our study area. Our first
+query pass may be the city level, state level or country level. To find
+your region (not all cities are able to be queried), it's helpful to
+start by querying at the smallest level, e.g. city and see if it
+matches. If that query is unsuccessful, move on to state and if not
+available, then to the country. It is also possible to set a boundary,
+by clipping an extent, around your first query pass.
 
-Downloading may take a few minutes to load. If you want to follow the example, you can read in `pol_feat.rds` from our `./data` folder if needed (see code chunk below).
+For our example, we can start by setting a larger query location for
+Argentina and subset to a smaller bounding box based on our unique study
+region. To find the best query for your data, you can try searching on:
+<https://www.openstreetmap.org/>. To define your study city or a
+bounding box more specifically, you can go to
+[**OpenStreetMap.com**](https://www.openstreetmap.org/export#map=13/-41.15087/-71.32273)
+**\> export \> manually select a different area** to find your boundary
+box coordinates of interest.
 
-```R
+Downloading may take a few minutes to load. If you want to follow the
+example, you can read in `pol_feat.rds` from our `./data` folder if
+needed (see code chunk below).
+
+``` r
 # for Argentina example read in:
 pol_feat <- readRDS("./data/pol_feat.rds")
 ```
 
 #### Downloading OSM data
-Depending on your connection, it may be faster to download OSM directly from their Geofabrik website. Data from each USA state can be downloaded [here](https://download.geofabrik.de/north-america/us.html) and continent or country data can be downloaded [here](https://download.geofabrik.de/). 
 
-Once you locate your state or region of interest, download the .osm.pbf file and add it to your data folder. 
+Depending on your connection, it may be faster to download OSM directly
+from their Geofabrik website. Data from each USA state can be downloaded
+[here](https://download.geofabrik.de/north-america/us.html) and
+continent or country data can be downloaded
+[here](https://download.geofabrik.de/).
 
-```R
+Once you locate your state or region of interest, download the .osm.pbf
+file and add it to your data folder.
+
+``` r
 # Set our first query
 # Replace with your study area country or region based on names listed on OSM's Geofabrik website: https://download.geofabrik.de/
 place <- "Argentina" 
@@ -185,25 +312,44 @@ pol_feat <- oe_read("./data/argentina-latest.osm.pbf",
                    extra_tags=keys)
 ```
 
-It can be helpful to check that you are grabbing the expected study area as a common mistake is to mix up X and Y coordinates! 
+It can be helpful to check that you are grabbing the expected study area
+as a common mistake is to mix up X and Y coordinates!
 
-```R
+``` r
 # Confirm the box is the correct coordinates for you study area 
 plot(study_area_bbox, axes = TRUE)
 ```
+
 <p float="center">
-  <img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto" />
+
+<img src="./figures/study_area_bbox.png" alt="A simple plot to confirm the correct coordinates for study region" width="500" height="auto"/>
 
 </p>
 
+Great, now we have grabbed all the OSM data using our **keys** within
+our outlined study area. Depending on your research questions or the
+data available for your region, you may wish to limit OSM data to a more
+specific area within your region, such as local municipalities or urban
+landscapes. Although OSM data is very powerful in more populated
+regions, it may do a poorer job describing natural landscapes around
+urban areas. Therefore, we want to limit our OSM extraction to urban
+regions only, and another global or national dataset to describe the
+surrounding natural landscape (more on this later).
 
-Great, now we have grabbed all the OSM data using our **keys** within our outlined study area. Depending on your research questions or the data available for your region, you may wish to limit OSM data to a more specific area within your region, such as local municipalities or urban landscapes.  Although OSM data is very powerful in more populated regions, it may do a poorer job describing natural landscapes around urban areas. Therefore, we want to limit our OSM extraction to urban regions only, and another global or national dataset to describe the surrounding natural landscape (more on this later). 
+We can do this by cherry picking OSM polygons or boundaries using
+`filter()` on the `pol_feat` data using OSM boundaries such as *osm_id*
+or *admin_level*. Examine your study area on
+[OpenStreetMap.com](www.openstreetmap.org) and determine if there are
+any polygons or boundary you want to limit pulling OSM data from.
+Remember, OSM functions best in urban regions so if your study area
+abuts a large natural or protected area, you may want to exclude that
+from your OSM data layer.
 
-We can do this by cherry picking OSM polygons or boundaries using `filter()` on the `pol_feat` data using OSM boundaries such as *osm_id* or *admin_level*. Examine your study area on [OpenStreetMap.com](www.openstreetmap.org) and determine if there are any polygons or boundary you want to limit pulling OSM data from. Remember, OSM functions best in urban regions so if your study area abuts a large natural or protected area, you may want to exclude that from your OSM data layer.
+For our example in Argentina, we will isolate two cities, Villa La
+Angostura and San Carlos de Bariloche and join them in the same
+multi-polygon layer.
 
-For our example in Argentina, we will isolate two cities, Villa La Angostura and San Carlos de Bariloche and join them in the same multi-polygon layer.
-
-```R
+``` r
 # This filtering grabs the townships of our study area and any landcover class in our study area tagged as 'scrub'. We do this because Bariloche's boundary is outside
 # the barriers we want to grab OSM data. Grabbing the smaller municipalities lets us limit our boundary to the city area more specifically. Then we will use 
 # a national landcover map to fill in regions not covered well by OSM (e.g. non-urban areas)
@@ -221,9 +367,15 @@ sf_use_s2(FALSE)
 bariloche <- study_area_boundary %>% 
   st_intersection(bariloche_boundary)
 ```
-Though we have a fairly good buffer around the urban region of Bariloche, we can tidy the boundary up further using a smoothing function. We can play with variables in this function to buffer the boundary more widely or smooth gaps in the boundary. Then we can grab all the OSM data within our new buffered area. See how the boundary changed before and after smoothing below.
 
-```R
+Though we have a fairly good buffer around the urban region of
+Bariloche, we can tidy the boundary up further using a smoothing
+function. We can play with variables in this function to buffer the
+boundary more widely or smooth gaps in the boundary. Then we can grab
+all the OSM data within our new buffered area. See how the boundary
+changed before and after smoothing below.
+
+``` r
 # notice that filtering to the townships of Bariloche misses some urban data nearby.
 # By using a buffer and smoothing function, we can grab additional areas around 
 # the small municipalities
@@ -248,13 +400,19 @@ bariloche_poly <- pol_feat %>%
 ```
 
 <p float="left">
-  <img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche's munipality boundary" width="400" height="auto" />
-  <img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche's munipality boundary after a smoothing function has been applied" width="400" height="auto" /> 
+
+<img src="./figures/Bariloche_boundary.png" alt="A plot of Bariloche&apos;s munipality boundary" width="400" height="auto"/>
+<img src="./figures/Bariloche_boundary_smoothed.png" alt="A plot of Bariloche&apos;s munipality boundary after a smoothing function has been applied" width="400" height="auto"/>
+
 </p>
 
-We do not need to buffer or smooth Villa Angostura like we did for Bariloche as the OSM boundary captures the urban region quite well. Therefore we can just filter to the city's *osm_id* and convert our boundary data.frame to a multipolygon. If we wanted to buffer or smooth our data, we can use the same functions as above.
+We do not need to buffer or smooth Villa Angostura like we did for
+Bariloche as the OSM boundary captures the urban region quite well.
+Therefore we can just filter to the city's *osm_id* and convert our
+boundary data.frame to a multipolygon. If we wanted to buffer or smooth
+our data, we can use the same functions as above.
 
-```R
+``` r
 angostura_boundary <- pol_feat %>%
   filter(osm_id == 3442889)
 
@@ -272,15 +430,23 @@ sf_use_s2(FALSE)
 angostura_poly <- pol_feat %>% 
   st_intersection(angostura_buffer)
 ```
+
 <p float="left">
-  <img src="./figures/angostura_boundary.png" alt="A plot of Angostura's munipality boundary" width="400" height="auto" />
+
+<img src="./figures/angostura_boundary.png" alt="A plot of Angostura&apos;s munipality boundary" width="400" height="auto"/>
+
 </p>
 
-Now we are ready to join our datasets and pull OSM linear data. As a rule of thumb, we do not filter linear features soley within our urban boundaries for OSM data as these will be useful to overlay on our global landcover map which may not capture linear features well.  
+Now we are ready to join our datasets and pull OSM linear data. As a
+rule of thumb, we do not filter linear features soley within our urban
+boundaries for OSM data as these will be useful to overlay on our global
+landcover map which may not capture linear features well.
 
-This may take a few minutes to load. If you are following the Argentina example, you can read in `lin_feat` in from our `./data` folder (see code chunk below).
+This may take a few minutes to load. If you are following the Argentina
+example, you can read in `lin_feat` in from our `./data` folder (see
+code chunk below).
 
-```R
+``` r
 # Join our two cities into one data.frame of polygons
 pol_feat_agg <- rbind(bariloche_poly, angostura_poly)
 
@@ -306,14 +472,24 @@ lin_feat <- oe_read("./data/argentina-latest.osm.pbf",
 # for Argentina example read in:
 lin_feat <- readRDS("./data/lin_feat.rds")
 ```
+
 ### Integrating Additional Data Sources
-In addition to OSM data, we can incorporate other sources of relevant data, such as Open Buildings data from Google. These data contain outlines of buildings derived from high-resolution satellite imagery and primarily focus on the continent of Africa and the Global South at large. These data can further enhance our understanding of the urban landscape and anthropogenic impact on our study area.
 
-For this tutorial, we will not cover additional data integration, but a code example is available below for Argentina. 
+In addition to OSM data, we can incorporate other sources of relevant
+data, such as Open Buildings data from Google. These data contain
+outlines of buildings derived from high-resolution satellite imagery and
+primarily focus on the continent of Africa and the Global South at
+large. These data can further enhance our understanding of the urban
+landscape and anthropogenic impact on our study area.
 
-<details closed><summary> See code to convert data here </a></summary>
-  
-```R
+For this tutorial, we will not cover additional data integration, but a
+code example is available below for Argentina.
+
+<details closed>
+
+<summary>See code to convert data here </a></summary>
+
+``` r
 # Read in building data downloaded from: https://sites.research.google/gr/open-buildings/
 buildings <- read_csv("./data/961_buildings.csv.gz")
 head(buildings)
@@ -326,13 +502,18 @@ build <- st_read("./data/Argentina_buildings.gpkg")
 ```
 
 If `build` is loading too slowly, read in `build.rds`.
-```R
+
+``` r
 build <- readRDS("./data/build.rds")
 ```
 
-Note that these data come with confidence values for each building's probable existence. For our example, we will limit our dataset to buildings with greater than 80% confidence of existing. Next, we will format the data to easily bind it with our existing polygon data e.g. `pol_data`.
+Note that these data come with confidence values for each building's
+probable existence. For our example, we will limit our dataset to
+buildings with greater than 80% confidence of existing. Next, we will
+format the data to easily bind it with our existing polygon data e.g.
+`pol_data`.
 
-```R
+``` r
 # filter to buildings with >80% confidence
 build_80 <- build %>% 
   filter(confidence > .8)
@@ -353,12 +534,13 @@ tm_shape(pol_feat_agg)+
   tm_fill(col = "red")+
 tm_shape(build_80)+
   tm_fill(col = "blue") 
-
 ```
 
-We can easily combine our data using `rbind`, however we need to match our columns for each dataset. We can do this by adding all missing columns to each dataset and populating them with NA's.
+We can easily combine our data using `rbind`, however we need to match
+our columns for each dataset. We can do this by adding all missing
+columns to each dataset and populating them with NA's.
 
-```R
+``` r
 # Step 1: Make sure columns in both data.frames are the same
 all_columns <- union(names(build_80), names(pol_feat_agg))  # Combine all unique columns from both
 
@@ -375,21 +557,33 @@ for (col in missing_pol_feat) {
   pol_feat_agg[[col]] <- NA  # Add missing column with NA values
 }
 ```
+
 Now we are ready to row bind our datasets and save as a `sf` object.
-```R
+
+``` r
 combined <- rbind(build_80, pol_feat_agg)
 pol_feat <- st_as_sf(combined)
 ```
-Note that other data sources can be used to bolster existing OSM data (like we have done here with the OSM `building` column) or be used to create new sources or columns of data (for example, vacant lots). However, any new columns that are added to the OSM data.frame, or `pol_data`, will need to be added as new layers in our next steps.
+
+Note that other data sources can be used to bolster existing OSM data
+(like we have done here with the OSM `building` column) or be used to
+create new sources or columns of data (for example, vacant lots).
+However, any new columns that are added to the OSM data.frame, or
+`pol_data`, will need to be added as new layers in our next steps.
 
 </details>
 
-<a name="building"></a>
-## 3. Building landcover classes
-### Categorizing OSM features
-Now we are ready to categorize OSM features using the `vlayers()` function. We will filter OSM features from Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes. This function grabs each landcover elements based on the filtered polygon and linear OSM features (from our OSM keys) and creates landcover 'classes' or features and puts them into a list. These classes will represent the classes in our OSM-enhanced map. These layers can easily be edited to add new, remove, and update landcover classes. 
+<a name="building"></a> \## 3. Building landcover classes \###
+Categorizing OSM features Now we are ready to categorize OSM features
+using the `vlayers()` function. We will filter OSM features from
+Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes.
+This function grabs each landcover elements based on the filtered
+polygon and linear OSM features (from our OSM keys) and creates
+landcover 'classes' or features and puts them into a list. These classes
+will represent the classes in our OSM-enhanced map. These layers can
+easily be edited to add new, remove, and update landcover classes.
 
-```R
+``` r
 vlayers <- OSMtoLULC_vlayers(
   OSM_polygon_layer = pol_feat, 
   OSM_line_layer = lin_feat
@@ -398,15 +592,20 @@ vlayers <- OSMtoLULC_vlayers(
 # plot a layer to see if this worked as expected
 plot(st_geometry(vlayers[[14]])) # This is the building layer
 ```
+
 Example from Argentina:
+
 <p float="center">
-  <img src="./figures/vlayers_build.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="700" height="auto" />
+
+<img src="./figures/vlayers_build.png" alt="A plot of the buildings layer in the vlayers list, note list item 14 is the buildings layer" width="700" height="auto"/>
 
 </p>
 
-<details closed><summary> See the vlayers function</a></summary>
+<details closed>
 
-```R
+<summary>See the vlayers function</a></summary>
+
+``` r
 OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
   
   # Create list to hold vector layers
@@ -439,7 +638,7 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
                                                  power %in% c("substation")|
                                                  surface %in% c("grass"))
   # class_07 <- protected_area
-  classL1[[7]] <- OSM_polygon_layer %>% filter(leisure	%in% c("nature_reserve")|
+  classL1[[7]] <- OSM_polygon_layer %>% filter(leisure  %in% c("nature_reserve")|
                                                  #boundary %in% c("protected_area","national_park")|
                                                  protected_area %in% c("nature")|
                                                  landuse %in% c("nature_reserve", "natural_reserve", "landscape_reserve"))
@@ -449,79 +648,79 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
                                                  leisure %in% c('garden')|
                                                  !is.na(allotments))
   # class_09 <- heterogenous_green 
-  classL1[[9]] 	<- OSM_polygon_layer %>% filter(natural %in% c("garden", "scrub", "shrubbery", "tundra", "cliff", "shrub", "wetland", "grassland", "fell",
+  classL1[[9]]  <- OSM_polygon_layer %>% filter(natural %in% c("garden", "scrub", "shrubbery", "tundra", "cliff", "shrub", "wetland", "grassland", "fell",
                                                                "heath","moor")|
-                                                  landuse	%in% c("plant_nursery", "meadow", "flowerbed", "wetland")|
+                                                  landuse   %in% c("plant_nursery", "meadow", "flowerbed", "wetland")|
                                                   #!is.na("meadow")| # This part creates an error
                                                   golf %in% c("rough") | 
                                                   grassland %in% c("pairie"))
   
   #class_10 <- barren_soil 
-  classL1[[10]] 	<- OSM_polygon_layer %>% filter(natural %in% c("mud", "dune", "sand","scree","sinkhole", "beach")|
-                                                   landuse	%in% c("brownfield", "construction")|
-                                                   golf	%in% c("bunker"))
+  classL1[[10]]     <- OSM_polygon_layer %>% filter(natural %in% c("mud", "dune", "sand","scree","sinkhole", "beach")|
+                                                   landuse  %in% c("brownfield", "construction")|
+                                                   golf %in% c("bunker"))
   #class_11 <- dense_green
   classL1[[11]] <- OSM_polygon_layer %>% filter(landuse %in% c("forest")|
                                                   natural  %in% c("wood")|
                                                   boundary %in% c("forest", "forest_compartment"))
   #class_12 <- water 
   classL1[[12]]  <- OSM_polygon_layer %>% filter(landuse %in% c("basin")|
-                                                   natural	 %in% c("water", "spring", "waterway")|
-                                                   waterway	 %in% c("river", "stream", "tidal_channel", "canal", "drain", "ditch", "yest")|
+                                                   natural   %in% c("water", "spring", "waterway")|
+                                                   waterway  %in% c("river", "stream", "tidal_channel", "canal", "drain", "ditch", "yest")|
                                                    (!is.na(water) & water != "intermittent")|
                                                    basin  %in% c("detention")|
                                                    intermittent != "yes"|
-                                                   seasonal	!= "yes"|
+                                                   seasonal != "yes"|
                                                    tidal!= "yes")
   
   # class_13 <- parking_surface 
-  classL1[[13]] <- OSM_polygon_layer %>% filter(parking	%in% c("surface")|
-                                                  aeroway	%in% c("runway", "apron"))
+  classL1[[13]] <- OSM_polygon_layer %>% filter(parking %in% c("surface")|
+                                                  aeroway   %in% c("runway", "apron"))
   
   # class_14 <- building
-  classL1[[14]] 	<- OSM_polygon_layer %>% filter( #!is.na("building")| # This part creates an error
+  classL1[[14]]     <- OSM_polygon_layer %>% filter( #!is.na("building")| # This part creates an error
     building %in% c("hospital", "parking", "industrial", "school", "commercial", "terrace", "detached", "semideatched_house", "house", "retail", "hotel", "apartments", "yes", "airport", "university")|
-      parking	%in% c("multi-storey")|
-      aeroway	%in% c("terminal"))
+      parking   %in% c("multi-storey")|
+      aeroway   %in% c("terminal"))
   
-  # class_15 <- roads_very_high_traffic	
-  classL1[[15]] <-  OSM_line_layer %>% filter(highway	%in% c("motorway",'motorway_link', "motorway_junction") &
+  # class_15 <- roads_very_high_traffic 
+  classL1[[15]] <-  OSM_line_layer %>% filter(highway   %in% c("motorway",'motorway_link', "motorway_junction") &
                                                 !grepl('/"bridge/"=>/"yes/"', OSM_line_layer$other_tags))
   
-  # class_16 <- roads_sidewalk	
-  classL1[[16]]	<- OSM_line_layer %>% filter(footway	%in% c("sidewalk"))
+  # class_16 <- roads_sidewalk  
+  classL1[[16]] <- OSM_line_layer %>% filter(footway    %in% c("sidewalk"))
   
   # class_17 <- roads_unclassified
   classL1[[17]] <- OSM_line_layer %>% filter(!(highway %in% c("footway","construction","escape","cycleway","steps","bridleway","construction","path","pedestrian","track","abandoned", "turning_loop","living_street", "bicycle road", "cyclestreet", "cycleway lane","cycleway tracks", "bus and cyclists", "service","services", "busway", "sidewalk", "residential", "rest_area", "primary", "motorway_junction", "secondary", "secondary_link", "tertiary", "tertiary_link", "motorway","motorway_link","trunk_link", "trunk", "corridor","elevator","platform","crossing","proposed", "razed")))
   
   # class_18 <- roads_very_low_traffic
-  classL1[[18]] <-  OSM_line_layer %>% filter(highway	 %in% c("services","service","turning_loop","living_street"))
+  classL1[[18]] <-  OSM_line_layer %>% filter(highway    %in% c("services","service","turning_loop","living_street"))
   
   # class_19 <- roads_low_traffic
-  classL1[[19]] <- OSM_line_layer %>% filter(highway	%in% c("residential", "rest_area", "busway"))
+  classL1[[19]] <- OSM_line_layer %>% filter(highway    %in% c("residential", "rest_area", "busway"))
   
   # class_20 <- roads_med_traffic 
-  classL1[[20]] <- OSM_line_layer %>% filter(highway	%in% c("tertiary", "tertiary_link"))
+  classL1[[20]] <- OSM_line_layer %>% filter(highway    %in% c("tertiary", "tertiary_link"))
   
   # class_21 <- roads_high_traffic_low_speed
-  classL1[[21]] <-  OSM_line_layer %>% filter(highway	%in% c("primary", "primary_link", "secondary", "secondary_link"))
+  classL1[[21]] <-  OSM_line_layer %>% filter(highway   %in% c("primary", "primary_link", "secondary", "secondary_link"))
   
   # class_22 <- roads_high_traffic_high_speed
-  classL1[[22]] <- OSM_line_layer %>% filter(highway	%in% c("trunk", "trunk_link"))
+  classL1[[22]] <- OSM_line_layer %>% filter(highway    %in% c("trunk", "trunk_link"))
   
   # class_23 <- streetcars
-  classL1[[23]] <- OSM_line_layer %>% filter(railway	%in% c("tram"))
+  classL1[[23]] <- OSM_line_layer %>% filter(railway    %in% c("tram"))
   
   # class_24 <- pedestrian_trails
-  classL1[[24]] <- OSM_line_layer %>% filter(highway	%in% c("footway","construction","escape", "cycleway","steps","bridleway","path","pedestrian","track", "abandoned","bicycle road", "cyclestreet", "cycleway lane", "cycleway tracks", "bus and cyclists")|
-                                               footway	!= "sidewalk")
+  classL1[[24]] <- OSM_line_layer %>% filter(highway    %in% c("footway","construction","escape", "cycleway","steps","bridleway","path","pedestrian","track", "abandoned","bicycle road", "cyclestreet", "cycleway lane", "cycleway tracks", "bus and cyclists")|
+                                               footway  != "sidewalk")
   
-  # class_25 <- railway	
-  classL1[[25]] <- OSM_line_layer %>% filter(railway	%in% c("light_rail","narrow_gauge","rail","preserved")|
+  # class_25 <- railway 
+  classL1[[25]] <- OSM_line_layer %>% filter(railway    %in% c("light_rail","narrow_gauge","rail","preserved")|
                                                railway != "tram")
   # class_26 <- linear_features_not_in_use
-  classL1[[26]] <- OSM_line_layer %>% filter(railway	%in% c("abandonded","construction","disused")|
-                                               highway	%in% c("construction"))
+  classL1[[26]] <- OSM_line_layer %>% filter(railway    %in% c("abandonded","construction","disused")|
+                                               highway  %in% c("construction"))
   # class_27 <- barriers
   #classL1[[28]] <- OSM_line_layer %>% filter(!is.na("barrier"))
   classL1[[27]] <- OSM_line_layer %>% filter(barrier !='')
@@ -529,25 +728,33 @@ OSMtoLULC_vlayers <- function(OSM_polygon_layer, OSM_line_layer){
   return(classL1)
   
 }
-
 ```
-             
+
 </details>
 
-
 ### Converting OSM features to rasters
-Next, we will convert all the filtered OSM features into raster layers. We will do this for each layer separately. Using the function `rlayers`, we convert linear features into polygons using a specific buffer size (see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a raster template using the extent of the downloaded study area. We will define the extent of study area again using coordinate values. We will not use a sfc object like 'study_area_bbox' as this will cause an error. As a reminder:
 
-| variable  | coordinate |
-|---------|------|
-|xmin|minimum latitude|
-|xmax|maximum latitude|
-|ymin|minimum longitude|
-|ymax|maximum longitude|
+Next, we will convert all the filtered OSM features into raster layers.
+We will do this for each layer separately. Using the function `rlayers`,
+we convert linear features into polygons using a specific buffer size
+(see Gelmi-Candusso et al., 2024 Table S3). To rasterize we generate a
+raster template using the extent of the downloaded study area. We will
+define the extent of study area again using coordinate values. We will
+not use a sfc object like 'study_area_bbox' as this will cause an error.
+As a reminder:
 
-<details closed><summary> See the rlayers function</a></summary>
+| variable | coordinate        |
+|----------|-------------------|
+| xmin     | minimum latitude  |
+| xmax     | maximum latitude  |
+| ymin     | minimum longitude |
+| ymax     | maximum longitude |
 
-```R
+<details closed>
+
+<summary>See the rlayers function</a></summary>
+
+``` r
 OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   classL1 <- OSM_LULC_vlayers
   rtemplate <- rast(res=0.001, ext = study_area_extent, crs= "EPSG:4326") 
@@ -598,15 +805,29 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
   }
   return(classL2)
 }
-
 ```
+
 </details>
 
-Note that in the `rlayers()` function, we set the resolution of our data using  `rast(res=0.001)`. This resolution is based on our coordinate system, here WGS84. A resolution of .001 roughly translates to 100 meters. Setting your resolution is a balance between computational efficiency and data granularity. To run our example here, it is best to keep the resolution low, `res = .001` but for data analyses and modeling, a finer resolution, such as `res= 0.00009` would capture roughly 10x10m of data. To work with a finer-scale resolution for the Argentina example, you can download the .tif rlayers [here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link) which have a resolution of .00001 for your use and comparison later in the tutorial. If you want to read in the .tifs files, use the code below.  
+Note that in the `rlayers()` function, we set the resolution of our data
+using `rast(res=0.001)`. This resolution is based on our coordinate
+system, here WGS84. A resolution of .001 roughly translates to 100
+meters. Setting your resolution is a balance between computational
+efficiency and data granularity. To run our example here, it is best to
+keep the resolution low, `res = .001` but for data analyses and
+modeling, a finer resolution, such as `res= 0.00009` would capture
+roughly 10x10m of data. To work with a finer-scale resolution for the
+Argentina example, you can download the .tif rlayers
+[here](https://drive.google.com/drive/folders/1xBk93YDDZerMvgEUfT90x4JxA5a15-KJ?usp=drive_link)
+which have a resolution of .00001 for your use and comparison later in
+the tutorial. If you want to read in the .tifs files, use the code
+below.
 
-<details closed><summary> To read in .00001 resolution rlayers </a></summary>
+<details closed>
 
-```R
+<summary>To read in .00001 resolution rlayers </a></summary>
+
+``` r
 # List all .RDS files in the directory
 rlayer_files <- list.files('./data', pattern = "\\.tif$", full.names = TRUE)
 
@@ -629,10 +850,12 @@ names(loaded_rlayers) <- c("industrial", "commercial", "institutional", "residen
                     "street_cars", "pedestrian_trails", "railway", "linear_features_not_in_use",
                     "barriers")
 ```
+
 </details>
 
 Example from Argentina:
-```R
+
+``` r
 extent <- as.vector(ext(c(xmin=-71.900000,xmax=-70.650000, ymin=-41.262600,ymax=-40.490000)))
 
 # this function assigns each landcover class information such as its geometry or a buffer
@@ -646,25 +869,34 @@ plot(rlayers[[14]], col = "black") # 14 = building list
 ```
 
 <p float="center">
-  <img src="./figures/rlayers_building.png" alt="A plot of the buildings layers in the rlayers list, note list item 14 is the buildings layer" width="500" height="auto" />
+
+<img src="./figures/rlayers_building.png" alt="A plot of the buildings layers in the rlayers list, note list item 14 is the buildings layer" width="500" height="auto"/>
 
 </p>
 
-We can visually see that we have lost data in our buidlings layer due to the decrease in our spatial resolution. 
+We can visually see that we have lost data in our buidlings layer due to
+the decrease in our spatial resolution.
 
 ### Merging rasters
-It's time to stack and collapse our rasters by merging all layers into one raster layer. We will overlay each raster following their priority (created in the rlayers function). We have defined the priority of each layer to represent movement barriers for wildlife, e.g. road features are built over water features to maintain bridges in the landscape.
 
-```R
+It's time to stack and collapse our rasters by merging all layers into
+one raster layer. We will overlay each raster following their priority
+(created in the rlayers function). We have defined the priority of each
+layer to represent movement barriers for wildlife, e.g. road features
+are built over water features to maintain bridges in the landscape.
+
+``` r
 
 OSM_only_map <- merge_OSM_LULC_layers(
   OSM_raster_layers = rlayers
 )
 ```
 
-<details closed><summary> See the OSM_only_map function </a></summary>
-  
-```R
+<details closed>
+
+<summary>See the OSM_only_map function </a></summary>
+
+``` r
   merge_OSM_LULC_layers <- function(OSM_raster_layers){ 
   classL2 <- OSM_raster_layers
   classL2 <- Filter(Negate(is.null), classL2)
@@ -674,10 +906,12 @@ OSM_only_map <- merge_OSM_LULC_layers(
 }
 ```
 
-  </details>
+</details>
 
-Let's have a quick view of our final OSM map using `ggplot()`. Below if an example from Argentina.
-```R
+Let's have a quick view of our final OSM map using `ggplot()`. Below if
+an example from Argentina.
+
+``` r
 ggplot() +
   geom_spatraster(data = as.factor(OSM_only_map), aes(fill = first)) +
   # You can use coord_sf
@@ -698,28 +932,42 @@ ggplot() +
                                "barriers"),
                     na.value = "white")
 ```
+
 <p float="center">
-  <img src="./figures/OSM_only_map.png" alt="A plot of the OSM_only_map where white indicates NA values for missing landcover" width="750" height="auto" />
+
+<img src="./figures/OSM_only_map.png" alt="A plot of the OSM_only_map where white indicates NA values for missing landcover" width="750" height="auto"/>
 
 </p>
 
-We can also interact with our map using `tmap` and get a closer look at our featured lines and polygons
-```R
+We can also interact with our map using `tmap` and get a closer look at
+our featured lines and polygons
+
+``` r
 tmap_mode("view")
 tm_shape(as.factor(OSM_only_map)) +
   tm_raster(col.scale = tm_scale_categorical(values = terrain.colors(27)))
 ```
 
-<a name="integrating"></a>
-## 4. Integrating maps
-As a reminder, the OSM database is primarily populated by community contributions, thus there are likely gaps of information. To enhance our map and to ensure we don’t have any gaps in the final output of the framework we will integrate the `OSM_only_map` onto a global or continental land cover map (depending on your region of interest). 
+<a name="integrating"></a> \## 4. Integrating maps As a reminder, the
+OSM database is primarily populated by community contributions, thus
+there are likely gaps of information. To enhance our map and to ensure
+we don’t have any gaps in the final output of the framework we will
+integrate the `OSM_only_map` onto a global or continental land cover map
+(depending on your region of interest).
 
 ### Example data
-For Argentina, we will be overlaying OSM data on top of a global dataset from [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download). These data describe land cover into 22 classes which have been defined using the United Nations Food and Agriculture Organization’s (UN FAO) Land Cover Classification System (LCCS) and do a good job describing the natural landscape within our study region.
+
+For Argentina, we will be overlaying OSM data on top of a global dataset
+from [Climate Data Store
+(CDS)](https://cds.climate.copernicus.eu/datasets/satellite-land-cover?tab=download).
+These data describe land cover into 22 classes which have been defined
+using the United Nations Food and Agriculture Organization’s (UN FAO)
+Land Cover Classification System (LCCS) and do a good job describing the
+natural landscape within our study region.
 
 #### Read in and view data
 
-```R
+``` r
 # read in global dataset
 my_map = rast("./data/CCS-Map-300m-P1Y-2022-Argentina.nc")
 
@@ -791,45 +1039,90 @@ ggplot(data = as.factor(my_map_crop)) +
 
 # To save map as a .png
 # ggsave("./figures/CDS_LULC_map.png", dpi = 300, scale = 1.5, width = 10, height = 8.5, units = "in")
-
 ```
+
 <p float="center">
-  <img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1001" height="auto" />
+
+<img src="./figures/CDS_LULC_map.png" alt="Plot of Climate Data Store (CDS) cropped to study region" width="1001" height="auto"/>
 
 </p>
 
 ### Custom data
-For this tutorial, we will overlay OSM data on top of a global landcover dataset from the [European Space Agency - WorldCover](https://esa-worldcover.org/en), a set of yearly median and percentiles composites at 10m resolution, derived from the Copernicus Sentinel-1 and Sentinel-2 archives, for the years 2020 and 2021. More information on this data can be found in the [Worldcover Product User Manual](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf), including mapping classification values which we will need later in this tutorial. 
 
-```R
+For this tutorial, we will overlay OSM data on top of a global landcover
+dataset from the [European Space Agency -
+WorldCover](https://esa-worldcover.org/en), a set of yearly median and
+percentiles composites at 10m resolution, derived from the Copernicus
+Sentinel-1 and Sentinel-2 archives, for the years 2020 and 2021. More
+information on this data can be found in the [Worldcover Product User
+Manual](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf),
+including mapping classification values which we will need later in this
+tutorial.
+
+``` r
 # read in ESA raster data
 # change file name to your study area .tif
-my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif") 
-
+my_map = rast("./data/ESA_WorldCover_10m_2021_v200_S42W072_Map.tif")  #version 2
 # crop map to OSM map extent
 my_map_crop <- crop(my_map, ext(OSM_only_map))
 plot(my_map_crop)
 ```
+
 <p float="center">
-  <img src="./figures/ESA_map_Argentina.png" alt="Plot of European Space Agency (ESA) landcover data from Argentina cropped to study region" width="600" height="auto" />
+
+<img src="./figures/ESA_map_Argentina.png" alt="Plot of European Space Agency (ESA) landcover data from Argentina cropped to study region" width="600" height="auto"/>
 
 </p>
 
-## WRITE CODE TO STITCH SPATIAL TIFFS HERE - TIZIANA
+## Stitching tiles 
+  
+``` r
+#load the different tiles
+my_map1 = rast("./data/global_LULC/WORLDCOVER/ESA_WORLDCOVER_10M_2021_V200/MAP/ESA_WorldCover_10m_2021_v200_N33W084_Map/ESA_WorldCover_10m_2021_v200_N33W084_Map.tif")
+my_map2 = rast("./data/global_LULC/WORLDCOVER/ESA_WORLDCOVER_10M_2021_V200/MAP/ESA_WorldCover_10m_2021_v200_N33W087_Map/ESA_WorldCover_10m_2021_v200_N33W087_Map.tif")
+
+#you can mosaic more than two tiles here, it will take a minute or two to process
+
+my_map <- terra::mosaic(my_map1, my_map2)
+```
 
 ### Reclassify Data
-To integrate these maps, we need to reclassify our global data to be cohesive with our OSM classification system. These data will then fill in any NA cells (in the OSM map) with the information provided from our global dataset. 
 
-When integrating global or local spatial data, we must create a reclassification dictionary which describes how the global data will transpose to the OSM dataset. We can choose to convert existing classes into representative OSM classes or retain the global landcover classes to be added to those of OSM. Note that most datasets will assign each class a numeric value which can usually be found in the spatial dataset's documentation. Classifications and further information on CDS can be found [here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf) and ESA can be found [here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf) (see example below).
+To integrate these maps, we need to reclassify our global data to be
+cohesive with our OSM classification system. These data will then fill
+in any NA cells (in the OSM map) with the information provided from our
+global dataset.
+
+When integrating global or local spatial data, we must create a
+reclassification dictionary which describes how the global data will
+transpose to the OSM dataset. We can choose to convert existing classes
+into representative OSM classes or retain the global landcover classes
+to be added to those of OSM. Note that most datasets will assign each
+class a numeric value which can usually be found in the spatial
+dataset's documentation. Classifications and further information on CDS
+can be found
+[here](http://dast.data.compute.cci2.ecmwf.int/documents/satellite-land-cover/D4.3.3-Tutorial_CDR_LC-CCI_v2.0.7cds_PRODUCTS_v1.0.1.pdf)
+and ESA can be found
+[here](https://worldcover2021.esa.int/data/docs/WorldCover_PUM_V2.0.pdf)
+(see example below).
 
 <p float="center">
-  <img src="./figures/worldcover_code_classes.png" alt="ESA Worldcover landcover class coding example" width="600" height="auto" />
+
+<img src="./figures/worldcover_code_classes.png" alt="ESA Worldcover landcover class coding example" width="600" height="auto"/>
 
 </p>
 
-We have prepped an example dictionary for CDS and ESA. Use this as a model for your own reclassification dictionary. We will then read in the .csv and extract just the numeric values. 
-#### Example data
-```R
+We have prepped an example dictionary for CDS and ESA. Use this as a
+model for your own reclassification dictionary. We will then read in the
+.csv and extract just the numeric values. \#### Example dat
+
+```{r}
+
+```
+
+a
+
+``` r
 # Read in reclassification dictionary for example data
 reclass_values <- read_csv("./data/reclass_cds_2_mcsc.csv")
 
@@ -837,22 +1130,28 @@ reclass_values <- read_csv("./data/reclass_cds_2_mcsc.csv")
 CDS_to_OSM_table <- reclass_values %>% 
   dplyr::select(cds_value, mcsc_value)
 ```
+
 #### Custom data
-```R
+
+``` r
 # Read in reclassification dictionary for custom data
 reclass_values <- read_csv("./data/reclass_esa_2_mcsc.csv")
 
 # Select classification values only
 ESA_to_OSM_table <- reclass_values %>% 
   dplyr::select(esa_value, mcsc_value)
-
 ```
+
 ### Integrate Data
-Now we are ready to create our final product, our integrated OSM and global landcover map!
 
-<details closed><summary> See the integrate_OSM_to_globalLULC() function</a></summary>
+Now we are ready to create our final product, our integrated OSM and
+global landcover map!
 
-```R  
+<details closed>
+
+<summary>See the integrate_OSM_to_globalLULC() function</a></summary>
+
+``` r
 integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_table){
   
   #load global lulc raster that will work as a background layer to cover any missing data in the OSM_database
@@ -874,27 +1173,33 @@ integrate_OSM_to_globalLULC <- function(OSM_lulc_map, global_lulc_map, reclass_t
   return(as.factor(r4))
 } 
 ```
+
 </details>
 
 #### Example Data
 
-```R
+``` r
 sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
 OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
                                                      global_lulc_map = my_map, 
                                                      reclass_table = CDS_to_OSM_table)
 ```
+
 #### Custom Data
-```R
+
+``` r
 sf_use_s2(TRUE) # TRUE means we will use the s2 spherical geometry package for geographical coordinate operations
 OSM_enhanced_LULC_map <- integrate_OSM_to_globalLULC(OSM_lulc_map = OSM_only_map,
                                                      global_lulc_map = my_map, 
                                                      reclass_table = ESA_to_OSM_table)
 ```
 
-Voilà! We now have a new and improved integrated OSM land use land cover map! Our object, `OSM_enhanced_LULC_map`, is a `SpatRaster` which can be saved as a .tif or shapefile to be easily opened here or in ArcGIS or other mapping programs.
+Voilà! We now have a new and improved integrated OSM land use land cover
+map! Our object, `OSM_enhanced_LULC_map`, is a `SpatRaster` which can be
+saved as a .tif or shapefile to be easily opened here or in ArcGIS or
+other mapping programs.
 
-```R
+``` r
 # To save SpatRaster as .tif
 terra::writeRaster(
   OSM_enhanced_LULC_map,
@@ -915,9 +1220,11 @@ polygon_data$landuse_class <- values(raster_data)
 # Save shapefile
 writeVector(polygon_data, "Bariloche_enhanced_lcover.shp", overwrite = TRUE)
 ```
-We can also use `ggplot2` to view our map in R and export as a .png, .tif, etc.
 
-```R
+We can also use `ggplot2` to view our map in R and export as a .png,
+.tif, etc.
+
+``` r
 OSM_enahnced_LULC_plot <- ggplot(data = OSM_enhanced_LULC_map) +
    geom_raster(aes(x = x, y = y, fill = first)) +
    theme( #change legend key size
@@ -965,13 +1272,165 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 ```
 
 <p float="center">
-  <img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto" />
+
+<img src="./figures/OSM_enahnced_LULC_map.png" alt="Plot of OSM enhanced map of greater Bariloche region" width="1000" height="auto"/>
 
 </p>
 
-
 # EXTRAS
-1. when finish map, show them how to add other extract other OSM features (e.g. golf courses) and how to update vlayer function
-2. show them how to edit and incoerpate differt data dictionaries (e.g. edit ESA dictionary) 
+
+1.  when finish map, show them how to add other extract other OSM
+    features (e.g. golf courses) and how to update vlayer function
+2.  show them how to edit and incoerpate differt data dictionaries (e.g.
+    edit ESA dictionary)
+
+#### Golf course extraction
+
+```R
+
+#Isolating golf courses
+packages.needed<- c("tmap","osmextract","tidyterra","dplyr", "terra", "sf", "readr", "readr", "ggplot2")
+install.packages(packages.needed)
+library(tmap)
+library(osmextract)
+library(tidyterra)
+library(dplyr)
+library(terra)
+library(sf)
+library(readr)
+library(devtools)
+library(ggplot2)
 
 
+## grab OSM data
+osm_kv <- read_csv(
+  "https://raw.githubusercontent.com/tgelmi-candusso/OSM_for_Ecology/main/urban_features/osm_key_values.csv"
+) 
+osm_kv <- osm_kv %>% 
+  filter(!is.na(key))
+keys <- unique(osm_kv$key)
+
+# Download and convert database for both polygon and linear features 
+# if you have not done so already, 
+# otherwise read in the already saved files. 
+
+if(
+  !file.exists("data/pol_feat_DC.rds")
+){
+  pol_feat_DC <- osmextract::oe_get(
+    "District of Columbia",
+    provider="geofabrik",
+    layer = "multipolygons", 
+    extra_tags=keys
+  )
+  saveRDS(
+    pol_feat_DC,
+    "data/pol_feat_DC.rds"
+  )
+} else {
+  pol_feat_DC <- readRDS(
+    "data/pol_feat_DC.rds"
+  )
+}
+
+if(
+  !file.exists("data/lin_feat_DC.rds")
+) {
+  lin_feat_DC <- osmextract::oe_get(
+    "District of Columbia",
+    layer = "lines", 
+    extra_tags=keys
+  )
+  saveRDS(
+    lin_feat_DC,
+    "data/lin_feat_DC.rds"
+  )
+} else {
+  lin_feat_DC <- readRDS(
+    "data/lin_feat_DC.rds"
+  )
+}
+
+head(pol_feat_DC)
+
+```
+
+```R
+
+#jumping straight to vector layer #OSMtoLULC_vlayers generating vector layers from features
+OSM_polygon_layer <- pol_feat_DC
+golf <- list()
+#separate golf course features into as many distinct classes you need
+golf[[1]] <- golf_courses_area <- OSM_polygon_layer %>% filter(leisure %in% c("golf_course"))
+golf[[2]] <- golf_course_grass <- OSM_polygon_layer %>% filter((!is.na(golf) & !(golf %in% c("rough","bunker"))))
+golf[[3]] <- golf_course_not_grass <- OSM_polygon_layer %>% filter((!is.na(golf) & (golf %in% c("rough","bunker"))))
+
+plot(golf_course_grass[,1])
+
+```
+
+```R
+
+#convert to rasters
+#create template
+golf_raster <- list()
+study_area_extent <- as.vector(ext(pol_feat))
+rtemplate <- rast(res=0.0001, ext = study_area_extent, crs= "EPSG:4326") #PR #we have 30 m.
+#finer resolution we tried was 0.00003
+
+for(i in 1:length(golf)){
+  temp1 <- golf[[i]]
+  if(nrow(temp1)>0){
+    temp1 <- st_make_valid(temp1) #PR
+    temp1 <- temp1 %>%  filter(!st_is_empty(.)) #PR
+    temp1 <- st_make_valid(temp1) # PR
+    temp1 <- terra::project(svc(temp1)[1], rtemplate)
+    temp1$priority <- 28+i
+    golf_raster[[i]] <- golf_courses_area_raster <- terra::rasterize(temp1, rtemplate, field="priority") 
+    print(paste0("layer ", i, "/28 ready"))
+  }
+  
+}
+
+plot(golf_raster[[1]])
+
+```
+
+```R
+#overlay raster layers (what would be landcover classes or whatever features have been classified)
+classL2 <- golf_raster
+classL2 <- Filter(Negate(is.null), classL2)
+classL2 <- rev(classL2) #Seattle loses class 16 when we revert but reverting works as expected to overlay classes
+r3 <- terra::app(rast(classL2), fun='first', na.rm=TRUE)
+
+plot(r3)
+golf_courses_all<- r3
+```
+
+```R
+#plot on live mode to check ll the golf courses are there
+tmap_mode("view")
+tm_shape(golf_courses_all)+
+  tm_raster(col.scale = tm_scale_categorical(labels=))
+
+```
+
+```R
+
+#to overlay to the LULC map
+#first make list with golf_courses_all and LULC
+full_map <- list()
+full_map[[1]] <- OSM_enhanced_LULC_map
+full_map[[2]] <- golf_courses_all
+
+classL2 <- full_map
+classL2 <- Filter(Negate(is.null), classL2)
+classL2 <- rev(classL2) #Seattle loses class 16 when we revert but reverting works as expected to overlay classes
+r3 <- terra::app(rast(classL2), fun='first', na.rm=TRUE)
+
+
+tmap_mode("view")
+tm_shape(r3)+
+  tm_raster(style="cat")
+
+```
