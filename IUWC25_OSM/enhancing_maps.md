@@ -575,7 +575,9 @@ However, any new columns that are added to the OSM data.frame, or
 
 </details>
 
-<a name="building"></a> \## 3. Building landcover classes \###
+<a name="building"></a> 
+
+## 3. Building landcover classes
 Categorizing OSM features Now we are ready to categorize OSM features
 using the `vlayers()` function. We will filter OSM features from
 Gelmi-Candusso et al., 2024 Table S4 and categorize them into classes.
@@ -950,8 +952,10 @@ tm_shape(as.factor(OSM_only_map)) +
   tm_raster(col.scale = tm_scale_categorical(values = terrain.colors(27)))
 ```
 
-<a name="integrating"></a> \## 4. Integrating maps As a reminder, the
-OSM database is primarily populated by community contributions, thus
+<a name="integrating"></a> 
+
+## 4. Integrating maps 
+As a reminder, the OSM database is primarily populated by community contributions, thus
 there are likely gaps of information. To enhance our map and to ensure
 we don’t have any gaps in the final output of the framework we will
 integrate the `OSM_only_map` onto a global or continental land cover map
@@ -1116,13 +1120,9 @@ and ESA can be found
 
 We have prepped an example dictionary for CDS and ESA. Use this as a
 model for your own reclassification dictionary. We will then read in the
-.csv and extract just the numeric values. \#### Example dat
+.csv and extract just the numeric values. 
 
-```{r}
-
-```
-
-a
+#### Example data
 
 ``` r
 # Read in reclassification dictionary for example data
@@ -1281,6 +1281,11 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 
 # EXTRAS
 
+<details closed>
+
+<Extras>See code to convert data here </a></summary>
+
+
 1.  when finish map, show them how to add other extract other OSM
     features (e.g. golf courses) and how to update vlayer function
 2.  show them how to edit and incoerpate differt data dictionaries (e.g.
@@ -1436,3 +1441,4 @@ tm_shape(r3)+
   tm_raster(style="cat")
 
 ```
+</details>
