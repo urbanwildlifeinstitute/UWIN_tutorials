@@ -88,7 +88,7 @@ Therefore, we outline the framework to integrate OSM data as described
 in [Gelmi-Candusso et al.,
 2024](https://github.com/tgelmi-candusso/OSM_for_Ecology.git).
 
-<a name="pullingandfiltering"></a> \
+<a name="pullingandfiltering"></a> 
 
 ## 2. Pulling and filtering data We
 will be working through an example study area in northern Patagonia,
