@@ -10,8 +10,8 @@ Projects make it straightforward to divide your work into multiple
 contexts, each with their own working directory, workspace, history, and
 source documents. A Project is essentially a directory which will
 contain all the files you need for a specific project. Go to RStudio and
-click on *File \> New Project \> Exisiting Directory* and locate your
-*UWIN_tutorials/IUWC25_OSM/* folder.
+click on *File \> New Project \> Exisiting Directory* and locate your folder in 
+*UWIN_tutorials/IUWC25_OSM/*.
 
 # UWIN Tutorial: Enhancing maps with OpenStreetMap Data
 
