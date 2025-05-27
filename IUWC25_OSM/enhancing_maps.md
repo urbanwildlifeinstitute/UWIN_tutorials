@@ -1283,8 +1283,9 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 
 <Details closed>
 
-<Extras>See code to convert data here </a></summary>
+<summary>Tutorial Extras</a></summary>
 
+## Extracting other land class, land cover features
 #### Golf course extraction
 
 ```R
