@@ -90,8 +90,8 @@ in [Gelmi-Candusso et al.,
 
 <a name="pullingandfiltering"></a> 
 
-## 2. Pulling and filtering data We
-will be working through an example study area in northern Patagonia,
+## 2. Pulling and filtering data
+We will be working through an example study area in northern Patagonia,
 Argentina. Collaborating UWIN partners here are based in the Centro
 Científico Tecnológico Consejo Nacional de Investigaciones Científicas y
 Técnicas (CONICET) in San Carlos de Bariloche in the province of Río
