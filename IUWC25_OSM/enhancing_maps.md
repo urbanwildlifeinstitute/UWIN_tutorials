@@ -1,8 +1,3 @@
----
-editor_options:
-  markdown:
-    wrap: 72
----
 
 **NOTE:** You may be used to starting by setting your directory using
 `setwd()`. However, we highly recommend using RStudio Projects. RStudio
