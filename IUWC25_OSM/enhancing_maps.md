@@ -1281,7 +1281,7 @@ ggsave("OSM_enahnced_LULC_map.png", dpi = 500, scale = 1.5, width = 10, height =
 
 # EXTRAS
 
-<details closed>
+<Extras closed>
 
 <Extras>See code to convert data here </a></summary>
 
