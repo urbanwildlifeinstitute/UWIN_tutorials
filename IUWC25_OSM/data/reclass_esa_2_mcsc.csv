@@ -1,0 +1,12 @@
+esa,esa_value,mcsc,mcsc_value
+Tree cover,10,dense_green_area,11
+Shrubland,20,hetero_green_area,9
+Grassland,30,hetero_green_area,9
+Cropland,40,resourceful_green_area,8
+Built-up,50,developed_na,28
+Bare/sparse vegetation,60,open_green_area,6
+Snow and Ice,70,NA,10
+Permanent water bodies,80,water,12
+Herbaceous wetland,90,hetero_green_area,9
+Mangroves,95,hetero_green_area,9
+Moss and lichen,100,open_green_area,6
