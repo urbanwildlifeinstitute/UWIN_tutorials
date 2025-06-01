@@ -161,11 +161,11 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
                 "streetcars", "pedestrian_trails", "railway", "linear_features_not_in_use","barriers"),
     "priority"=c(1:27),
     "geometry"=c(rep("poly",14), rep("line",13)),
-    "buffer"=c(rep(NA,12),6,NA,NA,24,3,12,6, 12,18,36,6,3,12,6,1) # buffer in meters
+    "buffer"=c(rep(NA,12),6,NA,24,3,3,12,6, 12,18,36,6,3,12,6,1) # buffer in meters
   )
   
   classL2 <- list()
-  
+  i = 14
   for(i in 1:27){
     if(as.character(st_geometry_type(classL1[[i]], by_geometry = FALSE)) %in% c("POLYGON","MULTIPOLYGON", "GEOMETRY")){
       temp1 <- classL1[[i]]
