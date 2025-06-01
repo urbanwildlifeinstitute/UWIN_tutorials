@@ -176,7 +176,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
         temp1$priority <- refTable$priority[i]
         #classL2[[i]] <- terra::rast(temp1, rtemplate, field="priority") 
-        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority") 
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority", touches = TRUE) 
         print(paste0("layer ", i, "/27 ready"))
       }
     }else{
@@ -189,7 +189,7 @@ OSMtoLULC_rlayers <- function(OSM_LULC_vlayers, study_area_extent){
         temp1 <- st_buffer(temp1, dist=refTable$buffer[i])
         temp1 <- terra::project(svc(temp1)[1], rtemplate)
         temp1$priority <- refTable$priority[i]
-        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority")
+        classL2[[i]] <- terra::rasterize(temp1, rtemplate, field="priority", touches = TRUE)
         print(paste0("layer ", i, "/27 ready"))
       }else{print(paste0("layer ", i, "/27 null"))}
     }
