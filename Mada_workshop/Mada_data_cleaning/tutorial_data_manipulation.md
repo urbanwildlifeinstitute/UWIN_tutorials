@@ -128,10 +128,10 @@ df %>% select(col1)
     -   `mutate()` adds new variables that are functions of existing variables
     -   `select()` picks variables based on their names
     -   `filter()` picks cases based on their values
-    -   `summarise()` reduces multiple values down to a single summary
-    -   `arrange()` changes the ordering of the rows
     -   `group_by()` groups variables for you to perform operations on the grouped data. Always remember to `ungroup()` once you are finished
-
+    -   `if_else()` vectors to use for TRUE and FALSE values of condition
+    -   `case_when()` a sequence of two-sided formulas. The left hand side determines which values match this case. The right hand side provides the replacement value
+    -   `_join()` joins add columns from y to x, matching observations based on the keys. There are muliple types of joins. 
 -   These can be linked together by pipes `|>` or `%>%`
 
 -   Cool [cheatsheet for dplyr](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf)
