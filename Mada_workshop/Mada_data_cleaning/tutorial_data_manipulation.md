@@ -248,7 +248,9 @@ A great library within dplyr is lubridate which has a useful [cheat sheet](https
 head(lemur_data$Date)
 ```
 
-It appears our Date is formatted month/day/year. Let's use the lubdridate package to change this column to a date in R
+It appears our `Date` data is formatted month/day/year. Let's use the lubdridate package to change this column to a date in R. 
+
+TO do this, we use the `mutate()` function to modify our Date. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell R that `Date` is the column we want it to write our corrected values into. 
 
 ```R
 lemur_prep <- lemur_data %>% 
@@ -332,7 +334,26 @@ lemur_species <- lemur_time %>%
 # check unique species names
 unique(lemur_species$Species)
 ```  
-If we need to apply multiple 'if_else' statement across a single column, we can use another function called 'case_when`. Lets look at an example with our `GroupSize` column.
+If we need to apply multiple 'if_else' statement across a single column, we can use another function called 'case_when`. Using `mutate()` again, we can apply `case_when()` like we did with `if_else`. This function allows us to target specific columns and instances of data entry we want to change. We can use different opertors to tell R how we want to change our columns. 
+
+| Operator     | Description                       |
+|--------------|-----------------------------------|
+| `>`          | greater than                      |
+| `>=`         | greater than or equal to          |
+| `<`          | less than                         |
+| `<=`         | less than or equal to             |
+| `==`         | exactly equal to                  |
+| `!=`         | not equal to                      |
+| `a | b`      | logical OR (either `a` or `b`)    |
+| `xor(a, b)`  | exclusive OR (only `a` or only `b`) |
+| `a & b`      | logical AND (both `a` and `b`)    |
+| `is.na()`    | detects missing (`NA`) values     |
+| `!is.na()`   | filters out missing values        |
+| `%in%`       | checks if a value is in a set     |
+
+In our case, we want to change the GroupSize column to be specific numbers. 
+
+Lets look at an example with our `GroupSize` column.
 
 ```R
 unique(lemur_species$GroupSize)
@@ -351,7 +372,9 @@ lemur_group <- lemur_species %>%
   ))
 ```
 
-If there are any values we did not specify here, and is not a valid number, the data will get 'coerced' or changed to to NA automatically. Let's see how our data has changed.
+If there are any values we did not specify here, and is not a valid number, the data will get 'coerced' or changed to to NA automatically. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
+
+Let's see how our data has changed.
 
 ```R
 unique(lemur_species$GroupSize)
@@ -429,70 +452,116 @@ hist(lemur_dist$Longitude)
 
 hist(lemur_dist$AccuracyM)
 ```
-
-
-
-
-
+We can see under glimpse that 'ElevationM' is a character string, not numeric. Likley, there is an error here.
 
 ```R
-# see unique sexes found by R
-unique(KameleonData$Sex)
+unique(lemur_dist$ElevationM)
 ```
-In this example, we had five different kinds of sexes recorded, *female*, *male*, *unknown*, *Male*, and *Female*. However, we only want to analyze three types, *female*, *male*, and *unknown*. We can use the function `tolower()` which will turn all uppercase letters into lowercase letters.
+There is only one value here that is not a number, we can turn this to NA and adjust to a correct value if we were able to confirm the value with our paper record later.
 
 ```R
-# lowercase all letters
-KameleonData <- KameleonData %>% 
-  mutate(Sex = tolower(Sex))
-```
-In this code, we use the `mutate()` function to modify our Sex column using `tolower()`. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell R that Sex is the column we want it to write our corrected values into. 
+lemur_elev <- lemur_dist %>% 
+  mutate(ElevationM = as.numeric(ElevationM))
 
-`Mutate()` is a very useful function. It can also help us apply functions not just on one column, like we just did, but multiple. Let's use mutate to apply a function called `trimws()` across all of our columns containing characters (as we glimpsed in our data earlier). We can use `trimws()` to get rid of any trailing spaces before or after our data, for example ' male'. 
+hist(lemur_elev$ElevationM)
+```
+
+Let's check our our remaining character columns `Habitat` and `Scientist` column now. These column is correct in that it is categorical data saved as character strings. Let's see if there are any duplicate names or other errors. 
+
+<details closed><summary> HeightM Solution</a></summary>
 
 ```R
-# get rid of spaces before and after character data
-KameleonData <- KameleonData %>% 
-  mutate(across(SpecimenCode:Site, ~ trimws(.))) 
-```
-Here, our code is saying, mutate columns that fall between SpecimenCode and Site AND apply the function `trimws()` across all of them. 
+# view values
+unique(lemur_elev$Habitat)
 
-When glimpsing our data, we also noticed that the Alive column was a bit confusing. Some data entries have an X, others xx, and others are empty! We want to make sure to be consistent with our data entry but when we find mistakes, we can use R to help us find and correct them. Let's look at all the different entry types for this column. 
+# We want to change empty values to NA and also correct spelling differences so they get reconized as being the same
+# we can use case_when() again for this
+lemur_habitat <- lemur_elev %>% 
+  mutate(
+    Habitat = case_when(
+      Habitat == "" ~ NA,
+      Habitat == "slope" ~ "Slope",
+      TRUE ~ as.character(Habitat)
+    ))
+
+# check our values
+unique(lemur_habitat$Habitat)
+
+# Again for Scientist
+unique(lemur_habitat$Scientist)
+
+# since we are only changing one value, we can use the if_else() function
+lemur_sci <- lemur_habitat %>% 
+  mutate(Scientist = if_else(Scientist == "", NA, Scientist))
+
+unique(lemur_sci$Scientist)
+```
+             
+</details>
+
+Almost done! We now want to examine a more complicated column, `ActivityBehvaior`. This column contains information of lemur behavior we observed while following troops in the field. Some of these data contain one activity or bahavior, such as `feeding`. While others are multiple acitivities or behaviors, such as `moving, and grunting`. As a group, lets look at all the recorded behaviors and activities an decide how they will be grouped or recategorized. It's important to be consistent. If we want to track two behaviors with a common "," or "and" or "then", all of those options are OK, but only choose one method and use this for each value. That way, if we want to breakup the behaviors or activities later on, we can separate them by one symbol or word. 
+
+We will map this out together, then do you best to build a case_when() function to change the values to our final activities/behaviors. 
+
+<details closed><summary>One example:</a></summary>
 
 ```R
-unique(KameleonData$Alive)
+lemur_act <- lemur_sci %>% 
+  mutate(
+    ActivityBehavior = case_when(
+      ActivityBehavior == "Stop; Feeding"| ActivityBehavior == "Stop then Feeding"  ~ "Stop, Feeding",
+      ActivityBehavior == "Jumping " | ActivityBehavior == "Jump" | 
+      ActivityBehavior == "Jupming" ~ "Jumping",
+      ActivityBehavior == "Stop  " | ActivityBehavior == "stop" |
+      ActivityBehavior == "Stot (stop?)" | ActivityBehavior == "Stop " ~ "Stop",
+      ActivityBehavior == "Sleep" ~ "Sleeping",
+      ActivityBehavior == "" ~ NA,
+      ActivityBehavior == "Moving / Grunting" ~ "Movement, Grunting",
+      ActivityBehavior == "Stop and Jumping " ~ "Stop, Jumping" ,
+      ActivityBehavior == "Stop and stand" ~ "Stop, Stand",
+      ActivityBehavior == "Stop and Jumping " ~ "Stop, Jumping" ,
+      ActivityBehavior == "Stop then moved" ~ "Stop, Movement",
+      TRUE ~ as.character(ActivityBehavior)
+    ))
+
+unique(lemur_act$ActivityBehavior)
 ```
-Using `mutate()` again, we can apply a new function called `case_when()`. This function allows us to target specific columns and instances of data entry we want to change. We can use different opertors to tell R how we want to change our columns. 
+             
+</details>
 
-| Operator     | Description                       |
-|--------------|-----------------------------------|
-| `>`          | greater than                      |
-| `>=`         | greater than or equal to          |
-| `<`          | less than                         |
-| `<=`         | less than or equal to             |
-| `==`         | exactly equal to                  |
-| `!=`         | not equal to                      |
-| `a | b`      | logical OR (either `a` or `b`)    |
-| `xor(a, b)`  | exclusive OR (only `a` or only `b`) |
-| `a & b`      | logical AND (both `a` and `b`)    |
-| `is.na()`    | detects missing (`NA`) values     |
-| `!is.na()`   | filters out missing values        |
-| `%in%`       | checks if a value is in a set     |
+OK, last one! We are onto the final column, `Cue`. Now that we are case_when() experts, we can do this easily!
 
-In our case, we want to change the Alive column to be yes, no, or NA. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
-
-For our data, we talk to our field team and determine that empty columns under 'Alive' mean that the field recorder observed the animal to be dead. So in this case, we want to change NA's to 'no'. Note that R will always read in empty data cells as NA so it is important to complete the cells with numbers, characters, or NA's as appropriate. 
+<details closed><summary>One example:</a></summary>
 
 ```R
-# Note '==' is for single values and '%in%' is for multiple values
-KameleonData <- KameleonData %>% 
-  mutate(Alive = case_when(
-    Alive %in% c("x", "xx", "X") ~ "yes",
-    is.na(Alive) ~ "no", # Note R will usually populate empty cells with NA's
-    TRUE ~ Alive))
+unique(lemur_act$Cue)
 
-unique(KameleonData$Alive)
+lemur_cue <- lemur_act %>% 
+  mutate(
+    Cue = case_when(
+      Cue == "see" | Cue == "Seen" ~ "See",
+      Cue == "Heard" ~ "Hear",
+      Cue == "" ~ NA,
+      TRUE ~ as.character(Cue)
+    ))
+
+unique(lemur_cue$Cue)
 ```
+</details>
+
+### Lessons Learned
+We did it! Now our data is tidy and analysis ready. What have we learned from this data cleaning? How might be change our data collection tools or recording techniques to make this process easier next time?
+
+<details closed><summary>Possible Solutions:</a></summary>
+
+
+1. Limiting what values are available on a data sheet
+a. for example allow people to circle responses on paper records OR
+b. drop down menu on digitial recording 
+2. Training or group meetings deciding on data standarization such as date/time format
+4. Be mindful of zero versus NA data
+
+</details>
 
 
 ## END
