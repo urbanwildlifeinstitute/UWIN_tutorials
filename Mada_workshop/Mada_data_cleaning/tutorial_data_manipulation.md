@@ -232,7 +232,7 @@ lemur_data$ID <- (c(1:nrow(lemur_data)))
 ```
 
 There are a few common errors we want to lookout for when tidying or cleaning data for analyses. These include:
-1. Data/Time erros - Date and time data can be very tricky to manage, especially if there are mistakes in data entries or inconsistencies in the format each scientists uses, for example formatting day/month/year versus month/day/year. We need to make sure our dates and times are in the same format to ensure R reads them in correctly and we can format them as a date and time programmatically. This makes data analyses and visualization much easier later on!
+1. Data/Time errors - Date and time data can be very tricky to manage, especially if there are mistakes in data entries or inconsistencies in the format each scientists uses, for example formatting day/month/year versus month/day/year. We need to make sure our dates and times are in the same format to ensure R reads them in correctly and we can format them as a date and time programmatically. This makes data analyses and visualization much easier later on!
 2. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
 3. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
 4. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female', we need to correct this in our data to conduct our analyses correctly.
@@ -286,6 +286,16 @@ correct_dates <- lemur_data %>%
   filter(Site == "2AJB" | Site == "FRK" | Site == "FLJ" | Site == "VIN") %>% 
   mutate(Date = dmy(Date))
 ```
+
+We want to join our correct dates back to our original dataset, we can do this again with another join, a left join. Lets first just select the columns we need from correct_dates: Date and ID. It can be helpful to change the object name to know where we are at in our cleaning process; that way we can go back to past dataframes and see the last place we successfully made changes.
+
+```R
+lemur_date <- lemur_prep %>%
+  left_join(correct_dates %>% select(ID, CorrectedDate = Date), by = "ID") %>% # This selects only the ID and Date column and renames it to a new column 'CorrectedDate'
+  mutate(Date = if_else(!is.na(CorrectedDate), CorrectedDate, Date)) %>% # We use an if_else() statement, where if there is a 'CorrectedDate' data, we replace the old dtaa information in the 'Date' column
+  select(-CorrectedDate) # Now that we merged the columns, we can get rid of our 'CorrectedDate' column
+```
+
 
 
 ```R
