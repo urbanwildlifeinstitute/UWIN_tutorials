@@ -365,7 +365,53 @@ unique(lemur_group$HeightM)
 
 Lets start by naming a new object related to height, now that we are done fixing errors in `GroupSize`. Then we can edit values that are not valid numbers. Remember, anything that is not a number and you don't edit here, will turn to NA. Try this first on your own!
 
-# hide this section
+<details closed><summary> HeightM Solution</a></summary>
+
+```R
+lemur_height <- lemur_group %>% 
+  mutate(
+    HeightM = case_when(
+      HeightM == "15?" ~ 15,
+      HeightM == "5 to 8" ~ 5,
+      TRUE ~ as.numeric(HeightM)
+    ))
+
+unique(lemur_height$HeightM)
+unique(lemur_group$HeightM)
+```
+             
+</details>
+
+Now that you're getting more pratice with case_when(), you can tidy the `DistanceM` on your own too! Some values here have minimums and maximums. Let's use these numbers as our final measurement. For example, >500 == 500, >200 == 200.
+
+<details closed><summary>Distance Solution</a></summary>
+
+```R
+# view unique values
+unique(lemur_height$DistanceM)
+
+# make changes
+lemur_dist <- lemur_height %>% 
+  mutate(
+    DistanceM = case_when(
+      DistanceM == ">100" ~ 100,
+      DistanceM == ">500" ~ 500,
+      DistanceM == "<500" ~ 500,
+      DistanceM == ">200" ~ 200,
+      DistanceM == "~20" ~ 20,
+      TRUE ~ as.numeric(HeightM)
+    ))
+
+# check changes
+unique(lemur_height$DistanceM)
+unique(lemur_dist$DistanceM)
+```
+             
+</details>
+
+
+
+
 
 
 
