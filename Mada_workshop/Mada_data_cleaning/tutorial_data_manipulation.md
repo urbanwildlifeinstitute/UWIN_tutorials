@@ -269,7 +269,7 @@ bad_dates <- semi_join(lemur_data, examine, by = "ID",  copy = FALSE)
 ```
 Now we can see why these dates did not format correctly! We can see that some are formatted day/month/year and others, month/day/year. We also see that some data use slashes '/', and others are formatted with dots, '.'. Now that we identified the key problems, we can begin to correct dates to follow a single format. We will want to start by grabbing date data for every site we found in 'bad_dates'. It's important for us to verify the entire site data because it is possible for example, that when we formatted the data earlier, some days got converted to months and months to days. For example, 12/11/10 could mean December 11, 2010 OR November 12, 2010!
 
-We can also return to our paper or original records to confirm our suspicions. Lets pretend we verified our data with our paper or field records and now we know the correct formatting for these sites should be formatted day/month/year. To fix this, we will go back to our original dataset 'lemur_data' and correct these sites before converting all of our date data.
+We can also return to our paper or original records to confirm our suspicions. Lets pretend we verified our data with our paper or field records and now we know the correct formatting for these sites should be formatted day/month/year. We also know that our data was only collected in the years 2010 - 2012. To fix this, we will go back to our original dataset 'lemur_data' and correct these sites before converting all of our date data.
 
 We can grab one site and fix it, or we can grab multiple. Note that 2AJB and FRK use different syntax: 2AJB uses '/' and FRK uses '.', but R can still reformat these correctly.
 
@@ -294,7 +294,60 @@ lemur_date <- lemur_prep %>%
   left_join(correct_dates %>% select(ID, CorrectedDate = Date), by = "ID") %>% # This selects only the ID and Date column and renames it to a new column 'CorrectedDate'
   mutate(Date = if_else(!is.na(CorrectedDate), CorrectedDate, Date)) %>% # We use an if_else() statement, where if there is a 'CorrectedDate' data, we replace the old dtaa information in the 'Date' column
   select(-CorrectedDate) # Now that we merged the columns, we can get rid of our 'CorrectedDate' column
+
+# view range of dates again
+hist(lemur_date$Date, breaks = "months")
+
 ```
+This is making a lot more sense! We can follow the same process for our time data too. 
+
+```R
+# format time data
+lemur_time <- lemur_date %>% 
+  mutate(Time = hm(Time))
+```
+With these correctly formatted, it's easy to look at one component of the date or time. For example:
+
+```R
+day(lemur_time$Date)
+hour(lemur_time$Time)
+```
+
+Next, let's look at our other data columns and see if any common errors appear here, such as spelling or empty cells. Let's start with species names.
+
+```R
+unique(lemur_time$Species)
+```
+We have one species *Microcebus rufus* that is listed here twice, one with just the species names the other with a astrix*. This will cause issues in our data analyses as it will be considered two distinct species. Therefore we should match the names and create a new column which indicates if they have an astrix or not.
+
+We can do this by using an if_else() statement, where if there is a "Microcebus rufus*", we put a 1 in the new column 'Astrix' and if not, a 0.
+
+```R
+lemur_species <- lemur_time %>% 
+  mutate(Astrix = if_else(Species == "Microcebus rufus*", 1, 0))
+
+# check unique species names
+unique(lemur_species$Species)
+```  
+If we need to apply multiple 'if_else' statement across a single column, we can use another function called 'case_when`. Lets look at an example with our `GroupSize` column.
+
+```R
+unique(lemur_species$GroupSize)
+
+lemur_group <- lemur_species %>% 
+  mutate(
+    GroupSize = case_when(
+      GroupSize == "4 to 5" ~ 4,
+      GroupSize == "3 to 5" ~ 3,
+      GroupSize == "3 to 4" ~ 3,
+      GroupSize == "4?" ~ 4,
+      GroupSize == "2?" ~ 2,
+      GroupSize == "2 to 4" ~ 2,
+      GroupSize == "6 to 7" ~ 6,
+      TRUE ~ as.numeric(GroupSize)
+  ))
+```
+
 
 
 
