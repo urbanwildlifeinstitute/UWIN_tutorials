@@ -6,8 +6,8 @@
 
 -   After today's lecture, you'll be able to:
 
-    -   Understand the structure of tidy data
-    -   Understand the main tidy verbs in dplyr to help tidy data
+    -   Understand the structure of analysis ready data
+    -   Understand the main tidyr and dplyr verbs to help clean data
     -   Organize and clean commonly seen ecological data 
 
 ## Packages
@@ -15,14 +15,22 @@
 These are the packages that we are going to be working with for this tutorial.
 
 ```{r}
+# install relevant packages
 install.packages("tidyr")
 install.packages("dplyr")
 install.packages("readxl")
+install.packages("lubridate")
+install.packages("stringr")
+install.packages("ggplot2")
 install.packages("janitor")
 
-library(dplyr) # grammar of data manipulation using set of verbs; tidyverse 
-library(tidyr) # tidy data; tidyverse
+# read in libraries of packages to R session
+library(tidyr)
+library(dplyr)
 library(readxl)
+library(lubridate)
+library(stringr)
+library(ggplot2)
 library(janitor)
 ```
 
@@ -45,7 +53,7 @@ Now you see three options:
 -   **Existing directory**: use this option if you already created a folder which will contain all the subdirectories and files for this particular project. Choose that folder here.
 -   **Version Control**: choose this option if you are going to work with a repository already stored in GitHub.
 
-For our own project, let's go ahead and choose 'New Directory' and let's name our project, for example: '2025_data_cleaning'
+For our own project, let's go ahead and choose 'Existing Directory' and navigate to "GitHub/UWIN_tutorials/Mada_workshop/Mada_data_cleaning" and create a new project with an appropriate name, for example: '2025_data_cleaning'
 
 ### Other files inside the main directory
 
@@ -151,20 +159,31 @@ df %>% select(col1)
 -   Cool [cheatsheet for tidyr](https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf)
 
 ## Data organization for analyses!
+First things first, let's see the data that we are going to be working with. Let's navigate to our `data` folder and find the raw file called 'All Lemurs.xlsx'. This is an excel file with numerous excel sheets. The data we want to work with today is on a sheet, or tab, called 'All Observations'. Often when we collect and save data, we like to save it in one place, like an excel file with multiple sheets. However, running analyses on multiple tabs can get confusing and is not possible to work with these data in R. To clean and analyze our 'All Observations' data we can save and export this data into a separate file. 
 
-First things first, let's see the data that we are going to be working with. To do so, let's use a super handy package called `readr` which is part of the `tidyverse`, specifically a function called `read_csv()`. The data we want is a `.csv` document and is conveniently stored in a folder called `data`.
-
-```{r}
-KameleonData <- read_csv("KameleonData.csv")
-
-# With glimpse we can see the name of each column, type, and the first rows 
-dplyr::glimpse(KameleonData)
-```
 ### What is CSV and why do we use it?
-CSV, or Comma-Separate Values, are a simple and adaptable data format used widley in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file as a .csv. Depending on how your data is formated, R may read your data in a less legible way and may require some extra cleaning to *tidy* the data. More on this at the end of the tutorial!
+CSV, or Comma-Separate Values, are a simple and adaptable data format used widley in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file as a .csv. To do this navigate to File > Save As > Folder > Save as type "CSV (Common delimited)". 
 
-### Note!
-R does not like spaces in file or column names and will likley cause strange formatting later. Some of our column names start with a capital letter and others are separated by a space. Lets upate these names to a more R-friendly format. 
+Depending on how your data is formated, R may read your data in a less legible way and may require some extra cleaning to *tidy* the data. Let's follow these steps to save our 'All Observations' data as a .csv file. Note it is best to use files without spaces, like lemur_data.csv, lemur.csv, lemur.data.csv, or LemurData.csv. Now, we are ready to read in our .csv data with a function called `read.csv()`. 
+
+```R
+# read in .csv data
+lemur_data <- read.csv("./data/lemurs.csv", col.names = TRUE)
+```
+We get a warning that there are "more columns than column names" and "header and 'col.names' are of different lengths". This means that some columns are missing names or there may be columns with empty data cells like spaces that got entered into the file. 
+
+We can overcome this error by adding our own unique column names. It can be good practice to update file names which are long, have spaces, or numbers at the begining, all formats which will cause an error or problems coding in R. We also see that some of our column names start with a capital letter and others are separated by a space. Lets upate these names to a more R-friendly format. We can programmtically by changing columns names with col.names = c("col1", "col1"), for example. We can also open our .csv file and update our column names manually. Lets try this programmatically.
+
+```R
+lemur_data <- read.csv("./data/lemurs.csv", header = TRUE,
+                       col.names = c("Site", "Date",	"Time",	"Species",
+                                     "Group_size",	"Height_m",	"Distance_m",
+                                     "Compass_degree", "UTM_x",	"UTM_y",
+                                     "Lat",	"Long",	"Accuracy_m",
+                                     "Elevation_m",	"Trail_marker",	"Transect",
+                                     "Habitat", "Scientist",	"Activity_behavior",
+                                     "Cue"))
+```
 
 Frist let's review some common naming conventions:
 
