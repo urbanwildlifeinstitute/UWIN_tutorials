@@ -206,31 +206,87 @@ You can leave the column names as is, but we want to show you a super handy func
 # "upper_camel"
 # "title" 
 # detect abbreviations with abbreviations = c()
-KameleonData <- janitor::clean_names(dat = KameleonData, 
+lemur_data <- janitor::clean_names(dat = lemur_data, 
                                      case = 'upper_camel')
-
-# view data
-glimpse(occ.KameleonData)
+# view new data
+colnames(lemur_data)
 ```
-
 If you wanted to edit a specific column name, we can also use the function `rename()`.
 
 ```R
-KameleonData <- KameleonData %>% 
-  rename("Date" = "CollectionDate")
+lemur_data <- lemur_data %>% 
+  rename("Latitude" = "Lat")
+```
+Let's visually examine our data and see if there are any changes we need to make with data our formatting. The function `glimpse` helps us looks at the head of each data column and tells us how R interpretted what each data column class is, for example chr = character, int = integer, dbl = double-precision floating-point number (number with decimals). More information on data classes [here](https://users.phhp.ufl.edu/rlp176/Courses/PHC6089/R_notes/DataClasses.html).
 
-# distinct keeps only unique rows from a data frame 
-# .keep_all = TRUE let's us keep all the columns in the data frame 
-# .keep_all = FALSE to only keep the column we specified in distinct and deletes the rest. 
-KameleonData %>% dplyr::distinct(SpeciesName)
+```R
+glimpse(lemur_data)
+```
+After examining our data, we see there are data types we want to change. For example, there are some characters columns we want to be numbers and other important updates like changing our date to be dates and our times to be times. 
+ 
+Before we start to clean our data, let's add a unique identifyer to observations, we can do that here by adding a count to each row, noting that the numbers are arbitrary and only helpful to reference a certain data point. This will help us to stay organized while we make updates to our data. 
+
+```R
+# Add observation ID
+lemur_data$ID <- (c(1:nrow(lemur_data)))
 ```
 
-We will cover a few common mistakes we find in data entry that have the potential to influence and cause errors in our data analyses. These include:
-1. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
-2. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
-3. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female', we need to correct this in our data to conduct our analyses.
+There are a few common errors we want to lookout for when tidying or cleaning data for analyses. These include:
+1. Data/Time erros - Date and time data can be very tricky to manage, especially if there are mistakes in data entries or inconsistencies in the format each scientists uses, for example formatting day/month/year versus month/day/year. We need to make sure our dates and times are in the same format to ensure R reads them in correctly and we can format them as a date and time programmatically. This makes data analyses and visualization much easier later on!
+2. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
+3. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
+4. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female', we need to correct this in our data to conduct our analyses correctly.
 
-Let's check out some useful tools in R to correct for these mistakes.
+Let's check out some useful tools in R to account for these errors. 
+
+#### Date and Time
+A great library within dplyr is lubridate which has a useful [cheat sheet](https://rawgit.com/rstudio/cheatsheets/main/lubridate.pdf). Let's look at the head of our data to determine what format we want to put our dates into.
+
+```R
+head(lemur_data$Date)
+```
+
+It appears our Date is formatted month/day/year. Let's use the lubdridate package to change this column to a date in R
+
+```R
+lemur_prep <- lemur_data %>% 
+  mutate(Date = mdy(Date))
+```
+We have a message that 108 rows which were not converted to a date and are now NA, this is likely because there are dates with different formatting within our column. It can usually help to plot our data and see if the dates make sense.
+
+```R
+hist(lemur_prep$Date, breaks = "months")
+```
+We can also look at which dates got converted to NA. This is where our ID number for each observation can be helpful! We can use a filter() function to do this.
+
+```R
+# select data that are NA
+examine <- lemur_prep %>% 
+  filter(is.na(Date))
+
+# create a new data.frame that grabs the original data based on the ID's of our 'bad date' data we just filtered
+bad_dates <- semi_join(lemur_data, examine, by = "ID",  copy = FALSE)
+```
+Now we can see why these dates did not format correctly! We can see that some are formatted day/month/year and others, month/day/year. We also see that some data use slashes '/', and others are formatted with dots, '.'. Now that we identified the key problems, we can begin to correct dates to follow a single format. We will want to start by grabbing date data for every site we found in 'bad_dates'. It's important for us to verify the entire site data because it is possible for example, that when we formatted the data earlier, some days got converted to months and months to days. For example, 12/11/10 could mean December 11, 2010 OR November 12, 2010!
+
+We can also return to our paper or original records to confirm our suspicions. Lets pretend we verified our data with our paper or field records and now we know the correct formatting for these sites should be formatted day/month/year. To fix this, we will go back to our original dataset 'lemur_data' and correct these sites before converting all of our date data.
+
+We can grab one site and fix it, or we can grab multiple. Note that 2AJB and FRK use different syntax: 2AJB uses '/' and FRK uses '.', but R can still reformat these correctly.
+
+```R
+# First try one site
+correct_dates <- lemur_data %>% 
+  filter(Site == "2AJB") %>% 
+  mutate(Date = dmy(Date))
+
+# Now we can add other sites that have errors, we can look at our 'bad_dates dataframe' to confirm which sites.
+unique(bad_dates$Site)
+
+correct_dates <- lemur_data %>% 
+  filter(Site == "2AJB" | Site == "FRK" | Site == "FLJ" | Site == "VIN") %>% 
+  mutate(Date = dmy(Date))
+```
+
 
 ```R
 # see unique sexes found by R
