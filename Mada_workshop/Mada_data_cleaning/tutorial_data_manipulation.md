@@ -139,7 +139,7 @@ df %>% select(col1)
     -   `group_by()` groups variables for you to perform operations on the grouped data. Always remember to `ungroup()` once you are finished
     -   `if_else()` vectors to use for TRUE and FALSE values of condition
     -   `case_when()` a sequence of two-sided formulas. The left hand side determines which values match this case. The right hand side provides the replacement value
-    -   `_join()` joins add columns from y to x, matching observations based on the keys. There are muliple types of joins. 
+    -   `_join()` joins add columns from y to x, matching observations based on the keys. There are multiple types of joins. 
 -   These can be linked together by pipes `|>` or `%>%`
 
 -   Cool [cheatsheet for dplyr](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf)
@@ -162,9 +162,9 @@ df %>% select(col1)
 First things first, let's see the data that we are going to be working with. Let's navigate to our `data` folder and find the raw file called 'All Lemurs.xlsx'. This is an excel file with numerous excel sheets. The data we want to work with today is on a sheet, or tab, called 'All Observations'. Often when we collect and save data, we like to save it in one place, like an excel file with multiple sheets. However, running analyses on multiple tabs can get confusing and is not possible to work with these data in R. To clean and analyze our 'All Observations' data we can save and export this data into a separate file. 
 
 ### What is CSV and why do we use it?
-CSV, or Comma-Separate Values, are a simple and adaptable data format used widley in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file as a .csv. To do this navigate to File > Save As > Folder > Save as type "CSV (Common delimited)". 
+CSV, or Comma-Separate Values, are a simple and adaptable data format used widely in the coding community. Is allows data to be stored in a tabular format and is compatible with many data tools while still being easy to read by humans. Therefore, when possible, it is best to save and read data into R as a .csv file. This can be done by simply saving an excel file, or .xlsx file as a .csv. To do this navigate to File > Save As > Folder > Save as type "CSV (Common delimited)". 
 
-Depending on how your data is formated, R may read your data in a less legible way and may require some extra cleaning to *tidy* the data. Let's follow these steps to save our 'All Observations' data as a .csv file. Note it is best to use files without spaces, like lemur_data.csv, lemur.csv, lemur.data.csv, or LemurData.csv. Now, we are ready to read in our .csv data with a function called `read.csv()`. 
+Depending on how your data is formatted, R may read your data in a less legible way and may require some extra cleaning to *tidy* the data. Let's follow these steps to save our 'All Observations' data as a .csv file. Note it is best to use files without spaces, like lemur_data.csv, lemur.csv, lemur.data.csv, or LemurData.csv. Now, we are ready to read in our .csv data with a function called `read.csv()`. 
 
 ```R
 # read in .csv data
@@ -172,7 +172,7 @@ lemur_data <- read.csv("./data/lemurs.csv", col.names = TRUE)
 ```
 We get a warning that there are "more columns than column names" and "header and 'col.names' are of different lengths". This means that some columns are missing names or there may be columns with empty data cells like spaces that got entered into the file. 
 
-We can overcome this error by adding our own unique column names. It can be good practice to update file names which are long, have spaces, or numbers at the begining, all formats which will cause an error or problems coding in R. We also see that some of our column names start with a capital letter and others are separated by a space. Lets upate these names to a more R-friendly format. We can programmtically by changing columns names with col.names = c("col1", "col1"), for example. We can also open our .csv file and update our column names manually. Lets try this programmatically.
+We can overcome this error by adding our own unique column names. It can be good practice to update file names which are long, have spaces, or numbers at the beginning, all formats which will cause an error or problems coding in R. We also see that some of our column names start with a capital letter and others are separated by a space. Let's update these names to a more R-friendly format. We can programmtically by changing columns names with col.names = c("col1", "col1"), for example. We can also open our .csv file and update our column names manually. Lets try this programmatically.
 
 ```R
 lemur_data <- read.csv("./data/lemurs.csv", header = TRUE,
@@ -226,7 +226,7 @@ glimpse(lemur_data)
 ```
 After examining our data, we see there are data types we want to change. For example, there are some characters columns we want to be numbers and other important updates like changing our date to be dates and our times to be times. 
  
-Before we start to clean our data, let's add a unique identifyer to observations, we can do that here by adding a count to each row, noting that the numbers are arbitrary and only helpful to reference a certain data point. This will help us to stay organized while we make updates to our data. 
+Before we start to clean our data, let's add a unique identifier to observations, we can do that here by adding a count to each row, noting that the numbers are arbitrary and only helpful to reference a certain data point. This will help us to stay organized while we make updates to our data. 
 
 ```R
 # Add observation ID
@@ -235,8 +235,8 @@ lemur_data$ID <- (c(1:nrow(lemur_data)))
 ### Common Errors
 There are a few common errors we want to lookout for when tidying or cleaning data for analyses. These include:
 1. Data/Time errors - Date and time data can be very tricky to manage, especially if there are mistakes in data entries or inconsistencies in the format each scientists uses, for example formatting day/month/year versus month/day/year. We need to make sure our dates and times are in the same format to ensure R reads them in correctly and we can format them as a date and time programmatically. This makes data analyses and visualization much easier later on!
-2. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
-3. Adding spaces before or after data - Similar to capitizliations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
+2. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats capitals and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
+3. Adding spaces before or after data - Similar to capitalizations and spelling mistakes, R recognizes spaces like a unique character. Therefore 'Male' and ' Male' will appear to be two different names.
 4. Spelling errors (for example: Female and femal) - Again, though we might recognize this spelling mistake, and know the data recorder meant to mark the animal as 'female', we need to correct this in our data to conduct our analyses correctly.
 
 Let's check out some useful tools in R to account for these errors. 
@@ -250,7 +250,7 @@ head(lemur_data$Date)
 
 It appears our `Date` data is formatted month/day/year. Let's use the lubdridate package to change this column to a date in R. 
 
-TO do this, we use the `mutate()` function to modify our Date. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell R that `Date` is the column we want it to write our corrected values into. 
+To do this, we use the `mutate()` function to modify our Date. However, we have to tell R if we want this mutatation, or modification, to create a new column or to write over an existing column. Since we want to correct our exisiting column, we can tell R that `Date` is the column we want it to write our newly formatted values into. 
 
 ```R
 lemur_prep <- lemur_data %>% 
@@ -273,7 +273,7 @@ bad_dates <- semi_join(lemur_data, examine, by = "ID",  copy = FALSE)
 ```
 Now we can see why these dates did not format correctly! We can see that some are formatted day/month/year and others, month/day/year. We also see that some data use slashes '/', and others are formatted with dots, '.'. Now that we identified the key problems, we can begin to correct dates to follow a single format. We will want to start by grabbing date data for every site we found in 'bad_dates'. It's important for us to verify the entire site data because it is possible for example, that when we formatted the data earlier, some days got converted to months and months to days. For example, 12/11/10 could mean December 11, 2010 OR November 12, 2010!
 
-We can also return to our paper or original records to confirm our suspicions. Lets pretend we verified our data with our paper or field records and now we know the correct formatting for these sites should be formatted day/month/year. We also know that our data was only collected in the years 2010 - 2012. To fix this, we will go back to our original dataset 'lemur_data' and correct these sites before converting all of our date data.
+We can also return to our paper or original records to confirm our suspicions. Let's pretend we verified our data with our paper or field records and now we know the correct formatting for these sites should be formatted day/month/year. We also know that our data was only collected in the years 2010 - 2012. To fix this, we will go back to our original dataset 'lemur_data' and correct these sites before converting all of our date data.
 
 We can grab one site and fix it, or we can grab multiple. Note that 2AJB and FRK use different syntax: 2AJB uses '/' and FRK uses '.', but R can still reformat these correctly.
 
@@ -291,7 +291,7 @@ correct_dates <- lemur_data %>%
   mutate(Date = dmy(Date))
 ```
 
-We want to join our correct dates back to our original dataset, we can do this again with another join, a left join. Lets first just select the columns we need from correct_dates: Date and ID. It can be helpful to change the object name to know where we are at in our cleaning process; that way we can go back to past dataframes and see the last place we successfully made changes.
+We want to join our correct dates back to our original dataset, we can do this again with another join, a left join. Let's first just select the columns we need from correct_dates: Date and ID. It can be helpful to change the object name to know where we are at in our cleaning process; that way we can go back to past data frames and see the last place we successfully made changes.
 
 ```R
 lemur_date <- lemur_prep %>%
@@ -323,7 +323,7 @@ Next, let's look at our other data columns and see if any common errors appear h
 ```R
 unique(lemur_time$Species)
 ```
-We have one species *Microcebus rufus* that is listed here twice, one with just the species names the other with a astrix*. This will cause issues in our data analyses as it will be considered two distinct species. Therefore we should match the names and create a new column which indicates if they have an astrix or not.
+We have one species *Microcebus rufus* that is listed here twice, one with just the species names the other with a astrix*. This will cause issues in our data analyses as it will be considered as two distinct species. Therefore we should match the names and create a new column which indicates if they have an astrix or not.
 
 We can do this by using an if_else() statement, where if there is a "Microcebus rufus*", we put a 1 in the new column 'Astrix' and if not, a 0.
 
@@ -333,7 +333,8 @@ lemur_species <- lemur_time %>%
 
 # check unique species names
 unique(lemur_species$Species)
-```  
+```
+
 If we need to apply multiple 'if_else' statement across a single column, we can use another function called 'case_when`. Using `mutate()` again, we can apply `case_when()` like we did with `if_else`. This function allows us to target specific columns and instances of data entry we want to change. We can use different opertors to tell R how we want to change our columns. 
 
 | Operator     | Description                       |
@@ -351,9 +352,7 @@ If we need to apply multiple 'if_else' statement across a single column, we can 
 | `!is.na()`   | filters out missing values        |
 | `%in%`       | checks if a value is in a set     |
 
-In our case, we want to change the GroupSize column to be specific numbers. 
-
-Lets look at an example with our `GroupSize` column.
+In our case, we want to change multiple values in the GroupSize column to be specific numbers. 
 
 ```R
 unique(lemur_species$GroupSize)
@@ -372,7 +371,7 @@ lemur_group <- lemur_species %>%
   ))
 ```
 
-If there are any values we did not specify here, and is not a valid number, the data will get 'coerced' or changed to to NA automatically. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
+If there are any values we did not specify here, and are not a valid number, the data will get 'coerced' or changed to to NA automatically. It's important to know that NA may mean a few different things, for example, not applicable, not available, not assessed, or no answer. This is different than zero data. 
 
 Let's see how our data has changed.
 
@@ -387,7 +386,7 @@ Much better! We can move on to our next data column, `HeightM`.
 unique(lemur_group$HeightM)
 ```
 
-Lets start by naming a new object related to height, now that we are done fixing errors in `GroupSize`. Then we can edit values that are not valid numbers. Remember, anything that is not a number and you don't edit here, will turn to NA. Try this first on your own!
+Lets start by naming a new object related to height, now that we are done fixing errors in `GroupSize`. Then we can edit values that are not valid numbers. Remember, anything that is not a number and you don't edit here, will turn to NA. Try this now on your own!
 
 <details closed><summary> HeightM Solution</a></summary>
 
@@ -407,7 +406,6 @@ unique(lemur_group$HeightM)
 </details>
 
 Now that you're getting more pratice with case_when(), you can tidy the `DistanceM` on your own too! Some values here have minimums and maximums. It's important to know that we cannot have columns with mixed data types, e.g. we can't have numbers and characters. For example the value "< 500" will be read in R as a character while "500" alone will be a numeric value. If they are placed in the same column, all numeric values will change to characters. 
-
 
 Let's use these numbers as our final measurement. For example, >500 == 500, >200 == 200.
 
@@ -466,7 +464,7 @@ lemur_elev <- lemur_dist %>%
 hist(lemur_elev$ElevationM)
 ```
 
-Let's check our our remaining character columns `Habitat` and `Scientist` column now. These column is correct in that it is categorical data saved as character strings. Let's see if there are any duplicate names or other errors. 
+Let's check out our remaining character columns `Habitat` and `Scientist`. These columns are correct in that it is categorical data saved as character strings. Let's see if there are any duplicate names or other errors. 
 
 <details closed><summary> HeightM Solution</a></summary>
 
@@ -499,7 +497,7 @@ unique(lemur_sci$Scientist)
              
 </details>
 
-Almost done! We now want to examine a more complicated column, `ActivityBehvaior`. This column contains information of lemur behavior we observed while following troops in the field. Some of these data contain one activity or bahavior, such as `feeding`. While others are multiple acitivities or behaviors, such as `moving, and grunting`. As a group, lets look at all the recorded behaviors and activities an decide how they will be grouped or recategorized. It's important to be consistent. If we want to track two behaviors with a common "," or "and" or "then", all of those options are OK, but only choose one method and use this for each value. That way, if we want to breakup the behaviors or activities later on, we can separate them by one symbol or word. 
+Almost done! We now want to examine a more complicated column, `ActivityBehvaior`. This column contains information of lemur behavior we observed while following troops in the field. Some of these data contain one activity or behavior, such as `feeding`. While others are multiple acitivities or behaviors, such as `moving, and grunting`. As a group, lets look at all the recorded behaviors and activities an decide how they will be grouped or recategorized. It's important to be consistent. If we want to track two behaviors with a common "," or "and" or "then", all of those options are OK, but only choose one method and use this for each value. That way, if we want to breakup the behaviors or activities later on, we can separate them by one symbol or word. 
 
 We will map this out together, then do you best to build a case_when() function to change the values to our final activities/behaviors. 
 
@@ -550,7 +548,34 @@ unique(lemur_cue$Cue)
 </details>
 
 ### Lessons Learned
-We did it! Now our data is tidy and analysis ready. What have we learned from this data cleaning? How might be change our data collection tools or recording techniques to make this process easier next time?
+We did it! Now that our data is tidy, we can easily summarise our data and run analyses! Here's are some fun things we can try:
+
+```R
+lemur.summary <- lemur_clean %>%                   # the data frame object that will be passed in the pipe
+  group_by(Species) %>%    # now we group by species
+  tally()                     # and tally how many species we counted in our data
+
+lemur.habitat <- lemur_clean %>%                   
+  group_by(Species, Habitat) %>%    # now we group by species for each habitat type
+  tally()                    # and tally how many species were detected in each habitat type
+```
+We can even plot these summaries to see where different lemur species like to hang out! We will cover more like this in the next R tutorial! You can also learn more about bar plots [here](https://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization).
+
+```R
+habitat_plot <- lemur.habitat %>% 
+  na.omit(Habitat) %>% # this let's us see all habitat data that is not NA
+  ggplot(aes(x=Species, y=n, fill=Habitat)) + 
+  geom_bar(stat="identity", position=position_dodge())
+
+habitat_plot
+```
+
+And we can't forget to save our new tidy data!
+```R
+write.csv(lemur_clean, "./data/lemur_cleaned.csv", row.names = FALSE) # row.names = FALSE stop R from adding a new column with row names
+```
+
+What have we learned from this data cleaning? How might be change our data collection tools or recording techniques to make this process easier next time?
 
 <details closed><summary>Possible Solutions:</a></summary>
 
@@ -562,6 +587,8 @@ b. drop down menu on digitial recording
 4. Be mindful of zero versus NA data
 
 </details>
+
+
 
 
 ## END
