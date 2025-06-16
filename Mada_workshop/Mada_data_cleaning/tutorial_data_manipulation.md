@@ -216,7 +216,8 @@ If you wanted to edit a specific column name, we can also use the function `rena
 
 ```R
 lemur_data <- lemur_data %>% 
-  rename("Latitude" = "Lat")
+  rename("Latitude" = "Lat") %>% 
+  rename("Longitude" = "Long")
 ```
 Let's visually examine our data and see if there are any changes we need to make with data our formatting. The function `glimpse` helps us looks at the head of each data column and tells us how R interpretted what each data column class is, for example chr = character, int = integer, dbl = double-precision floating-point number (number with decimals). More information on data classes [here](https://users.phhp.ufl.edu/rlp176/Courses/PHC6089/R_notes/DataClasses.html).
 
@@ -316,7 +317,7 @@ hour(lemur_time$Time)
 
 Next, let's look at our other data columns and see if any common errors appear here, such as spelling or empty cells. Let's start with species names.
 
-#### Names
+#### Other Common Errors
 ```R
 unique(lemur_time$Species)
 ```
@@ -382,7 +383,10 @@ unique(lemur_group$HeightM)
              
 </details>
 
-Now that you're getting more pratice with case_when(), you can tidy the `DistanceM` on your own too! Some values here have minimums and maximums. Let's use these numbers as our final measurement. For example, >500 == 500, >200 == 200.
+Now that you're getting more pratice with case_when(), you can tidy the `DistanceM` on your own too! Some values here have minimums and maximums. It's important to know that we cannot have columns with mixed data types, e.g. we can't have numbers and characters. For example the value "< 500" will be read in R as a character while "500" alone will be a numeric value. If they are placed in the same column, all numeric values will change to characters. 
+
+
+Let's use these numbers as our final measurement. For example, >500 == 500, >200 == 200.
 
 <details closed><summary>Distance Solution</a></summary>
 
@@ -409,6 +413,22 @@ unique(lemur_dist$DistanceM)
              
 </details>
 
+Let's examine some of our numeric columns. We can use `hist()` like we did for dates to confirm that our numbers make sense with what we know about our data and measurements. For example, we know that our compass degrees must range from 0 - 360 degrees. 
+
+```R
+# view our numeric columns
+glimpse(lemur_dist)
+
+hist(lemur_dist$CompassDegree)
+
+hist(lemur_dist$UtmX)
+hist(lemur_dist$UtmY)
+
+hist(lemur_dist$Latitude)
+hist(lemur_dist$Longitude)
+
+hist(lemur_dist$AccuracyM)
+```
 
 
 
