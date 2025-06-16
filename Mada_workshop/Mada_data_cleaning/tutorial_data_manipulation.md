@@ -185,7 +185,8 @@ lemur_data <- read.csv("./data/lemurs.csv", header = TRUE,
                                      "Cue"))
 ```
 
-Frist let's review some common naming conventions:
+### Naming
+Let's review some common naming conventions:
 
 <p float="center">
   <img src="./images/case_con.png" width="500" height="auto" />
@@ -230,7 +231,7 @@ Before we start to clean our data, let's add a unique identifyer to observations
 # Add observation ID
 lemur_data$ID <- (c(1:nrow(lemur_data)))
 ```
-
+### Common Errors
 There are a few common errors we want to lookout for when tidying or cleaning data for analyses. These include:
 1. Data/Time errors - Date and time data can be very tricky to manage, especially if there are mistakes in data entries or inconsistencies in the format each scientists uses, for example formatting day/month/year versus month/day/year. We need to make sure our dates and times are in the same format to ensure R reads them in correctly and we can format them as a date and time programmatically. This makes data analyses and visualization much easier later on!
 2. Duplicate naming (for example: Male and male) - Even though as humans, we see 'Male' and 'male' as the same, R treats captials and lowercase letters as distinct. Therefore, 'Male' and 'male' will be treated as two different names in R.
@@ -315,6 +316,7 @@ hour(lemur_time$Time)
 
 Next, let's look at our other data columns and see if any common errors appear here, such as spelling or empty cells. Let's start with species names.
 
+#### Names
 ```R
 unique(lemur_time$Species)
 ```
@@ -348,6 +350,22 @@ lemur_group <- lemur_species %>%
   ))
 ```
 
+If there are any values we did not specify here, and is not a valid number, the data will get 'coerced' or changed to to NA automatically. Let's see how our data has changed.
+
+```R
+unique(lemur_species$GroupSize)
+unique(lemur_group$GroupSize)
+```
+
+Much better! We can move on to our next data column, `HeightM`. 
+
+```R
+unique(lemur_group$HeightM)
+```
+
+Lets start by naming a new object related to height, now that we are done fixing errors in `GroupSize`. Then we can edit values that are not valid numbers. Remember, anything that is not a number and you don't edit here, will turn to NA. Try this first on your own!
+
+# hide this section
 
 
 
