@@ -9,6 +9,9 @@ In this tutorial, we will go over some basics of how to use GitHub. Throughout, 
 
 With these caveats in mind, let's get started with GitHub!
 
+### Some Resources
+- [Version Control with Git and GitHub](https://biostats-r.github.io/biostats/github/1_Git_Tutorial.html)
+
 ### Creating a GitHub account
 
 Before using GitHub, there's a pretty important initial step: **you need to sign up for a GitHub account!** If you have already done this, feel free to proceed to the next section. If not, please follow the instructions below.
