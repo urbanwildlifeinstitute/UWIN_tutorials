@@ -102,7 +102,7 @@ library(rnaturalearthdata)  # Support data for rnaturalearth
 ```{r}
 # Load the dataset
 lemurs <- read_csv("./data/lemur_cleaned.csv")
-landcover <- read_csv ("./data/mada_landcover.csv")
+landcover <- read_csv("./data/mada_landcover.csv")
 
 # Get a quick look at the structure of the data
 glimpse(lemurs)
