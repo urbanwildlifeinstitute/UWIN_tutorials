@@ -415,7 +415,7 @@ To find out the code for a color you like, click on Addins/Colour picker.
 
 
 <p float="center">
-  <img src="./images/colourpicker_1,jpg" width="500" height="auto" />
+  <img src="./images/colourpicker_1.jpg" width="500" height="auto" />
 
 </p>
 
