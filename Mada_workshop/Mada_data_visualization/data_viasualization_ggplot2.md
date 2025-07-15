@@ -1,11 +1,5 @@
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message= FALSE,
-  warning= FALSE
-  )
-```
+
 # Introduction to Data Visualization in R using the Ggplot2
 
 *Authors: Lucía Zamora and Kimberly Rivera*
