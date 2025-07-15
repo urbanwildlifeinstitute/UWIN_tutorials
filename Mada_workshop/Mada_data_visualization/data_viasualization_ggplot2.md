@@ -62,7 +62,10 @@ Here's a link to the presentation: https://gabspalomo.github.io/slides/uwin_ggpl
 A core principle of ggplot2 is that it enables you to build complex plots incrementally, one layer at a time.
 Each layer can use a different data set and apply its own aesthetic mappings, allowing you to create rich, multi-layered visualizations that combine information from multiple sources.
 
-![](C:/Users/marti/Documents/Carrera/UWIN/Ggplot/images/DL_datavis1_layers.png)
+<p float="center">
+  <img src="./images/DL_datavis1_layers.png" width="500" height="auto" />
+
+</p>
 
 Image taken from: https://ourcodingclub.github.io/tutorials/datavis/
 
@@ -410,12 +413,18 @@ install.packages("colourpicker")
 
 To find out the code for a color you like, click on Addins/Colour picker.
 
-![](C:/Users/marti/Documents/Carrera/UWIN/Ggplot/images/colourpicker_1.jpg)
 
+<p float="center">
+  <img src="./images/colourpicker_1" width="500" height="auto" />
+
+</p>
 
 When you click on All R colours you will see lots of different colours you can choose from 
 
-![](C:/Users/marti/Documents/Carrera/UWIN/Ggplot/images/colourpicker_2.jpg)
+<p float="center">
+  <img src="./images/colourpicker_2.jpg" width="500" height="auto" />
+
+</p>
 
 When you click on 1, and then on a certain colour, you fill up 1 with that colour, same goes for 2, 3 - you can add more colours with the +, or delete them by clicking the bin.
 Once you’ve made your pick, click Done.
