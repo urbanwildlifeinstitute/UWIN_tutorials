@@ -152,7 +152,7 @@ If you want to run through the example in this tutorial, we will need to
 download and add some large spatial datasets to our `./data` folder
 which can be downloaded from a google drive folder called
 'enhancing_maps'
-[here](https://drive.google.com/drive/folders/1DkQkxmcbfXyEAb35bzoJrjVHREy6UHOL?usp=drive_link).
+[here](https://drive.google.com/drive/folders/1kQqtXSaBOz3lxuZBkf7Xn_DHGcOpZIr0?usp=drive_link).
 
 These include: 1. Open Buildings data (`Argentina_buildings.gpkg` and
 `build.rds`) - This data can be downloaded directly from [Open
