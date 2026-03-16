@@ -1,3 +1,4 @@
+# Kim Rivera Practice
 # UWIN Workshop Series: Static Occupancy
 package_load<-function(packages = NA, quiet=TRUE, verbose=FALSE, warn.conflicts=FALSE){
   
